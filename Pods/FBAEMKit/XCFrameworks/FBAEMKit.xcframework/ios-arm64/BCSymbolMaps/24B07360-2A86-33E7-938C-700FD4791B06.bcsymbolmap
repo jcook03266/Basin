@@ -1,0 +1,1252 @@
+BCSymbolMap Version: 2.0
+Apple clang version 13.1.6 (clang-1316.0.21.2)
+/Applications/Xcode_13.3.0_rc1_fb.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk
+iPhoneOS15.4.sdk
+/Users/samodom/Library/Developer/Xcode/DerivedData/FacebookSDK-aqouerygvznijxhhuzeffcqjabcu/Build/Intermediates.noindex/ArchiveIntermediates/FBAEMKit-Dynamic/IntermediateBuildFilesPath/FBAEMKit.build/Release-iphoneos/FBAEMKit-Dynamic.build/DerivedSources/FBAEMKit_vers.c
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit
+-[FBAEMAdvertiserMultiEntryRule initWithOperator:rules:]
+-[FBAEMAdvertiserMultiEntryRule isMatchedEventParameters:]
++[FBAEMAdvertiserMultiEntryRule supportsSecureCoding]
+-[FBAEMAdvertiserMultiEntryRule initWithCoder:]
+-[FBAEMAdvertiserMultiEntryRule encodeWithCoder:]
+-[FBAEMAdvertiserMultiEntryRule copyWithZone:]
+-[FBAEMAdvertiserMultiEntryRule operator]
+-[FBAEMAdvertiserMultiEntryRule rules]
+-[FBAEMAdvertiserMultiEntryRule .cxx_destruct]
+_OBJC_SELECTOR_REFERENCES_
+_OBJC_SELECTOR_REFERENCES_.4
+_OBJC_SELECTOR_REFERENCES_.6
+_OBJC_SELECTOR_REFERENCES_.8
+_OBJC_CLASSLIST_REFERENCES_$_
+_OBJC_CLASSLIST_REFERENCES_$_.9
+_OBJC_SELECTOR_REFERENCES_.11
+_OBJC_CLASSLIST_REFERENCES_$_.12
+_OBJC_CLASSLIST_REFERENCES_$_.13
+_OBJC_SELECTOR_REFERENCES_.15
+_OBJC_SELECTOR_REFERENCES_.17
+_OBJC_SELECTOR_REFERENCES_.19
+_OBJC_SELECTOR_REFERENCES_.21
+_OBJC_SELECTOR_REFERENCES_.23
+_OBJC_SELECTOR_REFERENCES_.25
+__OBJC_$_CLASS_METHODS_FBAEMAdvertiserMultiEntryRule
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_NSObject
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_OPT_NSObject
+__OBJC_$_PROP_LIST_NSObject
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSObject
+__OBJC_PROTOCOL_$_NSObject
+__OBJC_LABEL_PROTOCOL_$_NSObject
+__OBJC_$_PROTOCOL_REFS_FBAEMAdvertiserRuleMatching
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_FBAEMAdvertiserRuleMatching
+__OBJC_$_PROTOCOL_METHOD_TYPES_FBAEMAdvertiserRuleMatching
+__OBJC_PROTOCOL_$_FBAEMAdvertiserRuleMatching
+__OBJC_LABEL_PROTOCOL_$_FBAEMAdvertiserRuleMatching
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_NSCopying
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSCopying
+__OBJC_PROTOCOL_$_NSCopying
+__OBJC_LABEL_PROTOCOL_$_NSCopying
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_NSCoding
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSCoding
+__OBJC_PROTOCOL_$_NSCoding
+__OBJC_LABEL_PROTOCOL_$_NSCoding
+__OBJC_$_PROTOCOL_REFS_NSSecureCoding
+__OBJC_$_PROTOCOL_CLASS_METHODS_NSSecureCoding
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSSecureCoding
+__OBJC_$_CLASS_PROP_LIST_NSSecureCoding
+__OBJC_PROTOCOL_$_NSSecureCoding
+__OBJC_LABEL_PROTOCOL_$_NSSecureCoding
+__OBJC_CLASS_PROTOCOLS_$_FBAEMAdvertiserMultiEntryRule
+__OBJC_$_CLASS_PROP_LIST_FBAEMAdvertiserMultiEntryRule
+__OBJC_METACLASS_RO_$_FBAEMAdvertiserMultiEntryRule
+__OBJC_$_INSTANCE_METHODS_FBAEMAdvertiserMultiEntryRule
+_OBJC_IVAR_$_FBAEMAdvertiserMultiEntryRule._operator
+_OBJC_IVAR_$_FBAEMAdvertiserMultiEntryRule._rules
+__OBJC_$_INSTANCE_VARIABLES_FBAEMAdvertiserMultiEntryRule
+__OBJC_$_PROP_LIST_FBAEMAdvertiserMultiEntryRule
+__OBJC_CLASS_RO_$_FBAEMAdvertiserMultiEntryRule
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMAdvertiserMultiEntryRule.m
+FBAEMKit/FBAEMAdvertiserMultiEntryRule.m
+FBAEMKit/FBAEMAdvertiserMultiEntryRule.h
+-[FBAEMAdvertiserRuleFactory createRuleWithJson:]
+-[FBAEMAdvertiserRuleFactory createRuleWithDict:]
+-[FBAEMAdvertiserRuleFactory createMultiEntryRuleWithDict:]
+-[FBAEMAdvertiserRuleFactory createSingleEntryRuleWithDict:]
+-[FBAEMAdvertiserRuleFactory primaryKeyForRule:]
+-[FBAEMAdvertiserRuleFactory getOperator:]
+-[FBAEMAdvertiserRuleFactory isOperatorForMultiEntryRule:]
+_OBJC_CLASSLIST_REFERENCES_$_.1
+_OBJC_SELECTOR_REFERENCES_.3
+_OBJC_SELECTOR_REFERENCES_.5
+_OBJC_SELECTOR_REFERENCES_.7
+_OBJC_SELECTOR_REFERENCES_.9
+_OBJC_SELECTOR_REFERENCES_.13
+_OBJC_CLASSLIST_REFERENCES_$_.20
+_OBJC_SELECTOR_REFERENCES_.22
+_OBJC_SELECTOR_REFERENCES_.24
+_OBJC_CLASSLIST_REFERENCES_$_.25
+_OBJC_SELECTOR_REFERENCES_.27
+_OBJC_SELECTOR_REFERENCES_.29
+_OBJC_SELECTOR_REFERENCES_.31
+_OBJC_SELECTOR_REFERENCES_.33
+_OBJC_CLASSLIST_REFERENCES_$_.34
+_OBJC_SELECTOR_REFERENCES_.36
+_OBJC_CLASSLIST_REFERENCES_$_.37
+_OBJC_CLASSLIST_REFERENCES_$_.38
+_OBJC_CLASSLIST_REFERENCES_$_.39
+_OBJC_CLASSLIST_REFERENCES_$_.40
+_OBJC_SELECTOR_REFERENCES_.42
+_OBJC_SELECTOR_REFERENCES_.44
+_OBJC_SELECTOR_REFERENCES_.46
+_OBJC_SELECTOR_REFERENCES_.90
+_OBJC_SELECTOR_REFERENCES_.92
+_OBJC_SELECTOR_REFERENCES_.94
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_FBAEMAdvertiserRuleProviding
+__OBJC_$_PROTOCOL_METHOD_TYPES_FBAEMAdvertiserRuleProviding
+__OBJC_PROTOCOL_$_FBAEMAdvertiserRuleProviding
+__OBJC_LABEL_PROTOCOL_$_FBAEMAdvertiserRuleProviding
+__OBJC_CLASS_PROTOCOLS_$_FBAEMAdvertiserRuleFactory
+__OBJC_METACLASS_RO_$_FBAEMAdvertiserRuleFactory
+__OBJC_$_INSTANCE_METHODS_FBAEMAdvertiserRuleFactory
+__OBJC_CLASS_RO_$_FBAEMAdvertiserRuleFactory
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMAdvertiserRuleFactory.m
+FBAEMKit/FBAEMAdvertiserRuleFactory.m
+-[FBAEMAdvertiserSingleEntryRule initWithOperator:paramKey:linguisticCondition:numericalCondition:arrayCondition:]
+-[FBAEMAdvertiserSingleEntryRule isMatchedEventParameters:]
+-[FBAEMAdvertiserSingleEntryRule isMatchedEventParameters:paramPath:]
+-[FBAEMAdvertiserSingleEntryRule isMatchedWithAsteriskParam:eventParameters:paramPath:]
+-[FBAEMAdvertiserSingleEntryRule isMatchedWithStringValue:numericalValue:]
+-[FBAEMAdvertiserSingleEntryRule isRegexMatch:]
+-[FBAEMAdvertiserSingleEntryRule isAnyOf:stringValue:ignoreCase:]
++[FBAEMAdvertiserSingleEntryRule supportsSecureCoding]
+-[FBAEMAdvertiserSingleEntryRule initWithCoder:]
+-[FBAEMAdvertiserSingleEntryRule encodeWithCoder:]
+-[FBAEMAdvertiserSingleEntryRule copyWithZone:]
+-[FBAEMAdvertiserSingleEntryRule operator]
+-[FBAEMAdvertiserSingleEntryRule paramKey]
+-[FBAEMAdvertiserSingleEntryRule linguisticCondition]
+-[FBAEMAdvertiserSingleEntryRule numericalCondition]
+-[FBAEMAdvertiserSingleEntryRule arrayCondition]
+-[FBAEMAdvertiserSingleEntryRule .cxx_destruct]
+_OBJC_SELECTOR_REFERENCES_.14
+_OBJC_SELECTOR_REFERENCES_.16
+_OBJC_SELECTOR_REFERENCES_.18
+_OBJC_SELECTOR_REFERENCES_.20
+_OBJC_SELECTOR_REFERENCES_.26
+_OBJC_SELECTOR_REFERENCES_.28
+_OBJC_SELECTOR_REFERENCES_.30
+_OBJC_SELECTOR_REFERENCES_.32
+_OBJC_CLASSLIST_REFERENCES_$_.33
+_OBJC_SELECTOR_REFERENCES_.35
+_OBJC_SELECTOR_REFERENCES_.37
+_OBJC_SELECTOR_REFERENCES_.40
+_OBJC_CLASSLIST_REFERENCES_$_.41
+_OBJC_SELECTOR_REFERENCES_.43
+_OBJC_SELECTOR_REFERENCES_.45
+_OBJC_SELECTOR_REFERENCES_.47
+_OBJC_CLASSLIST_REFERENCES_$_.48
+_OBJC_SELECTOR_REFERENCES_.50
+_OBJC_SELECTOR_REFERENCES_.52
+_OBJC_SELECTOR_REFERENCES_.54
+_OBJC_SELECTOR_REFERENCES_.56
+_OBJC_SELECTOR_REFERENCES_.58
+_OBJC_SELECTOR_REFERENCES_.60
+_OBJC_SELECTOR_REFERENCES_.62
+_OBJC_SELECTOR_REFERENCES_.64
+_OBJC_CLASSLIST_REFERENCES_$_.65
+_OBJC_SELECTOR_REFERENCES_.67
+_OBJC_SELECTOR_REFERENCES_.69
+_OBJC_CLASSLIST_REFERENCES_$_.70
+_OBJC_SELECTOR_REFERENCES_.72
+_OBJC_SELECTOR_REFERENCES_.74
+_OBJC_SELECTOR_REFERENCES_.76
+_OBJC_SELECTOR_REFERENCES_.78
+_OBJC_SELECTOR_REFERENCES_.80
+_OBJC_SELECTOR_REFERENCES_.82
+_OBJC_SELECTOR_REFERENCES_.84
+__OBJC_$_CLASS_METHODS_FBAEMAdvertiserSingleEntryRule
+__OBJC_CLASS_PROTOCOLS_$_FBAEMAdvertiserSingleEntryRule
+__OBJC_$_CLASS_PROP_LIST_FBAEMAdvertiserSingleEntryRule
+__OBJC_METACLASS_RO_$_FBAEMAdvertiserSingleEntryRule
+__OBJC_$_INSTANCE_METHODS_FBAEMAdvertiserSingleEntryRule
+_OBJC_IVAR_$_FBAEMAdvertiserSingleEntryRule._operator
+_OBJC_IVAR_$_FBAEMAdvertiserSingleEntryRule._paramKey
+_OBJC_IVAR_$_FBAEMAdvertiserSingleEntryRule._linguisticCondition
+_OBJC_IVAR_$_FBAEMAdvertiserSingleEntryRule._numericalCondition
+_OBJC_IVAR_$_FBAEMAdvertiserSingleEntryRule._arrayCondition
+__OBJC_$_INSTANCE_VARIABLES_FBAEMAdvertiserSingleEntryRule
+__OBJC_$_PROP_LIST_FBAEMAdvertiserSingleEntryRule
+__OBJC_CLASS_RO_$_FBAEMAdvertiserSingleEntryRule
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMAdvertiserSingleEntryRule.m
+FBAEMKit/FBAEMAdvertiserSingleEntryRule.m
+FBAEMKit/FBAEMAdvertiserSingleEntryRule.h
+NSMakeRange
+/Applications/Xcode_13.3.0_rc1_fb.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSRange.h
++[FBAEMConfiguration configureWithRuleProvider:]
++[FBAEMConfiguration ruleProvider]
+-[FBAEMConfiguration initWithJSON:]
+-[FBAEMConfiguration initWithDefaultCurrency:cutoffTime:validFrom:configMode:businessID:matchingRule:conversionValueRules:]
++[FBAEMConfiguration parseRules:]
+___33+[FBAEMConfiguration parseRules:]_block_invoke
++[FBAEMConfiguration getEventSetFromRules:]
++[FBAEMConfiguration getCurrencySetFromRules:]
+-[FBAEMConfiguration isSameValidFrom:businessID:]
+-[FBAEMConfiguration isSameBusinessID:]
++[FBAEMConfiguration supportsSecureCoding]
+-[FBAEMConfiguration initWithCoder:]
+-[FBAEMConfiguration encodeWithCoder:]
+-[FBAEMConfiguration copyWithZone:]
+-[FBAEMConfiguration cutoffTime]
+-[FBAEMConfiguration validFrom]
+-[FBAEMConfiguration defaultCurrency]
+-[FBAEMConfiguration configMode]
+-[FBAEMConfiguration businessID]
+-[FBAEMConfiguration matchingRule]
+-[FBAEMConfiguration conversionValueRules]
+-[FBAEMConfiguration eventSet]
+-[FBAEMConfiguration currencySet]
+-[FBAEMConfiguration .cxx_destruct]
+__ruleProvider
+_OBJC_CLASSLIST_REFERENCES_$_.17
+_OBJC_CLASSLIST_REFERENCES_$_.23
+_OBJC_CLASSLIST_REFERENCES_$_.28
+_OBJC_SELECTOR_REFERENCES_.34
+_OBJC_SELECTOR_REFERENCES_.38
+_OBJC_SELECTOR_REFERENCES_.41
+_OBJC_CLASSLIST_REFERENCES_$_.44
+_OBJC_SELECTOR_REFERENCES_.48
+___block_descriptor_32_e33_q24?0"FBAEMRule"8"FBAEMRule"16l
+___block_literal_global
+_OBJC_SELECTOR_REFERENCES_.51
+_OBJC_SELECTOR_REFERENCES_.53
+_OBJC_SELECTOR_REFERENCES_.55
+_OBJC_CLASSLIST_REFERENCES_$_.56
+_OBJC_SELECTOR_REFERENCES_.66
+_OBJC_SELECTOR_REFERENCES_.68
+_OBJC_SELECTOR_REFERENCES_.70
+_OBJC_CLASSLIST_REFERENCES_$_.75
+_OBJC_CLASSLIST_REFERENCES_$_.76
+_OBJC_CLASSLIST_REFERENCES_$_.77
+_OBJC_SELECTOR_REFERENCES_.79
+_OBJC_SELECTOR_REFERENCES_.81
+_OBJC_SELECTOR_REFERENCES_.83
+_OBJC_CLASSLIST_REFERENCES_$_.84
+_OBJC_SELECTOR_REFERENCES_.86
+_OBJC_SELECTOR_REFERENCES_.88
+__OBJC_$_CLASS_METHODS_FBAEMConfiguration
+__OBJC_CLASS_PROTOCOLS_$_FBAEMConfiguration
+__OBJC_$_CLASS_PROP_LIST_FBAEMConfiguration
+__OBJC_METACLASS_RO_$_FBAEMConfiguration
+__OBJC_$_INSTANCE_METHODS_FBAEMConfiguration
+_OBJC_IVAR_$_FBAEMConfiguration._cutoffTime
+_OBJC_IVAR_$_FBAEMConfiguration._validFrom
+_OBJC_IVAR_$_FBAEMConfiguration._defaultCurrency
+_OBJC_IVAR_$_FBAEMConfiguration._configMode
+_OBJC_IVAR_$_FBAEMConfiguration._businessID
+_OBJC_IVAR_$_FBAEMConfiguration._matchingRule
+_OBJC_IVAR_$_FBAEMConfiguration._conversionValueRules
+_OBJC_IVAR_$_FBAEMConfiguration._eventSet
+_OBJC_IVAR_$_FBAEMConfiguration._currencySet
+__OBJC_$_INSTANCE_VARIABLES_FBAEMConfiguration
+__OBJC_$_PROP_LIST_FBAEMConfiguration
+__OBJC_CLASS_RO_$_FBAEMConfiguration
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMConfiguration.m
+FBAEMKit/FBAEMConfiguration.m
+FBAEMKit/FBAEMConfiguration.h
+__33+[FBAEMConfiguration parseRules:]_block_invoke
++[FBAEMInvocation invocationWithAppLinkData:]
+-[FBAEMInvocation initWithCampaignID:ACSToken:ACSSharedSecret:ACSConfigID:businessID:catalogID:isTestMode:hasSKAN:isConversionFilteringEligible:]
+-[FBAEMInvocation initWithCampaignID:ACSToken:ACSSharedSecret:ACSConfigID:businessID:catalogID:timestamp:configMode:configID:recordedEvents:recordedValues:conversionValue:priority:conversionTimestamp:isAggregated:isTestMode:hasSKAN:isConversionFilteringEligible:]
+-[FBAEMInvocation attributeEvent:currency:value:parameters:configs:shouldUpdateCache:]
+-[FBAEMInvocation updateConversionValueWithConfigs:event:shouldBoostPriority:]
+-[FBAEMInvocation isOptimizedEvent:configs:]
+-[FBAEMInvocation isOptimizedEvent:config:]
+-[FBAEMInvocation isOutOfWindowWithConfigs:]
+-[FBAEMInvocation getHMAC:]
+-[FBAEMInvocation decodeBase64UrlSafeString:]
+-[FBAEMInvocation processedParameters:]
+-[FBAEMInvocation _isOutOfWindowWithConfig:]
+-[FBAEMInvocation _findConfig:]
+-[FBAEMInvocation _getConfigList:configs:]
+-[FBAEMInvocation _setConfig:]
++[FBAEMInvocation supportsSecureCoding]
+-[FBAEMInvocation initWithCoder:]
+-[FBAEMInvocation encodeWithCoder:]
+-[FBAEMInvocation copyWithZone:]
+-[FBAEMInvocation campaignID]
+-[FBAEMInvocation ACSToken]
+-[FBAEMInvocation ACSSharedSecret]
+-[FBAEMInvocation ACSConfigID]
+-[FBAEMInvocation businessID]
+-[FBAEMInvocation catalogID]
+-[FBAEMInvocation isTestMode]
+-[FBAEMInvocation hasSKAN]
+-[FBAEMInvocation isConversionFilteringEligible]
+-[FBAEMInvocation timestamp]
+-[FBAEMInvocation configMode]
+-[FBAEMInvocation configID]
+-[FBAEMInvocation recordedEvents]
+-[FBAEMInvocation recordedValues]
+-[FBAEMInvocation conversionValue]
+-[FBAEMInvocation priority]
+-[FBAEMInvocation conversionTimestamp]
+-[FBAEMInvocation isAggregated]
+-[FBAEMInvocation setIsAggregated:]
+-[FBAEMInvocation .cxx_destruct]
+_OBJC_CLASSLIST_REFERENCES_$_.45
+_OBJC_SELECTOR_REFERENCES_.49
+_OBJC_CLASSLIST_REFERENCES_$_.50
+_OBJC_CLASSLIST_REFERENCES_$_.53
+_OBJC_SELECTOR_REFERENCES_.57
+_OBJC_SELECTOR_REFERENCES_.59
+_OBJC_SELECTOR_REFERENCES_.61
+_OBJC_CLASSLIST_REFERENCES_$_.62
+_OBJC_CLASSLIST_REFERENCES_$_.67
+_OBJC_SELECTOR_REFERENCES_.96
+_OBJC_CLASSLIST_REFERENCES_$_.97
+_OBJC_SELECTOR_REFERENCES_.99
+_OBJC_SELECTOR_REFERENCES_.101
+_OBJC_CLASSLIST_REFERENCES_$_.102
+_OBJC_SELECTOR_REFERENCES_.104
+_OBJC_SELECTOR_REFERENCES_.106
+_OBJC_SELECTOR_REFERENCES_.108
+_OBJC_SELECTOR_REFERENCES_.110
+_OBJC_SELECTOR_REFERENCES_.112
+_OBJC_SELECTOR_REFERENCES_.114
+_OBJC_SELECTOR_REFERENCES_.116
+_OBJC_SELECTOR_REFERENCES_.118
+_OBJC_SELECTOR_REFERENCES_.120
+_OBJC_SELECTOR_REFERENCES_.122
+_OBJC_SELECTOR_REFERENCES_.124
+_OBJC_SELECTOR_REFERENCES_.126
+_OBJC_SELECTOR_REFERENCES_.128
+_OBJC_SELECTOR_REFERENCES_.130
+_OBJC_SELECTOR_REFERENCES_.132
+_OBJC_SELECTOR_REFERENCES_.134
+_OBJC_CLASSLIST_REFERENCES_$_.135
+_OBJC_SELECTOR_REFERENCES_.137
+_OBJC_SELECTOR_REFERENCES_.141
+_OBJC_SELECTOR_REFERENCES_.145
+_OBJC_SELECTOR_REFERENCES_.147
+_OBJC_SELECTOR_REFERENCES_.149
+_OBJC_SELECTOR_REFERENCES_.151
+_OBJC_SELECTOR_REFERENCES_.153
+_OBJC_SELECTOR_REFERENCES_.155
+_OBJC_SELECTOR_REFERENCES_.161
+_OBJC_SELECTOR_REFERENCES_.171
+_OBJC_SELECTOR_REFERENCES_.173
+_OBJC_CLASSLIST_REFERENCES_$_.174
+_OBJC_SELECTOR_REFERENCES_.176
+_OBJC_SELECTOR_REFERENCES_.178
+_OBJC_SELECTOR_REFERENCES_.180
+_OBJC_SELECTOR_REFERENCES_.182
+_OBJC_SELECTOR_REFERENCES_.184
+_OBJC_SELECTOR_REFERENCES_.186
+_OBJC_SELECTOR_REFERENCES_.188
+_OBJC_SELECTOR_REFERENCES_.190
+_OBJC_SELECTOR_REFERENCES_.192
+_OBJC_SELECTOR_REFERENCES_.194
+_OBJC_SELECTOR_REFERENCES_.196
+_OBJC_SELECTOR_REFERENCES_.198
+_OBJC_SELECTOR_REFERENCES_.200
+_OBJC_SELECTOR_REFERENCES_.202
+_OBJC_CLASSLIST_REFERENCES_$_.203
+_OBJC_SELECTOR_REFERENCES_.205
+_OBJC_SELECTOR_REFERENCES_.207
+_OBJC_SELECTOR_REFERENCES_.209
+_OBJC_SELECTOR_REFERENCES_.211
+_OBJC_SELECTOR_REFERENCES_.213
+_OBJC_SELECTOR_REFERENCES_.215
+_OBJC_SELECTOR_REFERENCES_.217
+__OBJC_$_CLASS_METHODS_FBAEMInvocation
+__OBJC_CLASS_PROTOCOLS_$_FBAEMInvocation
+__OBJC_$_CLASS_PROP_LIST_FBAEMInvocation
+__OBJC_METACLASS_RO_$_FBAEMInvocation
+__OBJC_$_INSTANCE_METHODS_FBAEMInvocation
+_OBJC_IVAR_$_FBAEMInvocation._isTestMode
+_OBJC_IVAR_$_FBAEMInvocation._hasSKAN
+_OBJC_IVAR_$_FBAEMInvocation._isConversionFilteringEligible
+_OBJC_IVAR_$_FBAEMInvocation._isAggregated
+_OBJC_IVAR_$_FBAEMInvocation._campaignID
+_OBJC_IVAR_$_FBAEMInvocation._ACSToken
+_OBJC_IVAR_$_FBAEMInvocation._ACSSharedSecret
+_OBJC_IVAR_$_FBAEMInvocation._ACSConfigID
+_OBJC_IVAR_$_FBAEMInvocation._businessID
+_OBJC_IVAR_$_FBAEMInvocation._catalogID
+_OBJC_IVAR_$_FBAEMInvocation._timestamp
+_OBJC_IVAR_$_FBAEMInvocation._configMode
+_OBJC_IVAR_$_FBAEMInvocation._configID
+_OBJC_IVAR_$_FBAEMInvocation._recordedEvents
+_OBJC_IVAR_$_FBAEMInvocation._recordedValues
+_OBJC_IVAR_$_FBAEMInvocation._conversionValue
+_OBJC_IVAR_$_FBAEMInvocation._priority
+_OBJC_IVAR_$_FBAEMInvocation._conversionTimestamp
+__OBJC_$_INSTANCE_VARIABLES_FBAEMInvocation
+__OBJC_$_PROP_LIST_FBAEMInvocation
+__OBJC_CLASS_RO_$_FBAEMInvocation
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMInvocation.m
+FBAEMKit/FBAEMInvocation.m
+FBAEMKit/FBAEMInvocation.h
+-[FBAEMNetworker startGraphRequestWithGraphPath:parameters:tokenString:HTTPMethod:completion:]
+___94-[FBAEMNetworker startGraphRequestWithGraphPath:parameters:tokenString:HTTPMethod:completion:]_block_invoke
+___copy_helper_block_e8_32s40b
+___destroy_helper_block_e8_32s40s
+-[FBAEMNetworker parseJSONResponse:error:statusCode:]
+-[FBAEMNetworker parseJSONOrOtherwise:error:]
+-[FBAEMNetworker appendAttachments:toBody:addFormData:]
+___55-[FBAEMNetworker appendAttachments:toBody:addFormData:]_block_invoke
+___copy_helper_block_e8_32s
+___destroy_helper_block_e8_32s
+-[FBAEMNetworker userAgent]
+___27-[FBAEMNetworker userAgent]_block_invoke
+___clang_at_available_requires_core_foundation_framework
+_OBJC_SELECTOR_REFERENCES_.10
+_OBJC_CLASSLIST_REFERENCES_$_.11
+_OBJC_CLASSLIST_REFERENCES_$_.26
+_OBJC_CLASSLIST_REFERENCES_$_.29
+_OBJC_CLASSLIST_REFERENCES_$_.32
+_OBJC_CLASSLIST_REFERENCES_$_.66
+___block_descriptor_48_e8_32s40bs_e46_v32?0"NSData"8"NSURLResponse"16"NSError"24l
+_OBJC_SELECTOR_REFERENCES_.77
+_OBJC_CLASSLIST_REFERENCES_$_.78
+_OBJC_CLASSLIST_REFERENCES_$_.91
+_OBJC_SELECTOR_REFERENCES_.93
+_OBJC_CLASSLIST_REFERENCES_$_.94
+_OBJC_SELECTOR_REFERENCES_.98
+_OBJC_CLASSLIST_REFERENCES_$_.99
+_OBJC_SELECTOR_REFERENCES_.103
+_OBJC_SELECTOR_REFERENCES_.105
+_OBJC_SELECTOR_REFERENCES_.109
+___block_descriptor_41_e8_32s_e15_v32?0816^B24l
+_userAgent.agent
+_userAgent.onceToken
+___block_descriptor_32_e5_v8?0l
+_OBJC_CLASSLIST_REFERENCES_$_.120
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_FBAEMNetworking
+__OBJC_$_PROTOCOL_METHOD_TYPES_FBAEMNetworking
+__OBJC_PROTOCOL_$_FBAEMNetworking
+__OBJC_LABEL_PROTOCOL_$_FBAEMNetworking
+__OBJC_$_PROTOCOL_REFS_NSURLSessionDelegate
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_OPT_NSURLSessionDelegate
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSURLSessionDelegate
+__OBJC_PROTOCOL_$_NSURLSessionDelegate
+__OBJC_LABEL_PROTOCOL_$_NSURLSessionDelegate
+__OBJC_$_PROTOCOL_REFS_NSURLSessionTaskDelegate
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_OPT_NSURLSessionTaskDelegate
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSURLSessionTaskDelegate
+__OBJC_PROTOCOL_$_NSURLSessionTaskDelegate
+__OBJC_LABEL_PROTOCOL_$_NSURLSessionTaskDelegate
+__OBJC_$_PROTOCOL_REFS_NSURLSessionDataDelegate
+__OBJC_$_PROTOCOL_INSTANCE_METHODS_OPT_NSURLSessionDataDelegate
+__OBJC_$_PROTOCOL_METHOD_TYPES_NSURLSessionDataDelegate
+__OBJC_PROTOCOL_$_NSURLSessionDataDelegate
+__OBJC_LABEL_PROTOCOL_$_NSURLSessionDataDelegate
+__OBJC_CLASS_PROTOCOLS_$_FBAEMNetworker
+__OBJC_METACLASS_RO_$_FBAEMNetworker
+__OBJC_$_INSTANCE_METHODS_FBAEMNetworker
+__OBJC_$_PROP_LIST_FBAEMNetworker
+__OBJC_CLASS_RO_$_FBAEMNetworker
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMNetworker.m
+__27-[FBAEMNetworker userAgent]_block_invoke
+FBAEMKit/FBAEMNetworker.m
+/Applications/Xcode_13.3.0_rc1_fb.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/dispatch/once.h
+__destroy_helper_block_e8_32s
+__copy_helper_block_e8_32s
+__55-[FBAEMNetworker appendAttachments:toBody:addFormData:]_block_invoke
+__destroy_helper_block_e8_32s40s
+__copy_helper_block_e8_32s40b
+__94-[FBAEMNetworker startGraphRequestWithGraphPath:parameters:tokenString:HTTPMethod:completion:]_block_invoke
++[FBAEMReporter configureWithNetworker:appID:]
++[FBAEMReporter configureWithNetworker:appID:reporter:]
++[FBAEMReporter configureWithNetworker:appID:reporter:store:]
++[FBAEMReporter networker]
++[FBAEMReporter setNetworker:]
++[FBAEMReporter appID]
++[FBAEMReporter setAppID:]
++[FBAEMReporter reporter]
++[FBAEMReporter setReporter:]
++[FBAEMReporter store]
++[FBAEMReporter setStore:]
++[FBAEMReporter enable]
+___23+[FBAEMReporter enable]_block_invoke
+___23+[FBAEMReporter enable]_block_invoke_2
+___copy_helper_block_e8_
+___destroy_helper_block_e8_
+___23+[FBAEMReporter enable]_block_invoke.74
++[FBAEMReporter setConversionFilteringEnabled:]
++[FBAEMReporter setCatalogMatchingEnabled:]
++[FBAEMReporter handleURL:]
++[FBAEMReporter parseURL:]
++[FBAEMReporter recordAndUpdateEvent:currency:value:parameters:]
+___64+[FBAEMReporter recordAndUpdateEvent:currency:value:parameters:]_block_invoke
+___64+[FBAEMReporter recordAndUpdateEvent:currency:value:parameters:]_block_invoke_2
+___copy_helper_block_e8_40s48s56s64s72s
+___destroy_helper_block_e8_40s48s56s64s72s
+___copy_helper_block_e8_40s48s56s64s
+___destroy_helper_block_e8_40s48s56s64s
++[FBAEMReporter _updateAttributedInvocation:event:currency:value:parameters:shouldBoostPriority:]
++[FBAEMReporter _attributedInvocation:Event:currency:value:parameters:configs:]
++[FBAEMReporter _isDoubleCounting:event:]
++[FBAEMReporter _appendAndSaveInvocation:]
+___42+[FBAEMReporter _appendAndSaveInvocation:]_block_invoke
++[FBAEMReporter _loadConfigurationWithRefreshForced:block:]
+___59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke
+___59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke_2
+___59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke_3
+___copy_helper_block_e8_32s40s
+___copy_helper_block_e8_32b
++[FBAEMReporter _loadCatalogOptimizationWithInvocation:contentID:block:]
+___72+[FBAEMReporter _loadCatalogOptimizationWithInvocation:contentID:block:]_block_invoke
+___72+[FBAEMReporter _loadCatalogOptimizationWithInvocation:contentID:block:]_block_invoke_2
+___copy_helper_block_e8_32s48s56b
+___destroy_helper_block_e8_32s48s56s
+___copy_helper_block_e8_40b
+___destroy_helper_block_e8_40s
++[FBAEMReporter _shouldReportConversionInCatalogLevel:event:]
++[FBAEMReporter _isContentOptimized:]
++[FBAEMReporter _requestParameters]
++[FBAEMReporter _catalogRequestParameters:contentID:]
++[FBAEMReporter _isConfigRefreshTimestampValid]
++[FBAEMReporter _shouldRefreshWithIsForced:]
++[FBAEMReporter _shouldDelayAggregationRequest]
++[FBAEMReporter _sendDebuggingRequest:]
+___39+[FBAEMReporter _sendDebuggingRequest:]_block_invoke
++[FBAEMReporter _debuggingRequestParameters:]
++[FBAEMReporter _loadMinAggregationRequestTimestamp]
++[FBAEMReporter _updateAggregationRequestTimestamp:]
++[FBAEMReporter _loadConfigs]
++[FBAEMReporter _saveConfigs]
++[FBAEMReporter _addConfigs:]
++[FBAEMReporter _addConfig:]
+___28+[FBAEMReporter _addConfig:]_block_invoke
++[FBAEMReporter _loadReportData]
++[FBAEMReporter _saveReportData]
++[FBAEMReporter _sendAggregationRequest]
+___40+[FBAEMReporter _sendAggregationRequest]_block_invoke
+___40+[FBAEMReporter _sendAggregationRequest]_block_invoke_2
+___40+[FBAEMReporter _sendAggregationRequest]_block_invoke_3
+___copy_helper_block_e8_40s
+___copy_helper_block_e8_32s48s
+___destroy_helper_block_e8_32s48s
++[FBAEMReporter _aggregationRequestParameters:]
++[FBAEMReporter dispatchOnQueue:delay:block:]
++[FBAEMReporter _clearCache]
++[FBAEMReporter _clearConfigs]
++[FBAEMReporter _clearInvocations]
++[FBAEMReporter _isUsingConfig:forInvocations:]
+_OBJC_CLASSLIST_REFERENCES_$_.43
+__networker
+__appID
+__reporter
+__store
+_enable.onceToken
+_OBJC_CLASSLIST_REFERENCES_$_.54
+_OBJC_CLASSLIST_REFERENCES_$_.55
+_OBJC_CLASSLIST_REFERENCES_$_.60
+_g_reportFile
+_g_configFile
+_OBJC_CLASSLIST_REFERENCES_$_.63
+_g_completionBlocks
+_g_serialQueue
+_g_minAggregationRequestTimestamp
+_g_configs
+_g_invocations
+___block_descriptor_40_e8__e5_v8?0l
+_OBJC_SELECTOR_REFERENCES_.73
+___block_descriptor_40_e8__e17_v16?0"NSError"8l
+_OBJC_CLASSLIST_REFERENCES_$_.85
+_OBJC_SELECTOR_REFERENCES_.87
+_OBJC_CLASSLIST_REFERENCES_$_.88
+_g_isAEMReportEnabled
+_g_isConversionFilteringEnabled
+_g_isCatalogMatchingEnabled
+_OBJC_SELECTOR_REFERENCES_.100
+_OBJC_SELECTOR_REFERENCES_.102
+_OBJC_CLASSLIST_REFERENCES_$_.105
+_OBJC_SELECTOR_REFERENCES_.107
+_OBJC_CLASSLIST_REFERENCES_$_.110
+_OBJC_CLASSLIST_REFERENCES_$_.121
+_OBJC_SELECTOR_REFERENCES_.123
+_OBJC_SELECTOR_REFERENCES_.125
+_OBJC_SELECTOR_REFERENCES_.127
+___block_descriptor_80_e8_40s48s56s64s72s_e5_v8?0l
+___block_descriptor_72_e8_40s48s56s64s_e17_v16?0"NSError"8l
+_OBJC_SELECTOR_REFERENCES_.133
+_OBJC_SELECTOR_REFERENCES_.135
+_OBJC_SELECTOR_REFERENCES_.139
+_OBJC_SELECTOR_REFERENCES_.143
+___block_descriptor_48_e8_32s_e5_v8?0l
+_OBJC_SELECTOR_REFERENCES_.157
+_OBJC_SELECTOR_REFERENCES_.159
+_g_isLoadingConfiguration
+_OBJC_CLASSLIST_REFERENCES_$_.160
+_OBJC_SELECTOR_REFERENCES_.164
+_OBJC_SELECTOR_REFERENCES_.166
+_OBJC_CLASSLIST_REFERENCES_$_.167
+_OBJC_SELECTOR_REFERENCES_.169
+_g_configRefreshTimestamp
+_OBJC_CLASSLIST_REFERENCES_$_.172
+_OBJC_SELECTOR_REFERENCES_.174
+___block_descriptor_56_e8_32s40s_e5_v8?0l
+___block_descriptor_40_e8__e20_v24?08"NSError"16l
+___block_descriptor_49_e8_32bs_e5_v8?0l
+___block_descriptor_64_e8_32s48s56bs_e5_v8?0l
+___block_descriptor_48_e8_40bs_e20_v24?08"NSError"16l
+_OBJC_CLASSLIST_REFERENCES_$_.199
+_OBJC_SELECTOR_REFERENCES_.201
+_OBJC_SELECTOR_REFERENCES_.203
+_OBJC_CLASSLIST_REFERENCES_$_.204
+_OBJC_SELECTOR_REFERENCES_.206
+_OBJC_SELECTOR_REFERENCES_.208
+_OBJC_SELECTOR_REFERENCES_.214
+_OBJC_SELECTOR_REFERENCES_.216
+_OBJC_SELECTOR_REFERENCES_.218
+_OBJC_SELECTOR_REFERENCES_.220
+_OBJC_SELECTOR_REFERENCES_.222
+_OBJC_SELECTOR_REFERENCES_.224
+_OBJC_CLASSLIST_REFERENCES_$_.229
+_OBJC_SELECTOR_REFERENCES_.231
+___block_descriptor_32_e20_v24?08"NSError"16l
+_OBJC_SELECTOR_REFERENCES_.237
+_OBJC_SELECTOR_REFERENCES_.239
+_OBJC_SELECTOR_REFERENCES_.241
+_OBJC_SELECTOR_REFERENCES_.245
+_OBJC_SELECTOR_REFERENCES_.247
+_OBJC_SELECTOR_REFERENCES_.249
+_OBJC_SELECTOR_REFERENCES_.251
+_OBJC_SELECTOR_REFERENCES_.253
+_OBJC_CLASSLIST_REFERENCES_$_.254
+_OBJC_SELECTOR_REFERENCES_.256
+_OBJC_CLASSLIST_REFERENCES_$_.257
+_OBJC_CLASSLIST_REFERENCES_$_.258
+_OBJC_CLASSLIST_REFERENCES_$_.259
+_OBJC_SELECTOR_REFERENCES_.261
+_OBJC_SELECTOR_REFERENCES_.263
+_OBJC_CLASSLIST_REFERENCES_$_.264
+_OBJC_SELECTOR_REFERENCES_.266
+_OBJC_SELECTOR_REFERENCES_.268
+_OBJC_CLASSLIST_REFERENCES_$_.269
+_OBJC_SELECTOR_REFERENCES_.271
+_OBJC_SELECTOR_REFERENCES_.273
+_OBJC_SELECTOR_REFERENCES_.275
+_OBJC_SELECTOR_REFERENCES_.277
+_OBJC_SELECTOR_REFERENCES_.279
+_OBJC_SELECTOR_REFERENCES_.281
+_OBJC_SELECTOR_REFERENCES_.283
+_OBJC_SELECTOR_REFERENCES_.285
+___block_descriptor_32_e51_q24?0"FBAEMConfiguration"8"FBAEMConfiguration"16l
+___block_literal_global.287
+_OBJC_SELECTOR_REFERENCES_.289
+_OBJC_SELECTOR_REFERENCES_.291
+_OBJC_SELECTOR_REFERENCES_.293
+_OBJC_SELECTOR_REFERENCES_.295
+_OBJC_SELECTOR_REFERENCES_.297
+___block_descriptor_48_e8_40s_e20_v24?08"NSError"16l
+___block_descriptor_56_e8_32s48s_e5_v8?0l
+_OBJC_SELECTOR_REFERENCES_.303
+_OBJC_SELECTOR_REFERENCES_.305
+_OBJC_SELECTOR_REFERENCES_.307
+_OBJC_SELECTOR_REFERENCES_.309
+_OBJC_SELECTOR_REFERENCES_.311
+_OBJC_SELECTOR_REFERENCES_.313
+_OBJC_SELECTOR_REFERENCES_.315
+_OBJC_SELECTOR_REFERENCES_.317
+_OBJC_SELECTOR_REFERENCES_.319
+_OBJC_SELECTOR_REFERENCES_.321
+_OBJC_SELECTOR_REFERENCES_.325
+_OBJC_SELECTOR_REFERENCES_.327
+_OBJC_SELECTOR_REFERENCES_.329
+_OBJC_SELECTOR_REFERENCES_.331
+_OBJC_SELECTOR_REFERENCES_.333
+_OBJC_SELECTOR_REFERENCES_.335
+__OBJC_$_CLASS_METHODS_FBAEMReporter
+__OBJC_$_CLASS_PROP_LIST_FBAEMReporter
+__OBJC_METACLASS_RO_$_FBAEMReporter
+__OBJC_CLASS_RO_$_FBAEMReporter
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMReporter.m
+FBAEMKit/FBAEMReporter.m
+__destroy_helper_block_e8_32s48s
+__copy_helper_block_e8_32s48s
+__copy_helper_block_e8_40s
+__40+[FBAEMReporter _sendAggregationRequest]_block_invoke_3
+__40+[FBAEMReporter _sendAggregationRequest]_block_invoke_2
+__40+[FBAEMReporter _sendAggregationRequest]_block_invoke
+__28+[FBAEMReporter _addConfig:]_block_invoke
+__39+[FBAEMReporter _sendDebuggingRequest:]_block_invoke
+__destroy_helper_block_e8_40s
+__copy_helper_block_e8_40b
+__destroy_helper_block_e8_32s48s56s
+__copy_helper_block_e8_32s48s56b
+__72+[FBAEMReporter _loadCatalogOptimizationWithInvocation:contentID:block:]_block_invoke_2
+__72+[FBAEMReporter _loadCatalogOptimizationWithInvocation:contentID:block:]_block_invoke
+__copy_helper_block_e8_32b
+__copy_helper_block_e8_32s40s
+__59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke_3
+__59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke_2
+__59+[FBAEMReporter _loadConfigurationWithRefreshForced:block:]_block_invoke
+__42+[FBAEMReporter _appendAndSaveInvocation:]_block_invoke
+__destroy_helper_block_e8_40s48s56s64s
+__copy_helper_block_e8_40s48s56s64s
+__destroy_helper_block_e8_40s48s56s64s72s
+__copy_helper_block_e8_40s48s56s64s72s
+__64+[FBAEMReporter recordAndUpdateEvent:currency:value:parameters:]_block_invoke_2
+__64+[FBAEMReporter recordAndUpdateEvent:currency:value:parameters:]_block_invoke
+__23+[FBAEMReporter enable]_block_invoke.74
+__destroy_helper_block_e8_
+__copy_helper_block_e8_
+__23+[FBAEMReporter enable]_block_invoke_2
+__23+[FBAEMReporter enable]_block_invoke
+-[FBAEMRequestBody init]
+-[FBAEMRequestBody appendUTF8:]
+-[FBAEMRequestBody appendWithKey:formValue:]
+___44-[FBAEMRequestBody appendWithKey:formValue:]_block_invoke
+-[FBAEMRequestBody data]
+-[FBAEMRequestBody _appendWithKey:filename:contentType:contentBlock:]
+-[FBAEMRequestBody compressedData]
+-[FBAEMRequestBody setData:]
+-[FBAEMRequestBody json]
+-[FBAEMRequestBody setJson:]
+-[FBAEMRequestBody .cxx_destruct]
+_OBJC_SELECTOR_REFERENCES_.2
+_OBJC_CLASSLIST_REFERENCES_$_.3
+_OBJC_CLASSLIST_REFERENCES_$_.8
+_OBJC_SELECTOR_REFERENCES_.12
+___block_descriptor_48_e8_32s40s_e5_v8?0l
+_OBJC_CLASSLIST_REFERENCES_$_.22
+_OBJC_CLASSLIST_REFERENCES_$_.31
+__OBJC_METACLASS_RO_$_FBAEMRequestBody
+__OBJC_$_INSTANCE_METHODS_FBAEMRequestBody
+_OBJC_IVAR_$_FBAEMRequestBody._data
+_OBJC_IVAR_$_FBAEMRequestBody._json
+__OBJC_$_INSTANCE_VARIABLES_FBAEMRequestBody
+__OBJC_$_PROP_LIST_FBAEMRequestBody
+__OBJC_CLASS_RO_$_FBAEMRequestBody
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMRequestBody.m
+FBAEMKit/FBAEMRequestBody.m
+__44-[FBAEMRequestBody appendWithKey:formValue:]_block_invoke
+-[FBAEMRule initWithJSON:]
+-[FBAEMRule initWithConversionValue:priority:events:]
+-[FBAEMRule containsEvent:]
+-[FBAEMRule isMatchedWithRecordedEvents:recordedValues:]
+-[FBAEMRule _isMatchedWithValues:recordedEventValues:]
++[FBAEMRule parseEvents:]
++[FBAEMRule supportsSecureCoding]
+-[FBAEMRule initWithCoder:]
+-[FBAEMRule encodeWithCoder:]
+-[FBAEMRule copyWithZone:]
+-[FBAEMRule conversionValue]
+-[FBAEMRule setConversionValue:]
+-[FBAEMRule priority]
+-[FBAEMRule setPriority:]
+-[FBAEMRule events]
+-[FBAEMRule setEvents:]
+-[FBAEMRule .cxx_destruct]
+_OBJC_CLASSLIST_REFERENCES_$_.7
+_OBJC_SELECTOR_REFERENCES_.39
+_OBJC_CLASSLIST_REFERENCES_$_.49
+__OBJC_$_CLASS_METHODS_FBAEMRule
+__OBJC_CLASS_PROTOCOLS_$_FBAEMRule
+__OBJC_$_CLASS_PROP_LIST_FBAEMRule
+__OBJC_METACLASS_RO_$_FBAEMRule
+__OBJC_$_INSTANCE_METHODS_FBAEMRule
+_OBJC_IVAR_$_FBAEMRule._conversionValue
+_OBJC_IVAR_$_FBAEMRule._priority
+_OBJC_IVAR_$_FBAEMRule._events
+__OBJC_$_INSTANCE_VARIABLES_FBAEMRule
+__OBJC_$_PROP_LIST_FBAEMRule
+__OBJC_CLASS_RO_$_FBAEMRule
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMRule.m
+FBAEMKit/FBAEMRule.m
+FBAEMKit/FBAEMRule.h
++[FBAEMUtility sharedUtility]
+___29+[FBAEMUtility sharedUtility]_block_invoke
+-[FBAEMUtility getInSegmentValue:matchingRule:]
+-[FBAEMUtility getContentID:]
+_sharedUtility.instance
+_sharedUtility.sharedUtilityNonce
+__OBJC_$_CLASS_METHODS_FBAEMUtility
+__OBJC_$_CLASS_PROP_LIST_FBAEMUtility
+__OBJC_METACLASS_RO_$_FBAEMUtility
+__OBJC_$_INSTANCE_METHODS_FBAEMUtility
+__OBJC_CLASS_RO_$_FBAEMUtility
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/FBAEMUtility.m
+FBAEMKit/FBAEMUtility.m
+__29+[FBAEMUtility sharedUtility]_block_invoke
+___swift_instantiateConcreteTypeFromMangledName
+_$s8FBAEMKit8AEMEventC10CodingKeysOSQAASQ2eeoiySbx_xtFZTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOSHAASH9hashValueSivgTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOSHAASH4hash4intoys6HasherVz_tFTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOSHAASH13_rawHashValue4seedS2i_tFTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOSYAASY8rawValuexSg03RawF0Qz_tcfCTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOSYAASY8rawValue03RawF0QzvgTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAsAFP11stringValueSSvgTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAsAFP11stringValuexSgSS_tcfCTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAsAFP8intValueSiSgvgTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAsAFP8intValuexSgSi_tcfCTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs28CustomDebugStringConvertibleAAsAFP16debugDescriptionSSvgTW
+_$s8FBAEMKit8AEMEventC10CodingKeysOs23CustomStringConvertibleAAsAFP11descriptionSSvgTW
+_$s8FBAEMKit8AEMEventC9eventNameSSvgTo
+_$s8FBAEMKit8AEMEventC9eventNameSSvsTo
+_$s8FBAEMKit8AEMEventC6valuesSDySSSiGSgvgTo
+_$s8FBAEMKit8AEMEventC6valuesSDySSSiGSgvsTo
+_$s8FBAEMKit8AEMEventC4dictACSgSDySSypGSg_tcfcTo
+_$s8FBAEMKit8AEMEventC20supportsSecureCodingSbvgZTo
+_$s8FBAEMKit8AEMEventC5coderACSgSo7NSCoderC_tcfcTo
+_$s8FBAEMKit8AEMEventC6encode4withySo7NSCoderC_tFTo
+_$s8FBAEMKit8AEMEventC4copy4withyp10ObjectiveC6NSZoneVSg_tFTo
+_$s8FBAEMKit8AEMEventCACycfcTo
+_$s8FBAEMKit8AEMEventCfETo
+_$ss22__RawDictionaryStorageC4findys10_HashTableV6BucketV6bucket_Sb5foundtxSHRzlFSS_Tg5
+_$sypSgWOh
+_$ss22__RawDictionaryStorageC4find_9hashValues10_HashTableV6BucketV6bucket_Sb5foundtx_SitSHRzlFSS_Tg5
+_$ss17_NativeDictionaryV4copyyyFSS_SiTg5
+_$ss17_NativeDictionaryV20_copyOrMoveAndResize8capacity12moveElementsySi_SbtFSS_SiTg5
+_$sSD17dictionaryLiteralSDyxq_Gx_q_td_tcfCSS_SiTg5Tf4gd_n
+_$sypWOc
+_$s8FBAEMKit8AEMEventC5coderACSgSo7NSCoderC_tcfcTf4gn_n
+_$s8FBAEMKit8AEMEventC10CodingKeysOSHAASQWb
+_$s8FBAEMKit8AEMEventC10CodingKeysOAESQAAWl
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs28CustomDebugStringConvertiblePWb
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs28CustomDebugStringConvertibleAAWl
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs23CustomStringConvertiblePWb
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs23CustomStringConvertibleAAWl
+___swift_memcpy1_1
+___swift_noop_void_return
+_$s8FBAEMKit8AEMEventC10CodingKeysOwet
+_$s8FBAEMKit8AEMEventC10CodingKeysOwst
+_$s8FBAEMKit8AEMEventC10CodingKeysOwug
+_$s8FBAEMKit8AEMEventC10CodingKeysOwup
+_$s8FBAEMKit8AEMEventC10CodingKeysOwui
+__swift_FORCE_LOAD_$_swiftCompatibility50
+__swift_FORCE_LOAD_$_swiftCompatibility51
+__swift_FORCE_LOAD_$_swiftCompatibilityDynamicReplacements
+__swift_FORCE_LOAD_$_swiftCompatibilityConcurrency
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs0C3KeyAAWl
+_$sSo8NSStringCMa
+_$sSo12NSDictionaryCMa
+_$sSo8NSNumberCMa
+_$sSo8NSStringCMaTm
+_$s8FBAEMKit8AEMEventC10CodingKeysO8rawValueAESgSS_tcfCTv_
+_symbolic _____y_____G s23_ContiguousArrayStorageC s12StaticStringV
+_$ss23_ContiguousArrayStorageCys12StaticStringVGMD
+_$s8FBAEMKit8AEMEventC9eventNameSSvpWvd
+_$s8FBAEMKit8AEMEventC6valuesSDySSSiGSgvpWvd
+_symbolic ypSg
+_$sypSgMD
+_symbolic SaySDySSypGG
+_$sSaySDySSypGGMD
+_$s8FBAEMKit8AEMEventC10CodingKeysOSQAAMcMK
+_$s8FBAEMKit8AEMEventC10CodingKeysOAESQAAWL
+_associated conformance 8FBAEMKit8AEMEventC10CodingKeysOSHAASQ
+_$s8FBAEMKit8AEMEventC10CodingKeysOSHAAMcMK
+_symbolic SS
+_symbolic _____ 8FBAEMKit8AEMEventC10CodingKeysO
+_symbolic $sSY
+_$s8FBAEMKit8AEMEventC10CodingKeysOSYAAMA
+_$s8FBAEMKit8AEMEventC10CodingKeysOSYAAMcMK
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs28CustomDebugStringConvertibleAAWL
+_associated conformance 8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs28CustomDebugStringConvertible
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs23CustomStringConvertibleAAWL
+_associated conformance 8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs23CustomStringConvertible
+_$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAMcMK
+_$s8FBAEMKit8AEMEventC10CodingKeysOs28CustomDebugStringConvertibleAAMcMK
+_$s8FBAEMKit8AEMEventC10CodingKeysOs23CustomStringConvertibleAAMcMK
+__CLASS_METHODS_FBAEMEvent
+__PROTOCOL_NSCopying
+l_OBJC_LABEL_PROTOCOL_$_NSCopying
+l_OBJC_PROTOCOL_REFERENCE_$_NSCopying
+__PROTOCOL_NSSecureCoding
+l_OBJC_LABEL_PROTOCOL_$_NSSecureCoding
+l_OBJC_PROTOCOL_REFERENCE_$_NSSecureCoding
+__PROTOCOLS_FBAEMEvent
+__CLASS_PROPERTIES_FBAEMEvent
+__METACLASS_DATA_FBAEMEvent
+__INSTANCE_METHODS_FBAEMEvent
+__PROTOCOLS_FBAEMEvent.1
+__IVARS_FBAEMEvent
+__PROPERTIES_FBAEMEvent
+__DATA_FBAEMEvent
+_$s8FBAEMKitMXM
+_symbolic So8NSObjectC
+_$s8FBAEMKit8AEMEventCMf
+_symbolic _____ 8FBAEMKit8AEMEventC
+_symbolic SDySSSiGSg
+_$s8FBAEMKit8AEMEventCMF
+_$s8FBAEMKit8AEMEventC10CodingKeysOWV
+_$s8FBAEMKit8AEMEventC10CodingKeysOMf
+_$s8FBAEMKit8AEMEventC10CodingKeysOMF
+__swift_FORCE_LOAD_$_swiftFoundation_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftObjectiveC_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftDarwin_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCoreFoundation_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftDispatch_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCoreGraphics_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCompatibility50_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCompatibility51_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCompatibilityDynamicReplacements_$_FBAEMKit
+__swift_FORCE_LOAD_$_swiftCompatibilityConcurrency_$_FBAEMKit
+_$s8FBAEMKit8AEMEventC10CodingKeysOAEs0C3KeyAAWL
+_$sSo8NSStringCML
+_symbolic _____yyXlXpG s23_ContiguousArrayStorageC
+_$ss23_ContiguousArrayStorageCyyXlXpGMD
+_$sSo12NSDictionaryCML
+_$sSo8NSNumberCML
+_symbolic SDySSSiG
+_$sSDySSSiGMD
+_symbolic _____ySSSiG s18_DictionaryStorageC
+_$ss18_DictionaryStorageCySSSiGMD
+___swift_reflection_version
+__PROTOCOL_INSTANCE_METHODS_NSCopying
+__PROTOCOL_METHOD_TYPES_NSCopying
+__PROTOCOL_NSCoding
+l_OBJC_LABEL_PROTOCOL_$_NSCoding
+l_OBJC_PROTOCOL_REFERENCE_$_NSCoding
+__PROTOCOL_PROTOCOLS_NSSecureCoding
+__PROTOCOL_CLASS_METHODS_NSSecureCoding
+__PROTOCOL_METHOD_TYPES_NSSecureCoding
+__PROTOCOL_CLASS_PROPERTIES_NSSecureCoding
+__PROTOCOL_INSTANCE_METHODS_NSCoding
+__PROTOCOL_METHOD_TYPES_NSCoding
+_objc_classes_$s8FBAEMKit8AEMEventCN
+Apple clang version 13.1.6 (clang-1316.0.20.8)
+-private-discriminator _909268C328D01A8713093EFB7714CD75
+<swift-imported-modules>
+Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/AEMEvent.swift
+$sSo8NSStringCMa
+<compiler-generated>
+$s8FBAEMKit8AEMEventC10CodingKeysOAEs0C3KeyAAWl
+$s8FBAEMKit8AEMEventC10CodingKeysOMa
+$s8FBAEMKit8AEMEventC10CodingKeysOwui
+$s8FBAEMKit8AEMEventC10CodingKeysOwup
+$s8FBAEMKit8AEMEventC10CodingKeysOwug
+$s8FBAEMKit8AEMEventC10CodingKeysOwst
+$s8FBAEMKit8AEMEventC10CodingKeysOwet
+__swift_noop_void_return
+__swift_memcpy1_1
+$s8FBAEMKit8AEMEventCMa
+$s8FBAEMKit8AEMEventC10CodingKeysOAEs23CustomStringConvertibleAAWl
+$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs23CustomStringConvertiblePWb
+$s8FBAEMKit8AEMEventC10CodingKeysOAEs28CustomDebugStringConvertibleAAWl
+$s8FBAEMKit8AEMEventC10CodingKeysOs0C3KeyAAs28CustomDebugStringConvertiblePWb
+$s8FBAEMKit8AEMEventC10CodingKeysOAESQAAWl
+$s8FBAEMKit8AEMEventC10CodingKeysOSHAASQWb
+init
+_allocateUninitializedArray
+$sSa13_adoptStorage_5countSayxG_SpyxGts016_ContiguousArrayB0CyxGn_SitFZyXlXp_Tg5
+$ss22_ContiguousArrayBufferV5count7storageAByxGSi_s01_aB7StorageCyxGtcfCyXlXp_Tg5
+$ss22_ContiguousArrayBufferV18_initStorageHeader5count8capacityySi_SitFyXlXp_Tg5
+$sypWOc
+$ss17_NativeDictionaryV7_insert2at3key5valueys10_HashTableV6BucketV_xnq_ntFSS_SiTg5
+Swift runtime failure: arithmetic overflow
+Swift runtime failure: Dictionary literal contains duplicate keys
+$sSp10initialize2toyx_tFSi_Tg5
+$ss17_NativeDictionaryV7_valuesSpyq_GvgSS_SiTg5
+$sSp10initialize2toyx_tFSS_Tg5
+$ss17_NativeDictionaryV5_keysSpyxGvgSS_SiTg5
+$sSa9formIndex5afterySiz_tFSS_Sit_Tg5
+$sSayxSicigSS_Sit_Tg5
+$sSa11_getElement_20wasNativeTypeChecked22matchingSubscriptCheckxSi_Sbs16_DependenceTokenVtFSS_Sit_Tg5
+$sSD7_nativeSDyxq_Gs17_NativeDictionaryVyxq_Gn_tcfCSS_SiTg5
+$ss17_NativeDictionaryV8capacityAByxq_GSi_tcfCSS_SiTg5
+$sSa5countSivgSS_Sit_Tg5
+$sSa9_getCountSiyFSS_Sit_Tg5
+$ss12_ArrayBufferV14immutableCountSivgSS_Sit_Tg5
+$ss12_ArrayBufferV7_natives011_ContiguousaB0VyxGvgSS_Sit_Tg5
+$ss17_NativeDictionaryV20_copyOrMoveAndResize8capacity12moveElementsySi_SbtFSS_SiTg5
+$ss17_NativeDictionaryV16_unsafeInsertNew3key5valueyxn_q_ntFSS_SiTg5
+$ss10_HashTableV8nextHole9atOrAfterAB6BucketVAF_tF
+Swift runtime failure: Hash table has no holes
+$sSp6assign9repeating5countyx_SitFs13_UnsafeBitsetV4WordV_Tgq5
+$sSSSHsSH13_rawHashValue4seedS2i_tFTW
+$sSHsE13_rawHashValue4seedS2i_tFSS_Tgq5
+$ss17_NativeDictionaryV4copyyyFSS_SiTg5
+$ss10_HashTableV12copyContents2ofyAB_tF
+$ss22__RawDictionaryStorageC4find_9hashValues10_HashTableV6BucketV6bucket_Sb5foundtx_SitSHRzlFSS_Tg5
+$sSSSQsSQ2eeoiySbx_xtFZTW
+$sSS2eeoiySbSS_SStFZ
+$ss14_stringCompare__9expectingSbs11_StringGutsV_ADs01_D16ComparisonResultOtF
+$sypSgWOh
+$ss22__RawDictionaryStorageC4findys10_HashTableV6BucketV6bucket_Sb5foundtxSHRzlFSS_Tg5
+$s8FBAEMKit8AEMEventCfETo
+deinit
+$ss25_unimplementedInitializer9className04initD04file4line6columns5NeverOs12StaticStringV_A2JS2utFySRys5UInt8VGXEfU0_
+$ss25_unimplementedInitializer9className04initD04file4line6columns5NeverOs12StaticStringV_A2JS2utFySRys5UInt8VGXEfU0_yAMXEfU_
+copy
+encode
+supportsSecureCoding.get
+subscript.set
+$sSD8_VariantV8setValue_6forKeyyq_n_xtFSS_SiTg5
+$ss17_NativeDictionaryV8setValue_6forKey8isUniqueyq_n_xSbtFSS_SiTg5
+$ss17_NativeDictionaryV12mutatingFind_8isUniques10_HashTableV6BucketV6bucket_Sb5foundtx_SbtFSS_SiTg5
+$ss16IndexingIteratorV4next7ElementQzSgyFSaySDySSypGG_Tg5
+$sSiSQsSQ2eeoiySbx_xtFZTW
+$sSD8_VariantV8asNatives01_C10DictionaryVyxq_GvM6$deferL_yySHRzr0_lFSS_SiTg5
+$ss17_NativeDictionaryV12ensureUnique02isD08capacityS2b_SitFSS_SiTg5
+$ss17_NativeDictionaryV6resize8capacityySi_tFSS_SiTg5
+$sSD8_VariantV20isUniquelyReferencedSbyFSS_SiTg5
+isEmpty.get
+subscript.get
+$ss17_NativeDictionaryV7_valuesSpyq_GvgSS_ypTg5
+$sSayxGSlsSly7ElementQz5IndexQzcirTWSDySSypG_Tg5
+$sSayxSicirSDySSypG_Tg5
+$sSayxSicigSDySSypG_Tg5
+$sSa11_getElement_20wasNativeTypeChecked22matchingSubscriptCheckxSi_Sbs16_DependenceTokenVtFSDySSypG_Tg5
+$sSayxGSlsSl8endIndex0B0QzvgTWSDySSypG_Tg5
+$sSa8endIndexSivgSDySSypG_Tg5
+$sSa9_getCountSiyFSDySSypG_Tg5
+$ss12_ArrayBufferV14immutableCountSivgSDySSypG_Tg5
+$ss12_ArrayBufferV7_natives011_ContiguousaB0VyxGvgSDySSypG_Tg5
+values.set
+values.get
+eventName.set
+eventName.get
+description.get
+debugDescription.get
+intValue.get
+$sSa13_adoptStorage_5countSayxG_SpyxGts016_ContiguousArrayB0CyxGn_SitFZs12StaticStringV_Tg5
+stringValue.get
+rawValue.get
+_rawHashValue
+hash
+$sSSSHsSH4hash4intoys6HasherVz_tFTW
+hashValue.get
+==
+__swift_instantiateConcreteTypeFromMangledName
+_$s8FBAEMKit11AEMSettingsC5appIDSSSgyFZTo
+_$s8FBAEMKit11AEMSettingsCACycfcTo
+_$s8FBAEMKit11AEMSettingsC5appIDSSSgyFZTf4d_n
+_$sypSgWOb
+_$sypWOb
+__CLASS_METHODS_FBAEMSettings
+__METACLASS_DATA_FBAEMSettings
+__INSTANCE_METHODS_FBAEMSettings
+__DATA_FBAEMSettings
+_$s8FBAEMKit11AEMSettingsCMf
+_symbolic _____ 8FBAEMKit11AEMSettingsC
+_$s8FBAEMKit11AEMSettingsCMF
+_objc_classes_$s8FBAEMKit11AEMSettingsCN
+/Users/samodom/fbsource/fbobjc/ios-sdk/FBAEMKit/FBAEMKit/AEMSettings.swift
+$sypWOb
+$sypSgWOb
+$s8FBAEMKit11AEMSettingsCMa
+appID
+_swift_getFunctionTypeMetadataGlobalActorBackDeploy
+___swift_getFunctionTypeMetadataGlobalActorBackDeploy_block_invoke
+__ZZ50swift_getFunctionTypeMetadataGlobalActorBackDeployE9builderFn
+__ZZ50swift_getFunctionTypeMetadataGlobalActorBackDeployE12builderToken
+___block_descriptor_tmp
+Apple clang version 13.1.6 (clang-1316.0.21.1)
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/CompatibilityConcurrency -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityConcurrency -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibilityConcurrency -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/CompatibilityConcurrency/CMakeFiles/swiftCompatibilityConcurrency-iphoneos-arm64.dir/CompatibilityConcurrency.cpp.o -MF stdlib/toolchain/CompatibilityConcurrency/CMakeFiles/swiftCompatibilityConcurrency-iphoneos-arm64.dir/CompatibilityConcurrency.cpp.o.d -o stdlib/toolchain/CompatibilityConcurrency/CMakeFiles/swiftCompatibilityConcurrency-iphoneos-arm64.dir/CompatibilityConcurrency.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityConcurrency/CompatibilityConcurrency.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityConcurrency/CompatibilityConcurrency.cpp
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/swift-macosx-x86_64
+__swift_getFunctionTypeMetadataGlobalActorBackDeploy_block_invoke
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityConcurrency/CompatibilityConcurrency.cpp
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs
+swift_getFunctionTypeMetadataGlobalActorBackDeploy
+Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/dispatch/once.h
+/AppleInternal/BuildRoot
+_swift_getFunctionReplacement50
+_swift_getOrigOfReplaceable50
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/CompatibilityDynamicReplacements -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityDynamicReplacements -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibilityDynamicReplacements -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/CompatibilityDynamicReplacements/CMakeFiles/swiftCompatibilityDynamicReplacements-iphoneos-arm64.dir/DynamicReplaceable.cpp.o -MF stdlib/toolchain/CompatibilityDynamicReplacements/CMakeFiles/swiftCompatibilityDynamicReplacements-iphoneos-arm64.dir/DynamicReplaceable.cpp.o.d -o stdlib/toolchain/CompatibilityDynamicReplacements/CMakeFiles/swiftCompatibilityDynamicReplacements-iphoneos-arm64.dir/DynamicReplaceable.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityDynamicReplacements/DynamicReplaceable.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityDynamicReplacements/DynamicReplaceable.cpp
+swift_getOrigOfReplaceable50
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/CompatibilityDynamicReplacements/DynamicReplaceable.cpp
+swift_getFunctionReplacement50
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/Compatibility51 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibility51 -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/Overrides.cpp.o -MF stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/Overrides.cpp.o.d -o stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/Overrides.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/Overrides.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/Overrides.cpp
+__ZN5swift17getRootSuperclassEv
+__ZN5swift4LazyIN12_GLOBAL__N_116ConformanceStateEE19defaultInitCallbackEPv
+__ZN12_GLOBAL__N_124searchInConformanceCacheEPKN5swift14TargetMetadataINS0_9InProcessEEEPKNS0_24TargetProtocolDescriptorIS2_EE
+__ZN12_GLOBAL__N_116ConformanceState12cacheFailureEPKvPKN5swift24TargetProtocolDescriptorINS3_9InProcessEEEm
+__ZZZL20getObjCClassMetadataPKN5swift19TargetClassMetadataINS_9InProcessEEEENK3$_1clEvENUlPvE_8__invokeES6_
+__ZZZN5swift17getRootSuperclassEvENK3$_0clEvENUlPvE_8__invokeES1_
+__ZZZL24getTypeContextDescriptorPKN5swift14TargetMetadataINS_9InProcessEEEENK3$_2clEvENUlPvE_8__invokeES6_
+__ZL17swift_unreachablePKc
+__ZZZL26getExistentialTypeMetadataN5swift23ProtocolClassConstraintEPKNS_14TargetMetadataINS_9InProcessEEEmPKNS_27TargetProtocolDescriptorRefIS2_EEENK3$_3clEvENUlPvE_8__invokeESB_
+__ZN12_GLOBAL__N_122override_equalContextsEPKN5swift23TargetContextDescriptorINS0_9InProcessEEES5_
+__ZN12_GLOBAL__N_116addImageCallbackEPK11mach_header
+__ZN12_GLOBAL__N_116addImageCallbackEPK11mach_headerl
+__ZN12_GLOBAL__N_112ConformancesE
+__ZZZL20getObjCClassMetadataPKN5swift19TargetClassMetadataINS_9InProcessEEEENK3$_1clEvE7TheLazy
+__ZZZN5swift17getRootSuperclassEvENK3$_0clEvE7TheLazy
+__ZZZL24getTypeContextDescriptorPKN5swift14TargetMetadataINS_9InProcessEEEENK3$_2clEvE7TheLazy
+__ZZZL26getExistentialTypeMetadataN5swift23ProtocolClassConstraintEPKNS_14TargetMetadataINS_9InProcessEEEmPKNS_27TargetProtocolDescriptorRefIS2_EEENK3$_3clEvE7TheLazy
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/Compatibility51 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibility51 -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/ProtocolConformance.cpp.o -MF stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/ProtocolConformance.cpp.o.d -o stdlib/toolchain/Compatibility51/CMakeFiles/swiftCompatibility51-iphoneos-arm64.dir/ProtocolConformance.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/ProtocolConformance.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/ProtocolConformance.cpp
+addImageCallback
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/ProtocolConformance.cpp
+push_back
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/Concurrent.h
+~scope_exit
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include/llvm/ADT/ScopeExit.h
+operator()
+deallocateFreeList
+clear_and_shrink_to_fit
+deallocate
+llvm.loop.mustprogress
+operator unsigned long
+Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/c++/v1/atomic
+load
+__cxx_atomic_load<unsigned long>
+end
+begin
+store
+__cxx_atomic_store<unsigned long>
+data
+__cxx_atomic_store<swift::overrides::ConcurrentReadableArray<(anonymous namespace)::ConformanceSection>::Storage *>
+copy<(anonymous namespace)::ConformanceSection *, (anonymous namespace)::ConformanceSection *>
+Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/c++/v1/__algorithm/copy.h
+__copy<(anonymous namespace)::ConformanceSection, (anonymous namespace)::ConformanceSection>
+allocate
+max<unsigned long>
+Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/c++/v1/__algorithm/max.h
+max<unsigned long, std::__1::__less<unsigned long, unsigned long> >
+Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/usr/include/c++/v1/__algorithm/comp.h
+__cxx_atomic_load<swift::overrides::ConcurrentReadableArray<(anonymous namespace)::ConformanceSection>::Storage *>
+override_equalContexts
+operator==
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include/llvm/ADT/StringRef.h
+equals
+compareMemory
+getTypeContextIdentity
+empty
+StringRef
+strLen
+operator[]
+hasImportInfo
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/ABI/MetadataValues.h
+getFlag<2U>
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/Basic/FlagSet.h
+get
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/Basic/RelativePointer.h
+applyRelativeOffset<const swift::RelativeDirectPointerImpl<const char, false, int>, int>
+applyRelativeOffset<const swift::RelativeIndirectablePointer<const swift::TargetContextDescriptor<swift::InProcess>, true, int, swift::TargetContextDescriptor<swift::InProcess> *>, int>
+isUnique
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/ABI/Metadata.h
+__invoke
+swift_unreachable
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/Basic/Unreachable.h
+cacheFailure
+updateFailureGeneration
+getOrInsert<(anonymous namespace)::ConformanceCacheKey, const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *, unsigned long &>
+__cxx_atomic_store<swift::overrides::ConcurrentMapBase<(anonymous namespace)::ConformanceCacheEntry, false>::Node *>
+atomic_compare_exchange_strong_explicit<swift::overrides::ConcurrentMapBase<(anonymous namespace)::ConformanceCacheEntry, false>::Node *>
+compare_exchange_strong
+__cxx_atomic_compare_exchange_strong<swift::overrides::ConcurrentMapBase<(anonymous namespace)::ConformanceCacheEntry, false>::Node *>
+Node<(anonymous namespace)::ConformanceCacheKey &, const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *, unsigned long &>
+ConformanceCacheEntry
+atomic
+__atomic_base
+__cxx_atomic_impl
+__cxx_atomic_base_impl
+destroyNode
+compareWithKey
+__cxx_atomic_load<swift::overrides::ConcurrentMapBase<(anonymous namespace)::ConformanceCacheEntry, false>::Node *>
+searchInConformanceCache
+cacheMiss
+cachedFailure
+_swiftoverride_class_getSuperclass
+dyn_cast<swift::TargetForeignClassMetadata<swift::InProcess>, const swift::TargetMetadata<swift::InProcess> >
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include/llvm/Support/Casting.h
+isa<swift::TargetForeignClassMetadata<swift::InProcess>, const swift::TargetMetadata<swift::InProcess> *>
+doit
+classof
+getKind
+getEnumeratedMetadataKind
+getObjCClassMetadata
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/Basic/Lazy.h
+classHasSuperclass
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility51/../../public/runtime/Private.h
+getClassObject
+cachedSuccess
+getDescription
+__cxx_atomic_load<const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *>
+isSuccessful
+findCached
+find<(anonymous namespace)::ConformanceCacheKey>
+getConformanceCacheTypeKey
+getTypeContextDescriptor
+~Snapshot
+decrementReaders
+fetch_sub
+__cxx_atomic_fetch_sub<unsigned long>
+snapshot
+incrementReaders
+fetch_add
+__cxx_atomic_fetch_add<unsigned long>
+getFailureGeneration
+defaultInitCallback
+ConformanceState
+initializeProtocolConformanceLookup
+ConcurrentReadableArray
+MiniVector
+swift51override_conformsToSwiftProtocol
+cacheSuccess
+makeSuccessful
+__cxx_atomic_store<const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *>
+getOrInsert<(anonymous namespace)::ConformanceCacheKey, const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *&, int>
+Node<(anonymous namespace)::ConformanceCacheKey &, const swift::TargetProtocolConformanceDescriptor<swift::InProcess> *&, int>
+getConformingTypeAsMetadata
+getMatchingType
+matches
+getContextDescriptor
+getSwiftProtocol
+isObjC
+getSuperclassConstraint
+getTrailingObjects<const swift::TargetMetadata<swift::InProcess> *>
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include/swift/ABI/TrailingObjects.h
+getTrailingObjectsImpl
+hasSuperclassConstraint
+getProtocols
+getTrailingObjects<swift::TargetProtocolDescriptorRef<swift::InProcess> >
+callNumTrailingObjects<const swift::TargetMetadata<swift::InProcess> *>
+numTrailingObjects
+dyn_cast<swift::TargetExistentialTypeMetadata<swift::InProcess>, const swift::TargetMetadata<swift::InProcess> >
+isa<swift::TargetExistentialTypeMetadata<swift::InProcess>, const swift::TargetMetadata<swift::InProcess> *>
+ConformanceCandidate
+override_getCanonicalTypeMetadata
+getExistentialTypeMetadata
+getClassConstraint
+getField<0U, 1U, swift::ProtocolClassConstraint>
+getProtocolContextDescriptorFlags
+getKindSpecificFlags
+forSwift
+dyn_cast<swift::TargetProtocolDescriptor<swift::InProcess>, const swift::TargetContextDescriptor<swift::InProcess> >
+isa<swift::TargetProtocolDescriptor<swift::InProcess>, const swift::TargetContextDescriptor<swift::InProcess> *>
+operator bool
+getAccessFunction
+isGeneric
+dyn_cast<swift::TargetTypeContextDescriptor<swift::InProcess>, const swift::TargetContextDescriptor<swift::InProcess> >
+isa<swift::TargetTypeContextDescriptor<swift::InProcess>, const swift::TargetContextDescriptor<swift::InProcess> *>
+getTypeDescriptor
+operator swift::TargetContextDescriptor<swift::InProcess> **
+operator swift::TargetContextDescriptor<swift::InProcess> *
+getDirectObjCClassName
+getIndirectObjCClass
+getTypeKind
+getTypeReferenceKind
+getProtocol
+operator const swift::TargetProtocolDescriptor<swift::InProcess> *
+applyRelativeOffset<const swift::RelativeIndirectablePointer<const swift::TargetProtocolDescriptor<swift::InProcess>, true, int, swift::TargetProtocolDescriptor<swift::InProcess> *>, int>
+applyRelativeOffset<const swift::RelativeDirectPointerImpl<swift::TargetProtocolConformanceDescriptor<swift::InProcess>, false, int>, int>
+Snapshot
+getRootSuperclass
+__ZL24registerAddImageCallbackPv
+__ZL16addImageCallbackPK11mach_headerl
+__ZZN5swift34swift50override_conformsToProtocolEPKNS_14TargetMetadataINS_9InProcessEEEPKNS_24TargetProtocolDescriptorIS1_EEPFPKNS_18TargetWitnessTableIS1_EES4_S8_EE5token
+__ZL27ProtocolConformancesSection
+_DummyTargetContextDescriptor
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/Compatibility50 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibility50 -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/ProtocolConformance.cpp.o -MF stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/ProtocolConformance.cpp.o.d -o stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/ProtocolConformance.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/ProtocolConformance.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/ProtocolConformance.cpp
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/ProtocolConformance.cpp
+_getTypeDescriptorLocation
+registerAddImageCallback
+swift50override_conformsToProtocol
+__ZL29installGetClassHook_untrustedv
+__ZL35getObjCClassByMangledName_untrustedPKcPP10objc_class
+__ZL15OldGetClassHook
+/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --driver-mode=g++ -D CMARK_STATIC_DEFINE -D GTEST_HAS_RTTI=0 -D SWIFT_INLINE_NAMESPACE=__runtime -D __STDC_CONSTANT_MACROS -D __STDC_FORMAT_MACROS -D __STDC_LIMIT_MACROS -I stdlib/toolchain/Compatibility50 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50 -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/include -I include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/llvm/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/llvm-project/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/llvm-macosx-x86_64/tools/clang/include -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/cmark/src -I /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Binaries/swiftlang/install/TempContent/Objects/BNI_Xcode/cmark-macosx-x86_64/src -Wno-unknown-warning-option -Werror=unguarded-availability-new -fno-stack-protector -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-class-memaccess -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -fdiagnostics-color -Werror=switch -Wdocumentation -Wimplicit-fallthrough -Wunreachable-code -Woverloaded-virtual -D OBJC_OLD_DISPATCH_PROTOTYPES=0 -O2 -D NDEBUG -arch arm64 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fno-exceptions -funwind-tables -fno-rtti -Werror=gnu -Werror=c++98-compat-extra-semi -Wall -Wglobal-constructors -Wexit-time-destructors -D SWIFT_COMPATIBILITY_LIBRARY=1 -D SWIFT_TARGET_LIBRARY_NAME=swiftCompatibility50 -fembed-bitcode=all -D SWIFT_RUNTIME --target=arm64-apple-ios7.0 -isysroot /AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk -arch arm64 -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/Library/Frameworks -F/AppleInternal/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/../../../Developer/AppleInternal/Library/Frameworks -O2 -g -D NDEBUG -D SWIFT_LIBRARY_EVOLUTION=0 -D SWIFT_STDLIB_HAS_DLADDR -D SWIFT_STDLIB_HAS_DARWIN_LIBMALLOC=1 -D SWIFT_STDLIB_HAS_STDIN -D SWIFT_STDLIB_HAS_ENVIRON -D SWIFT_RUNTIME_OS_VERSIONING -D SWIFT_STDLIB_SHORT_MANGLING_LOOKUPS -std=c++14 -MD -MT stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/Overrides.cpp.o -MF stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/Overrides.cpp.o.d -o stdlib/toolchain/Compatibility50/CMakeFiles/swiftCompatibility50-iphoneos-arm64.dir/Overrides.cpp.o -c /AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/Overrides.cpp -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-quoted-include-in-framework-header -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -Wno-objc-load-method -Xclang -clang-vendor-feature=+messageToSelfInClassMethodIdReturnType -Xclang -clang-vendor-feature=+disableInferNewAvailabilityFromInit -Xclang -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -Xclang -fno-odr-hash-protocols -Xclang -clang-vendor-feature=+enableAggressiveVLAFolding -Xclang -clang-vendor-feature=+revert09abecef7bbf -Xclang -clang-vendor-feature=+thisNoAlignAttr -Xclang -clang-vendor-feature=+thisNoNullAttr -mlinker-version=762 -stdlib=libc++
+/AppleInternal/BuildRoot/Library/Caches/com.apple.xbs/Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/Overrides.cpp
+getObjCClassByMangledName_untrusted
+Sources/swiftlang/swiftlang-5.6.0.323.62/swift/stdlib/toolchain/Compatibility50/Overrides.cpp
+installGetClassHook_untrusted

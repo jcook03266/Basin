@@ -1,0 +1,21 @@
+{
+    "webcredentials": {
+        "apps": [
+            "2JMR3SJGS4.JCDev.Basin"
+        ]
+    },
+    "applinks": {
+        "apps": [
+            "2JMR3SJGS4.JCDev.Basin"
+        ],
+        "details": [
+            {
+                "appID": "2JMR3SJGS4.JCDev.Basin",
+                "paths": [
+                    "*"
+                ]
+            }
+        ]
+    }
+}
+
