@@ -119,7 +119,7 @@ public class TermsofServiceVC: UIViewController, UITextFieldDelegate, UITextView
         ["Terms of Service","\nTerms of Use","\nPrivacy Policy"])
         
         /** Add other attributes to different parts of the text*/
-        attributedText.addAttributes([.font: getCustomFont(name: .Ubuntu_bold, size: 18, dynamicSize: true), .foregroundColor: UIColor.black], range: attributedText.mutableString.range(of: "\nAGREEMENT TO TERMS"))
+        attributedText.addAttributes([.font: getCustomFont(name: .Ubuntu_bold, size: 18, dynamicSize: true), .foregroundColor: appThemeColor], range: attributedText.mutableString.range(of: "\nAGREEMENT TO TERMS"))
         
         contentTextView.attributedText = attributedText
         

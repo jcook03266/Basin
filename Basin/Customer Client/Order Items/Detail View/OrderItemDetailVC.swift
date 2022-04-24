@@ -632,20 +632,20 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemCountDisplay.frame.origin = CGPoint(x: 0, y: imageView.frame.maxY - itemCountDisplay.frame.height/3)
         itemCountDisplay.center.x = imageView.center.x
         
-        bannerAdContainer.frame.origin = CGPoint(x: self.stackView.frame.width/2 - bannerAdContainer.frame.width/2, y: priceLabel.frame.maxY + 10)
+        bannerAdContainer.frame.origin = CGPoint(x: self.stackView.frame.width/2 - bannerAdContainer.frame.width/2, y: priceLabel.frame.maxY + bannerAdContainer.frame.height)
         
         itemChoicesTableView.frame.origin = CGPoint(x: 0, y: bannerAdContainer.frame.maxY + 10)
         
         addToCartButton.frame.origin = CGPoint(x: view.frame.width/2 - addToCartButton.frame.width/2, y: view.frame.maxY - (addToCartButton.frame.height * 2.5))
         
-        specialInstructionsLabelContainer.frame.origin = CGPoint(x: 0, y: itemChoicesTableView.frame.maxY + 5)
+        specialInstructionsLabelContainer.frame.origin = CGPoint(x: 0, y: itemChoicesTableView.frame.maxY + specialInstructionsLabelContainer.frame.height/2)
         
-        specialInstructionsTextViewContainer.frame.origin = CGPoint(x: 0, y: specialInstructionsLabelContainer.frame.maxY + 5)
+        specialInstructionsTextViewContainer.frame.origin = CGPoint(x: 0, y: specialInstructionsLabelContainer.frame.maxY + 10)
         
         if displayRecommendations == true{
-        recommendedForYouCollectionViewLabel.frame.origin = CGPoint(x: stackView.frame.width * 0.05, y: specialInstructionsTextViewContainer.frame.maxY + 5)
+            recommendedForYouCollectionViewLabel.frame.origin = CGPoint(x: stackView.frame.width * 0.05, y: specialInstructionsTextViewContainer.frame.maxY + recommendedForYouCollectionViewLabel.frame.height/2)
         
-        recommendedForYouCollectionViewContainer.frame.origin = CGPoint(x: stackView.frame.width/2 - recommendedForYouCollectionViewContainer.frame.width/2, y: recommendedForYouCollectionViewLabel.frame.maxY + 5)
+        recommendedForYouCollectionViewContainer.frame.origin = CGPoint(x: stackView.frame.width/2 - recommendedForYouCollectionViewContainer.frame.width/2, y: recommendedForYouCollectionViewLabel.frame.maxY + 10)
         }
         
         scrollView.frame.origin = CGPoint(x: self.view.frame.width/2 - scrollView.frame.width/2, y: maskedHeaderView.frame.height * 0.725)

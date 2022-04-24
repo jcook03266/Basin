@@ -116,6 +116,10 @@
 		49C1FB0228148B3C0020EB4A /* TimeAndDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA9328148B3B0020EB4A /* TimeAndDate.swift */; };
 		49FF37122814A47F009E8E2D /* 92770-balcony-hang.json in Resources */ = {isa = PBXBuildFile; fileRef = 49FF37112814A47F009E8E2D /* 92770-balcony-hang.json */; };
 		49FF37142814EEB8009E8E2D /* Basin logo Lottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 49FF37132814EEB8009E8E2D /* Basin logo Lottie.json */; };
+		49FF371628151624009E8E2D /* LottieRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF371528151624009E8E2D /* LottieRefreshControl.swift */; };
+		49FF371828151D4A009E8E2D /* Basin RC Lottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 49FF371728151D4A009E8E2D /* Basin RC Lottie.json */; };
+		49FF371A28151F63009E8E2D /* Basin RC Lottie Long.json in Resources */ = {isa = PBXBuildFile; fileRef = 49FF371928151F63009E8E2D /* Basin RC Lottie Long.json */; };
+		49FF371C28152388009E8E2D /* Basin RC Lottie White.json in Resources */ = {isa = PBXBuildFile; fileRef = 49FF371B28152388009E8E2D /* Basin RC Lottie White.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -233,6 +237,10 @@
 		49C1FA9428148B3B0020EB4A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49FF37112814A47F009E8E2D /* 92770-balcony-hang.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "92770-balcony-hang.json"; sourceTree = "<group>"; };
 		49FF37132814EEB8009E8E2D /* Basin logo Lottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "Basin logo Lottie.json"; path = "Basin Assets/Logo/Basin logo Lottie.json"; sourceTree = SOURCE_ROOT; };
+		49FF371528151624009E8E2D /* LottieRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieRefreshControl.swift; sourceTree = "<group>"; };
+		49FF371728151D4A009E8E2D /* Basin RC Lottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Basin RC Lottie.json"; sourceTree = "<group>"; };
+		49FF371928151F63009E8E2D /* Basin RC Lottie Long.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Basin RC Lottie Long.json"; sourceTree = "<group>"; };
+		49FF371B28152388009E8E2D /* Basin RC Lottie White.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Basin RC Lottie White.json"; sourceTree = "<group>"; };
 		B2B3CBAFB29F499F87DD088C /* Pods-Basin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Basin.debug.xcconfig"; path = "Target Support Files/Pods-Basin/Pods-Basin.debug.xcconfig"; sourceTree = "<group>"; };
 		B6514B84DFAD5A9C7E9FD729 /* Pods-Basin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Basin.release.xcconfig"; path = "Target Support Files/Pods-Basin/Pods-Basin.release.xcconfig"; sourceTree = "<group>"; };
 		E5B7A2A321562BED27B68B92 /* Pods_Basin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Basin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,6 +360,7 @@
 				49C1FA2028148B3B0020EB4A /* UnderlinedButtonBar.swift */,
 				49C1FA2128148B3B0020EB4A /* DetentedBottomSheetView.swift */,
 				49C1FA2228148B3B0020EB4A /* LottieButton.swift */,
+				49FF371528151624009E8E2D /* LottieRefreshControl.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -557,11 +566,14 @@
 			isa = PBXGroup;
 			children = (
 				49C1FA7528148B3B0020EB4A /* manRelaxingOnCouch.json */,
+				49FF371728151D4A009E8E2D /* Basin RC Lottie.json */,
 				49C1FA7628148B3B0020EB4A /* LottieAnimationContainer.swift */,
 				49FF37132814EEB8009E8E2D /* Basin logo Lottie.json */,
+				49FF371B28152388009E8E2D /* Basin RC Lottie White.json */,
 				49C1FA7728148B3B0020EB4A /* confettiCannons.json */,
 				49C1FA7828148B3B0020EB4A /* 49860-ironing-people-animation.json */,
 				49C1FA7928148B3B0020EB4A /* 73132-delivery-boy.json */,
+				49FF371928151F63009E8E2D /* Basin RC Lottie Long.json */,
 				49C1FA7A28148B3B0020EB4A /* heart-like.json */,
 				49FF37112814A47F009E8E2D /* 92770-balcony-hang.json */,
 				49C1FA7B28148B3B0020EB4A /* 89833-laundry.json */,
@@ -688,6 +700,7 @@
 				49C1FAEE28148B3C0020EB4A /* 75200-packaging-for-delivery.json in Resources */,
 				49C1FACA28148B3B0020EB4A /* Ubuntu-MediumItalic.ttf in Resources */,
 				49C1FAC528148B3B0020EB4A /* OFL.txt in Resources */,
+				49FF371828151D4A009E8E2D /* Basin RC Lottie.json in Resources */,
 				49C1FAC428148B3B0020EB4A /* Bungee-Regular.ttf in Resources */,
 				49C1FAD628148B3B0020EB4A /* Montserrat-SemiBold.ttf in Resources */,
 				49C1FAD128148B3B0020EB4A /* Montserrat-ExtraLight.ttf in Resources */,
@@ -700,6 +713,7 @@
 				49C1FAC828148B3B0020EB4A /* Ubuntu-Regular.ttf in Resources */,
 				49C1FAD428148B3B0020EB4A /* Montserrat-MediumItalic.ttf in Resources */,
 				49C1FAF028148B3C0020EB4A /* 64579-washing-machine.json in Resources */,
+				49FF371C28152388009E8E2D /* Basin RC Lottie White.json in Resources */,
 				49C1FAE228148B3C0020EB4A /* UFL.txt in Resources */,
 				49C1FAD728148B3B0020EB4A /* Montserrat-ExtraLightItalic.ttf in Resources */,
 				49C1FAE128148B3C0020EB4A /* Ubuntu-BoldItalic.ttf in Resources */,
@@ -722,6 +736,7 @@
 				49C1FAF428148B3C0020EB4A /* liquidCheckMark.json in Resources */,
 				49C1FAF228148B3C0020EB4A /* verificationBadge.json in Resources */,
 				49C1FACD28148B3B0020EB4A /* Montserrat-Medium.ttf in Resources */,
+				49FF371A28151F63009E8E2D /* Basin RC Lottie Long.json in Resources */,
 				49C1FAE428148B3C0020EB4A /* Ubuntu-Light.ttf in Resources */,
 				49C1FAE628148B3C0020EB4A /* manRelaxingOnCouch.json in Resources */,
 				49C1FAD528148B3B0020EB4A /* Montserrat-BlackItalic.ttf in Resources */,
@@ -862,6 +877,7 @@
 				49C1FAAD28148B3B0020EB4A /* BusinessClientVC.swift in Sources */,
 				49C1FABC28148B3B0020EB4A /* LaundromatLocationDetailVC.swift in Sources */,
 				49C1FAF728148B3C0020EB4A /* CustomerSupportVC.swift in Sources */,
+				49FF371628151624009E8E2D /* LottieRefreshControl.swift in Sources */,
 				49C1FABF28148B3B0020EB4A /* OrderDetailView.swift in Sources */,
 				49C1FB0228148B3C0020EB4A /* TimeAndDate.swift in Sources */,
 				49C1FAE728148B3C0020EB4A /* LottieAnimationContainer.swift in Sources */,

@@ -229,7 +229,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     
     /** Displays a punny label that entertains the user while the app 'loads'*/
     func displayLoadingLabel(){
-        let labelHeight: CGFloat = 40
+        let labelHeight: CGFloat = lottieLoadingAnimationView.frame.height/2
         let labelWidth: CGFloat = view.frame.width/2
         
         loadingLabel = UILabel(frame: CGRect(x: view.frame.width/2 - labelWidth/2, y: lottieLoadingAnimationView.frame.maxY, width: labelWidth, height: labelHeight))
@@ -237,12 +237,20 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         
         /** Enable dynamic font sizing*/
         loadingLabel.adjustsFontForContentSizeCategory = true
-        loadingLabel.font = getCustomFont(name: .Ubuntu_bold, size: 20, dynamicSize: true)
+        loadingLabel.font = getCustomFont(name: .Bungee_Regular, size: 38, dynamicSize: true)
         
+        loadingLabel.alpha = 0
         loadingLabel.textColor = .white
-        loadingLabel.text = laundryLoadingPuns[0]
+        loadingLabel.text = "Basin"
+        ///loadingLabel.text = laundryLoadingPuns[0]
         loadingLabel.textAlignment = .center
         loadingLabel.shadowColor = .lightGray
+        
+        UIView.animate(withDuration: 1, delay: 2){[self] in
+            loadingLabel.alpha = 1
+        }
+        
+        /*
         loadingLabel.transform = CGAffineTransform(scaleX: 0, y: 0)
         
         /** Transform the size of the animation view from 0 to 1*/
@@ -290,6 +298,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                 })
             }
         }
+        */
         
         self.view.addSubview(loadingLabel)
     }
@@ -297,8 +306,8 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     /** Removes the loading label by scaling it down and then removing the view from the hierarchy*/
     func removeLoadingLabel(){
         /** Transform the size of the animation view from 1 to near 0*/
-        UIView.animate(withDuration: 1, delay: 0.25, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
-            loadingLabel.transform = CGAffineTransform(scaleX: 0.00000001, y: 0.00000001)
+        UIView.animate(withDuration: 1, delay: 0.25){ [self] in
+            loadingLabel.alpha = 0
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.25){[self] in
@@ -334,12 +343,15 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
             loadingBar.frame.origin.x = 0
         }
         
+        UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){ [self] in
+            loadingBar.backgroundColor = bgColor
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
             loadingBar.layer.removeAllAnimations()
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){ [self] in
                 loadingBar.frame.size.height = view.frame.height
-                loadingBar.backgroundColor = bgColor
             }
             
             /** If a user is logged in then go to the appropriate client for that user, if not then show the onboarding screen*/
@@ -1016,7 +1028,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         greetingLabel.adjustsFontForContentSizeCategory = false
         greetingLabel.font = getCustomFont(name: .Bungee_Regular, size: 30, dynamicSize: false)
         greetingLabel.textColor = appThemeColor
-        greetingLabel.text = "Welcome"
+        greetingLabel.text = "Basin"
         greetingLabel.textAlignment = .center
         /**
          greetingLabel.layer.shadowColor = appThemeColor.cgColor
@@ -1089,9 +1101,9 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         signUpButton.frame.size.width = onboardingTransitionView.frame.width * 0.8
         switch darkMode {
         case true:
-            signUpButton.backgroundColor = UIColor.white
+            signUpButton.backgroundColor = bgColor.darker
         case false:
-            signUpButton.backgroundColor = UIColor.white
+            signUpButton.backgroundColor = bgColor
         }
         signUpButton.tintColor = .white
         signUpButton.setTitle("Sign Up", for: .normal)
@@ -1150,9 +1162,9 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         signUpRoundButton.frame.size.width = signUpRoundButton.frame.size.height
         switch darkMode {
         case true:
-            signUpRoundButton.backgroundColor = UIColor.white
+            signUpRoundButton.backgroundColor = bgColor.darker
         case false:
-            signUpRoundButton.backgroundColor = UIColor.white
+            signUpRoundButton.backgroundColor = bgColor
         }
         signUpRoundButton.tintColor = appThemeColor
         signUpRoundButton.setImage(image, for: .normal)
@@ -1270,7 +1282,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         signInBackButton = UIButton()
         signInBackButton.frame.size.height = 40
         signInBackButton.frame.size.width = signInBackButton.frame.size.height
-        signInBackButton.backgroundColor = bgColor
+        signInBackButton.backgroundColor = .white
         signInBackButton.tintColor = appThemeColor
         signInBackButton.setImage(image, for: .normal)
         signInBackButton.layer.cornerRadius = signInBackButton.frame.height/2
@@ -2651,7 +2663,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         
         setStartMenuPosition()
         
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
+        UIView.animate(withDuration: 0.25, delay: 0){[self] in
             sender.alpha = 0
             lastSlideContentContainer.alpha = 0
         }
@@ -2673,7 +2685,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
             lastSlideContentContainer.removeFromSuperview()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.25){ [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){ [self] in
             displayStartScreen()
         }
         

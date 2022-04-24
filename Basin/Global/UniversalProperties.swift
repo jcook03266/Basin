@@ -95,7 +95,7 @@ var loadingIndicator: AnimationView = AnimationView()
 func displayLoadingIndicator(at location: CGPoint, duration: CGFloat, size: CGFloat){
     /** Display this asynchronously as it's not rendered without that*/
     DispatchQueue.main.asyncAfter(deadline: .now()){
-        loadingIndicator = AnimationView.init(name: "64579-washing-machine")
+        loadingIndicator = AnimationView.init(name: "Basin RC Lottie White")
         loadingIndicator.frame.size = CGSize(width: size, height: size)
         loadingIndicator.frame.origin = location
         

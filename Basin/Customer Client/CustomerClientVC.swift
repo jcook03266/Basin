@@ -89,7 +89,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     var highestToLowestSortingByRatings = true
     var highestToLowestSortingByReviews = true
     /** Refresh control object for the bottom sheet table view*/
-    var bottomSheetRefreshControl = UIRefreshControl()
+    var bottomSheetRefreshControl = LottieRefreshControl()
     
     /** Orders tab UI*/
     var ordersTableView: UITableView!
@@ -97,7 +97,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** UI Label displaying styled text above the orders bottom sheet*/
     var ordersTitleLabel: UILabel!
     /** Refresh control object for the bottom sheet table view*/
-    var ordersBottomSheetRefreshControl = UIRefreshControl()
+    var ordersBottomSheetRefreshControl = LottieRefreshControl()
     /** Array that controls the amount of rows displayed for each section with 1 section with a row value of 0 being a closed section at instantiation*/
     var rowsForSection = [5,20]
     /** Image views with a chevron image denoting the current state of the section, whether it's expanded or collapsed*/
@@ -156,7 +156,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Activates when the application regains focus*/
     @objc func appDidBecomeActive(){
         /** Remove the snapshot when the app becomes focused again*/
-        clearMapViewSnapshotAsync()
+        ///clearMapViewSnapshotAsync()
     }
     
     /** Activates when app is fully in the background state*/
@@ -963,7 +963,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         ordersTableView.register(ordersTableViewCell.self, forCellReuseIdentifier: ordersTableViewCell.identifier)
         
         ordersBottomSheetRefreshControl.addTarget(self, action: #selector(self.ordersBottomSheetRefreshStart(_:)), for: .valueChanged)
-        ordersBottomSheetRefreshControl.tintColor = appThemeColor
+        ordersBottomSheetRefreshControl.tintColor = .clear
         ordersBottomSheetRefreshControl.layer.zPosition = -1
         ordersTableView.refreshControl = ordersBottomSheetRefreshControl
         
@@ -1121,7 +1121,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         bottomSheet.hide(animated: false)
         
         bottomSheetRefreshControl.addTarget(self, action: #selector(self.bottomSheetRefreshStart(_:)), for: .valueChanged)
-        bottomSheetRefreshControl.tintColor = appThemeColor
+        bottomSheetRefreshControl.tintColor = .clear
         bottomSheetRefreshControl.layer.zPosition = -1
         laundromatLocationsTableView.refreshControl = bottomSheetRefreshControl
         
@@ -1143,7 +1143,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){ [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload the table view*/
             ordersTableView.reloadSections([0], with: .fade)
             
@@ -1159,7 +1159,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){ [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload both the table view and collection view*/
             laundromatLocationsTableView.reloadSections([0], with: .top)
             laundromatLocationsCollectionView.reloadData()
@@ -2119,8 +2119,16 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Detect when a scroll view scrolls*/
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == ordersTableView{
+            /** Trigger refresh animation*/
+            ordersBottomSheetRefreshControl.updateProgress(with: scrollView.contentOffset.y)
+        }
+        
         if scrollView == laundromatLocationsCollectionView{
             let pageIndex = round(scrollView.contentOffset.x/self.view.frame.width)
+            
+            /** Trigger refresh animation*/
+            bottomSheetRefreshControl.updateProgress(with: scrollView.contentOffset.y)
             
             for (marker, laundromat) in mapMarkers{
                 let laundromatCell = laundromatLocationsCollectionView.cellForItem(at: IndexPath(row: Int(pageIndex), section: 0))

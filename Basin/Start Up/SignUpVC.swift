@@ -402,7 +402,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         customerButton.frame.origin = CGPoint(x: view.frame.width/2 - buttonSize.width/2, y: view.frame.height/2 - buttonSize.height/2)
         switch darkMode{
         case true:
-            customerButton.backgroundColor = .white
+            customerButton.backgroundColor = bgColor.darker
         case false:
             customerButton.backgroundColor = bgColor
         }
@@ -436,7 +436,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         businessButton.frame.origin = CGPoint(x: customerButton.frame.minX - (businessButton.frame.width + 10), y: view.frame.height/2 - buttonSize.height/2)
         switch darkMode{
         case true:
-            businessButton.backgroundColor = .white
+            businessButton.backgroundColor = bgColor.darker
         case false:
             businessButton.backgroundColor = bgColor
         }
@@ -468,7 +468,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         driverButton.frame.origin = CGPoint(x: customerButton.frame.maxX + 10, y: view.frame.height/2 - buttonSize.height/2)
         switch darkMode{
         case true:
-            driverButton.backgroundColor = .white
+            driverButton.backgroundColor = bgColor.darker
         case false:
             driverButton.backgroundColor = bgColor
         }
@@ -518,7 +518,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         termsOfServiceButtonContainer.backgroundColor = appThemeColor
         termsOfServiceButton.frame.origin = CGPoint(x: termsOfServiceButtonContainer.frame.width/2 - termsOfServiceButton.frame.width/2, y: termsOfServiceButtonContainer.frame.height/2 - termsOfServiceButton.frame.height/2)
         termsOfServiceButtonContainer.layer.shadowColor = appThemeColor.cgColor
-        termsOfServiceButtonContainer.layer.shadowRadius = 10
+        termsOfServiceButtonContainer.layer.shadowRadius = 4
         termsOfServiceButtonContainer.layer.shadowOpacity = 1
         termsOfServiceButtonContainer.layer.masksToBounds = false
         termsOfServiceButtonContainer.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -615,7 +615,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
             
             topMask.fillColor = appThemeColor.cgColor
             topMask.shadowColor = appThemeColor.cgColor
-            topMask.shadowRadius = 10
+            topMask.shadowRadius = 4
             topMask.shadowOpacity = 1
             topMask.masksToBounds = false
             topMask.shadowOffset = CGSize(width: 0, height: 2)
@@ -637,7 +637,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         bottomMask.zPosition = 1
         bottomMask.fillColor = appThemeColor.cgColor
         bottomMask.shadowColor = appThemeColor.cgColor
-        bottomMask.shadowRadius = 10
+        bottomMask.shadowRadius = 4
         bottomMask.shadowOpacity = 1
         bottomMask.masksToBounds = false
         bottomMask.shadowOffset = CGSize(width: 0, height: 2)
@@ -729,8 +729,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         appleSignInButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         appleSignInButton.frame.size.height = 60
         appleSignInButton.frame.size.width = appleSignInButton.frame.size.height
-        appleSignInButton.backgroundColor = .white
-        appleSignInButton.setImage(#imageLiteral(resourceName: "apple"), for: .normal)
+        switch darkMode{
+        case true:
+            appleSignInButton.backgroundColor = bgColor.darker
+            appleSignInButton.setImage(#imageLiteral(resourceName: "apple-white"), for: .normal)
+        case false:
+            appleSignInButton.backgroundColor = bgColor
+            appleSignInButton.setImage(#imageLiteral(resourceName: "apple"), for: .normal)
+        }
         appleSignInButton.imageView?.contentMode = .scaleAspectFit
         appleSignInButton.layer.cornerRadius = appleSignInButton.frame.height/2
         appleSignInButton.castDefaultShadow()
@@ -742,7 +748,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         googleSignInButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         googleSignInButton.frame.size.height = 60
         googleSignInButton.frame.size.width = googleSignInButton.frame.size.height
-        googleSignInButton.backgroundColor = .white
+        switch darkMode{
+        case true:
+            googleSignInButton.backgroundColor = bgColor.darker
+        case false:
+            googleSignInButton.backgroundColor = bgColor
+        }
         googleSignInButton.setImage(#imageLiteral(resourceName: "search"), for: .normal)
         googleSignInButton.imageView?.contentMode = .scaleAspectFit
         googleSignInButton.layer.cornerRadius = googleSignInButton.frame.height/2
@@ -756,7 +767,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         faceBookSignInButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         faceBookSignInButton.frame.size.height = 60
         faceBookSignInButton.frame.size.width = faceBookSignInButton.frame.size.height
-        faceBookSignInButton.backgroundColor = .white
+        switch darkMode{
+        case true:
+            faceBookSignInButton.backgroundColor = bgColor.darker
+        case false:
+            faceBookSignInButton.backgroundColor = bgColor
+        }
         faceBookSignInButton.setImage(#imageLiteral(resourceName: "facebook"), for: .normal)
         faceBookSignInButton.imageView?.contentMode = .scaleAspectFit
         faceBookSignInButton.layer.cornerRadius = faceBookSignInButton.frame.height/2
@@ -782,7 +798,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         signUpWithThirdPartyLabel.font = getCustomFont(name: .Ubuntu_bold, size: 18, dynamicSize: true)
         signUpWithThirdPartyLabel.adjustsFontForContentSizeCategory = true
         signUpWithThirdPartyLabel.adjustsFontSizeToFitWidth = true
-        signUpWithThirdPartyLabel.backgroundColor = bgColor
+        switch darkMode{
+        case true:
+            signUpWithThirdPartyLabel.backgroundColor = bgColor.darker
+        case false:
+            signUpWithThirdPartyLabel.backgroundColor = bgColor
+        }
         signUpWithThirdPartyLabel.textColor = appThemeColor
         signUpWithThirdPartyLabel.text = "Link a third-party account:"
         signUpWithThirdPartyLabel.textAlignment = .center
@@ -816,8 +837,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         emailTextfield.frame.size.height = 50
         emailTextfield.frame.size.width = view.frame.width * 0.9
         emailTextfield.tintColor = appThemeColor
-        emailTextfield.backgroundColor = .white
-        emailTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            emailTextfield.backgroundColor = bgColor.lighter
+            emailTextfield.textColor = fontColor
+        case false:
+            emailTextfield.backgroundColor = bgColor
+            emailTextfield.textColor = fontColor
+        }
         emailTextfield.layer.cornerRadius = emailTextfield.frame.height/2
         emailTextfield.adjustsFontForContentSizeCategory = true
         emailTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 15, dynamicSize: true)
@@ -841,7 +868,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         /** Shadow properties*/
         emailTextfield.layer.shadowColor = UIColor.darkGray.cgColor
         emailTextfield.layer.shadowOpacity = 0.25
-        emailTextfield.layer.shadowRadius = 8
+        emailTextfield.layer.shadowRadius = 2
         emailTextfield.layer.shadowOffset = CGSize(width: 0, height: 2)
         emailTextfield.layer.shadowPath = UIBezierPath(roundedRect: emailTextfield.bounds, cornerRadius: emailTextfield.layer.cornerRadius).cgPath
         
@@ -861,7 +888,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton.setImage(UIImage(systemName: "envelope.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton.frame.size = CGSize(width: emailTextfield.frame.height/(1.5), height: emailTextfield.frame.height/(1.5))
         leftButton.frame.origin = CGPoint(x: paddingView.frame.width/2 - leftButton.frame.width/2, y: paddingView.frame.height/2 - leftButton.frame.height/2)
-        leftButton.backgroundColor = .white
+        leftButton.backgroundColor = .clear
         leftButton.tintColor = appThemeColor
         leftButton.layer.cornerRadius = leftButton.frame.height/2
         leftButton.contentMode = .scaleAspectFit
@@ -877,8 +904,15 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         phoneTextfield.frame.size.height = 50
         phoneTextfield.frame.size.width = view.frame.width * 0.9
         phoneTextfield.tintColor = appThemeColor
-        phoneTextfield.backgroundColor = .white
-        phoneTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            phoneTextfield.backgroundColor = bgColor.lighter
+            phoneTextfield.textColor = fontColor
+        case false:
+            phoneTextfield.backgroundColor = bgColor
+            phoneTextfield.textColor = fontColor
+        }
+        
         phoneTextfield.layer.cornerRadius = phoneTextfield.frame.height/2
         phoneTextfield.adjustsFontForContentSizeCategory = true
         phoneTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 15, dynamicSize: true)
@@ -915,7 +949,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         /** Shadow properties*/
         phoneTextfield.layer.shadowColor = UIColor.darkGray.cgColor
         phoneTextfield.layer.shadowOpacity = 0.25
-        phoneTextfield.layer.shadowRadius = 8
+        phoneTextfield.layer.shadowRadius = 2
         phoneTextfield.layer.shadowOffset = CGSize(width: 0, height: 2)
         phoneTextfield.layer.shadowPath = UIBezierPath(roundedRect: phoneTextfield.bounds, cornerRadius: phoneTextfield.layer.cornerRadius).cgPath
         
@@ -929,7 +963,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         verifyPhoneButton.frame.size.height = 40
         verifyPhoneButton.frame.size.width = (view.frame.width * 0.4 - 10)
-        verifyPhoneButton.backgroundColor = .white
+        switch darkMode{
+        case true:
+            verifyPhoneButton.backgroundColor = bgColor.darker
+        case false:
+            verifyPhoneButton.backgroundColor = bgColor
+        }
         verifyPhoneButton.alpha = 0.5
         verifyPhoneButton.setTitle("Verify Phone #", for: .normal)
         verifyPhoneButton.setTitleColor(appThemeColor, for: .normal)
@@ -993,7 +1032,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
             textField.frame.size.height = 50
             textField.frame.size.width = OTPTextFieldContainer.frame.width/6 - 10
             textField.tintColor = appThemeColor
-            textField.backgroundColor = .white.darker
+            textField.backgroundColor = bgColor.darker
             textField.textColor = appThemeColor
             textField.layer.cornerRadius = textField.frame.height/4
             textField.adjustsFontForContentSizeCategory = true
@@ -1098,8 +1137,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         usernameTextfield.frame.size.height = 50
         usernameTextfield.frame.size.width = view.frame.width * 0.9
         usernameTextfield.tintColor = appThemeColor
-        usernameTextfield.backgroundColor = .white
-        usernameTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            usernameTextfield.backgroundColor = bgColor.lighter
+            usernameTextfield.textColor = fontColor
+        case false:
+            usernameTextfield.backgroundColor = bgColor
+            usernameTextfield.textColor = fontColor
+        }
         usernameTextfield.layer.cornerRadius = usernameTextfield.frame.height/2
         usernameTextfield.adjustsFontForContentSizeCategory = true
         usernameTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1143,7 +1188,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton.setImage(UIImage(systemName: "at.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton.frame.size = CGSize(width: usernameTextfield.frame.height/(1.5), height: usernameTextfield.frame.height/(1.5))
         leftButton.frame.origin = CGPoint(x: paddingView.frame.width/2 - leftButton.frame.width/2, y: paddingView.frame.height/2 - leftButton.frame.height/2)
-        leftButton.backgroundColor = .white
+        leftButton.backgroundColor = .clear
         leftButton.tintColor = appThemeColor
         leftButton.layer.cornerRadius = leftButton.frame.height/2
         leftButton.contentMode = .scaleAspectFit
@@ -1158,8 +1203,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         passwordTextfield.frame.size.height = 50
         passwordTextfield.frame.size.width = view.frame.width * 0.9
         passwordTextfield.tintColor = appThemeColor
-        passwordTextfield.backgroundColor = .white
-        passwordTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            passwordTextfield.backgroundColor = bgColor.lighter
+            passwordTextfield.textColor = fontColor
+        case false:
+            passwordTextfield.backgroundColor = bgColor
+            passwordTextfield.textColor = fontColor
+        }
         passwordTextfield.layer.cornerRadius = passwordTextfield.frame.height/2
         passwordTextfield.adjustsFontForContentSizeCategory = true
         passwordTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1217,7 +1268,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         passwordTextfieldLeftButton.addAction(passwordTextfieldLeftButtonPressed, for: .touchUpInside)
         passwordTextfieldLeftButton.frame.size = CGSize(width: passwordTextfield.frame.height/2, height: passwordTextfield.frame.height/2)
         passwordTextfieldLeftButton.frame.origin = CGPoint(x: paddingView_2.frame.width/2 - passwordTextfieldLeftButton.frame.width/2, y: paddingView_2.frame.height/2 - passwordTextfieldLeftButton.frame.height/2)
-        passwordTextfieldLeftButton.backgroundColor = .white
+        passwordTextfieldLeftButton.backgroundColor = .clear
         passwordTextfieldLeftButton.tintColor = appThemeColor
         passwordTextfieldLeftButton.layer.cornerRadius = passwordTextfieldLeftButton.frame.height/2
         passwordTextfieldLeftButton.contentMode = .scaleAspectFit
@@ -1634,8 +1685,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         firstNameTextfield.frame.size.height = 50
         firstNameTextfield.frame.size.width = view.frame.width * 0.45
         firstNameTextfield.tintColor = appThemeColor
-        firstNameTextfield.backgroundColor = .white
-        firstNameTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            firstNameTextfield.backgroundColor = bgColor.lighter
+            firstNameTextfield.textColor = fontColor
+        case false:
+            firstNameTextfield.backgroundColor = bgColor
+            firstNameTextfield.textColor = fontColor
+        }
         firstNameTextfield.layer.cornerRadius = firstNameTextfield.frame.height/2
         firstNameTextfield.adjustsFontForContentSizeCategory = true
         firstNameTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1679,7 +1736,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton.setImage(UIImage(systemName: "1.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton.frame.size = CGSize(width: firstNameTextfield.frame.height/(1.5), height: firstNameTextfield.frame.height/(1.5))
         leftButton.frame.origin = CGPoint(x: paddingView.frame.width/2 - leftButton.frame.width/2, y: paddingView.frame.height/2 - leftButton.frame.height/2)
-        leftButton.backgroundColor = .white
+        leftButton.backgroundColor = .clear
         leftButton.tintColor = appThemeColor
         leftButton.layer.cornerRadius = leftButton.frame.height/2
         leftButton.contentMode = .scaleAspectFit
@@ -1694,8 +1751,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         lastNameTextfield.frame.size.height = 50
         lastNameTextfield.frame.size.width = view.frame.width * 0.45
         lastNameTextfield.tintColor = appThemeColor
-        lastNameTextfield.backgroundColor = .white
-        lastNameTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            lastNameTextfield.backgroundColor = bgColor.lighter
+            lastNameTextfield.textColor = fontColor
+        case false:
+            lastNameTextfield.backgroundColor = bgColor
+            lastNameTextfield.textColor = fontColor
+        }
         lastNameTextfield.layer.cornerRadius = lastNameTextfield.frame.height/2
         lastNameTextfield.adjustsFontForContentSizeCategory = true
         lastNameTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1739,7 +1802,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_2.setImage(UIImage(systemName: "2.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_2.frame.size = CGSize(width: lastNameTextfield.frame.height/(1.5), height: lastNameTextfield.frame.height/(1.5))
         leftButton_2.frame.origin = CGPoint(x: paddingView_2.frame.width/2 - leftButton_2.frame.width/2, y: paddingView_2.frame.height/2 - leftButton_2.frame.height/2)
-        leftButton_2.backgroundColor = .white
+        leftButton_2.backgroundColor = .clear
         leftButton_2.tintColor = appThemeColor
         leftButton_2.layer.cornerRadius = leftButton_2.frame.height/2
         leftButton_2.contentMode = .scaleAspectFit
@@ -1754,8 +1817,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         address1Textfield.frame.size.height = 50
         address1Textfield.frame.size.width = view.frame.width * 0.9
         address1Textfield.tintColor = appThemeColor
-        address1Textfield.backgroundColor = .white
-        address1Textfield.textColor = .black
+        switch darkMode{
+        case true:
+            address1Textfield.backgroundColor = bgColor.lighter
+            address1Textfield.textColor = fontColor
+        case false:
+            address1Textfield.backgroundColor = bgColor
+            address1Textfield.textColor = fontColor
+        }
         address1Textfield.layer.cornerRadius = address1Textfield.frame.height/2
         address1Textfield.adjustsFontForContentSizeCategory = true
         address1Textfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1798,7 +1867,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_3.setImage(UIImage(systemName: "building.2.crop.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_3.frame.size = CGSize(width: address1Textfield.frame.height/(1.5), height: address1Textfield.frame.height/(1.5))
         leftButton_3.frame.origin = CGPoint(x: paddingView_3.frame.width/2 - leftButton_3.frame.width/2, y: paddingView_3.frame.height/2 - leftButton_3.frame.height/2)
-        leftButton_3.backgroundColor = .white
+        leftButton_3.backgroundColor = .clear
         leftButton_3.tintColor = appThemeColor
         leftButton_3.layer.cornerRadius = leftButton_3.frame.height/2
         leftButton_3.contentMode = .scaleAspectFit
@@ -1813,8 +1882,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         address2Textfield.frame.size.height = 50
         address2Textfield.frame.size.width = view.frame.width * 0.9
         address2Textfield.tintColor = appThemeColor
-        address2Textfield.backgroundColor = .white
-        address2Textfield.textColor = .black
+        switch darkMode{
+        case true:
+            address2Textfield.backgroundColor = bgColor.lighter
+            address2Textfield.textColor = fontColor
+        case false:
+            address2Textfield.backgroundColor = bgColor
+            address2Textfield.textColor = fontColor
+        }
         address2Textfield.layer.cornerRadius = address2Textfield.frame.height/2
         address2Textfield.adjustsFontForContentSizeCategory = true
         address2Textfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1857,7 +1932,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_4.setImage(UIImage(systemName: "123.rectangle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_4.frame.size = CGSize(width: address2Textfield.frame.height/(1.5), height: address2Textfield.frame.height/(1.5))
         leftButton_4.frame.origin = CGPoint(x: paddingView_4.frame.width/2 - leftButton_4.frame.width/2, y: paddingView_4.frame.height/2 - leftButton_4.frame.height/2)
-        leftButton_4.backgroundColor = .white
+        leftButton_4.backgroundColor = .clear
         leftButton_4.tintColor = appThemeColor
         leftButton_4.layer.cornerRadius = leftButton_4.frame.height/2
         leftButton_4.contentMode = .scaleAspectFit
@@ -1872,7 +1947,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         cityTextfield.frame.size.height = 50
         cityTextfield.frame.size.width = view.frame.width * 0.45
         cityTextfield.tintColor = appThemeColor
-        cityTextfield.backgroundColor = .white
+        switch darkMode{
+        case true:
+            cityTextfield.backgroundColor = bgColor.lighter
+            cityTextfield.textColor = fontColor
+        case false:
+            cityTextfield.backgroundColor = bgColor
+            cityTextfield.textColor = fontColor
+        }
         cityTextfield.textColor = .black
         cityTextfield.layer.cornerRadius = cityTextfield.frame.height/2
         cityTextfield.adjustsFontForContentSizeCategory = true
@@ -1921,7 +2003,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_5.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_5.frame.size = CGSize(width: cityTextfield.frame.height/(1.5), height: cityTextfield.frame.height/(1.5))
         leftButton_5.frame.origin = CGPoint(x: paddingView_5.frame.width/2 - leftButton_5.frame.width/2, y: paddingView_5.frame.height/2 - leftButton_5.frame.height/2)
-        leftButton_5.backgroundColor = .white
+        leftButton_5.backgroundColor = .clear
         leftButton_5.tintColor = appThemeColor
         leftButton_5.layer.cornerRadius = leftButton_5.frame.height/2
         leftButton_5.contentMode = .scaleAspectFit
@@ -1939,7 +2021,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         markTextFieldEntryAsCorrect(textField: cityTextfield)
         cityPickerView.delegate = self
         cityPickerView.dataSource = self
-        cityPickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            cityPickerView.backgroundColor = bgColor.darker
+        case false:
+            cityPickerView.backgroundColor = bgColor
+        }
         cityPickerView.contentMode = .center
         cityPickerView.autoresizingMask = .flexibleWidth
         
@@ -1947,8 +2034,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         boroughTextfield.frame.size.height = 50
         boroughTextfield.frame.size.width = view.frame.width * 0.45
         boroughTextfield.tintColor = appThemeColor
-        boroughTextfield.backgroundColor = .white
-        boroughTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            boroughTextfield.backgroundColor = bgColor.lighter
+            boroughTextfield.textColor = fontColor
+        case false:
+            boroughTextfield.backgroundColor = bgColor
+            boroughTextfield.textColor = fontColor
+        }
         boroughTextfield.layer.cornerRadius = boroughTextfield.frame.height/2
         boroughTextfield.adjustsFontForContentSizeCategory = true
         boroughTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -1996,7 +2089,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_6.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_6.frame.size = CGSize(width: boroughTextfield.frame.height/(1.5), height: boroughTextfield.frame.height/(1.5))
         leftButton_6.frame.origin = CGPoint(x: paddingView_6.frame.width/2 - leftButton_6.frame.width/2, y: paddingView_6.frame.height/2 - leftButton_6.frame.height/2)
-        leftButton_6.backgroundColor = .white
+        leftButton_6.backgroundColor = .clear
         leftButton_6.tintColor = appThemeColor
         leftButton_6.layer.cornerRadius = leftButton_6.frame.height/2
         leftButton_6.contentMode = .scaleAspectFit
@@ -2014,7 +2107,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         markTextFieldEntryAsCorrect(textField: boroughTextfield)
         boroughPickerView.delegate = self
         boroughPickerView.dataSource = self
-        boroughPickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            boroughPickerView.backgroundColor = bgColor.darker
+        case false:
+            boroughPickerView.backgroundColor = bgColor
+        }
         boroughPickerView.contentMode = .center
         boroughPickerView.autoresizingMask = .flexibleWidth
         
@@ -2022,8 +2120,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         stateTextfield.frame.size.height = 50
         stateTextfield.frame.size.width = view.frame.width * 0.45
         stateTextfield.tintColor = appThemeColor
-        stateTextfield.backgroundColor = .white
-        stateTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            stateTextfield.backgroundColor = bgColor.lighter
+            stateTextfield.textColor = fontColor
+        case false:
+            stateTextfield.backgroundColor = bgColor
+            stateTextfield.textColor = fontColor
+        }
         stateTextfield.layer.cornerRadius = stateTextfield.frame.height/2
         stateTextfield.adjustsFontForContentSizeCategory = true
         stateTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -2071,7 +2175,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_7.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_7.frame.size = CGSize(width: stateTextfield.frame.height/(1.5), height: stateTextfield.frame.height/(1.5))
         leftButton_7.frame.origin = CGPoint(x: paddingView_7.frame.width/2 - leftButton_7.frame.width/2, y: paddingView_7.frame.height/2 - leftButton_7.frame.height/2)
-        leftButton_7.backgroundColor = .white
+        leftButton_7.backgroundColor = .clear
         leftButton_7.tintColor = appThemeColor
         leftButton_7.layer.cornerRadius = leftButton_7.frame.height/2
         leftButton_7.contentMode = .scaleAspectFit
@@ -2089,7 +2193,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         markTextFieldEntryAsCorrect(textField: stateTextfield)
         statePickerView.delegate = self
         statePickerView.dataSource = self
-        statePickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            statePickerView.backgroundColor = bgColor.darker
+        case false:
+            statePickerView.backgroundColor = bgColor
+        }
         statePickerView.contentMode = .center
         statePickerView.autoresizingMask = .flexibleWidth
         
@@ -2097,8 +2206,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         zipCodeTextfield.frame.size.height = 50
         zipCodeTextfield.frame.size.width = view.frame.width * 0.45
         zipCodeTextfield.tintColor = appThemeColor
-        zipCodeTextfield.backgroundColor = .white
-        zipCodeTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            zipCodeTextfield.backgroundColor = bgColor.lighter
+            zipCodeTextfield.textColor = fontColor
+        case false:
+            zipCodeTextfield.backgroundColor = bgColor
+            zipCodeTextfield.textColor = fontColor
+        }
         zipCodeTextfield.layer.cornerRadius = zipCodeTextfield.frame.height/2
         zipCodeTextfield.adjustsFontForContentSizeCategory = true
         zipCodeTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -2146,7 +2261,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_8.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_8.frame.size = CGSize(width: zipCodeTextfield.frame.height/(1.5), height: zipCodeTextfield.frame.height/(1.5))
         leftButton_8.frame.origin = CGPoint(x: paddingView_8.frame.width/2 - leftButton_8.frame.width/2, y: paddingView_8.frame.height/2 - leftButton_8.frame.height/2)
-        leftButton_8.backgroundColor = .white
+        leftButton_8.backgroundColor = .clear
         leftButton_8.tintColor = appThemeColor
         leftButton_8.layer.cornerRadius = leftButton_8.frame.height/2
         leftButton_8.contentMode = .scaleAspectFit
@@ -2163,7 +2278,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         zipCodeTextfield.text = nycZipCodes[0].key.description
         zipCodePickerView.delegate = self
         zipCodePickerView.dataSource = self
-        zipCodePickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            zipCodePickerView.backgroundColor = bgColor.darker
+        case false:
+            zipCodePickerView.backgroundColor = bgColor
+        }
         zipCodePickerView.contentMode = .center
         zipCodePickerView.autoresizingMask = .flexibleWidth
         
@@ -2214,8 +2334,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         DOBTextfield.frame.size.height = 50
         DOBTextfield.frame.size.width = view.frame.width * 0.9
         DOBTextfield.tintColor = appThemeColor
-        DOBTextfield.backgroundColor = .white
-        DOBTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            DOBTextfield.backgroundColor = bgColor.lighter
+            DOBTextfield.textColor = fontColor
+        case false:
+            DOBTextfield.backgroundColor = bgColor
+            DOBTextfield.textColor = fontColor
+        }
         DOBTextfield.layer.cornerRadius = DOBTextfield.frame.height/2
         DOBTextfield.adjustsFontForContentSizeCategory = true
         DOBTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -2261,7 +2387,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         spacerButton.setImage(UIImage(systemName: "calendar.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         spacerButton.frame.size = CGSize(width: DOBTextfield.frame.height/(1.5), height: DOBTextfield.frame.height/(1.5))
         spacerButton.frame.origin = CGPoint(x: spacer.frame.width/2 - spacerButton.frame.width/2, y: spacer.frame.height/2 - spacerButton.frame.height/2)
-        spacerButton.backgroundColor = .white
+        spacerButton.backgroundColor = .clear
         spacerButton.tintColor = appThemeColor
         spacerButton.layer.cornerRadius = spacerButton.frame.height/2
         spacerButton.contentMode = .scaleAspectFit
@@ -2276,7 +2402,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton.frame.size = CGSize(width: DOBTextfield.frame.height/(1.5), height: DOBTextfield.frame.height/(1.5))
         leftButton.frame.origin = CGPoint(x: paddingView.frame.width/2 - leftButton.frame.width/2, y: paddingView.frame.height/2 - leftButton.frame.height/2)
-        leftButton.backgroundColor = .white
+        leftButton.backgroundColor = .clear
         leftButton.tintColor = appThemeColor
         leftButton.layer.cornerRadius = leftButton.frame.height/2
         leftButton.contentMode = .scaleAspectFit
@@ -2296,7 +2422,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         DOBPickerView.minimumDate = dateFormatter.date(from: "01/01/1920")
-        DOBPickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            DOBPickerView.backgroundColor = bgColor.darker
+        case false:
+            DOBPickerView.backgroundColor = bgColor
+        }
         DOBPickerView.contentMode = .center
         DOBPickerView.autoresizingMask = .flexibleWidth
         DOBPickerView.addTarget(self, action: #selector(datePickerChanged), for: .valueChanged)
@@ -2305,8 +2436,14 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         genderTextfield.frame.size.height = 50
         genderTextfield.frame.size.width = view.frame.width * 0.45
         genderTextfield.tintColor = appThemeColor
-        genderTextfield.backgroundColor = .white
-        genderTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            genderTextfield.backgroundColor = bgColor.lighter
+            genderTextfield.textColor = fontColor
+        case false:
+            genderTextfield.backgroundColor = bgColor
+            genderTextfield.textColor = fontColor
+        }
         genderTextfield.layer.cornerRadius = genderTextfield.frame.height/2
         genderTextfield.adjustsFontForContentSizeCategory = true
         genderTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
@@ -2352,7 +2489,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         spacerButton_2.setImage(UIImage(systemName: "figure.wave.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         spacerButton_2.frame.size = CGSize(width: genderTextfield.frame.height/(1.5), height: genderTextfield.frame.height/(1.5))
         spacerButton_2.frame.origin = CGPoint(x: spacer_2.frame.width/2 - spacerButton_2.frame.width/2, y: spacer_2.frame.height/2 - spacerButton_2.frame.height/2)
-        spacerButton_2.backgroundColor = .white
+        spacerButton_2.backgroundColor = .clear
         spacerButton_2.tintColor = appThemeColor
         spacerButton_2.layer.cornerRadius = spacerButton_2.frame.height/2
         spacerButton_2.contentMode = .scaleAspectFit
@@ -2367,7 +2504,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         leftButton_2.setImage(UIImage(systemName: "arrow.up.arrow.down", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton_2.frame.size = CGSize(width: genderTextfield.frame.height/(1.5), height: genderTextfield.frame.height/(1.5))
         leftButton_2.frame.origin = CGPoint(x: paddingView_2.frame.width/2 - leftButton_2.frame.width/2, y: paddingView_2.frame.height/2 - leftButton_2.frame.height/2)
-        leftButton_2.backgroundColor = .white
+        leftButton_2.backgroundColor = .clear
         leftButton_2.tintColor = appThemeColor
         leftButton_2.layer.cornerRadius = leftButton_2.frame.height/2
         leftButton_2.contentMode = .scaleAspectFit
@@ -2384,7 +2521,12 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         genderTextfield.text = genders[2]
         genderPickerView.delegate = self
         genderPickerView.dataSource = self
-        genderPickerView.backgroundColor = .white
+        switch darkMode{
+        case true:
+            genderPickerView.backgroundColor = bgColor.darker
+        case false:
+            genderPickerView.backgroundColor = bgColor
+        }
         genderPickerView.contentMode = .center
         genderPickerView.autoresizingMask = .flexibleWidth
         /** Default value is unspecified*/

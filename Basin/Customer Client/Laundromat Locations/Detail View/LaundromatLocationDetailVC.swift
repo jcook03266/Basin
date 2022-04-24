@@ -116,9 +116,9 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     /** A sorted array of the category titles for the washing menu*/
     var sortedWashingMenuCategories: [String] = []
     var washingMenuTableView: UITableView!
-    var washingMenuTableViewRefreshControl = UIRefreshControl()
+    var washingMenuTableViewRefreshControl = LottieRefreshControl()
     var dryCleaningMenuTableView: UITableView!
-    var dryCleaningMenuTableViewRefreshControl = UIRefreshControl()
+    var dryCleaningMenuTableViewRefreshControl = LottieRefreshControl()
     var tableViewHeaderHeight: CGFloat = 60
     var tableViewFooterHeight: CGFloat = 0
     
@@ -491,7 +491,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         /** Set refresh control*/
         washingMenuTableViewRefreshControl.addTarget(self, action: #selector(self.washingMenuTableViewRefreshStart(_:)), for: .valueChanged)
-        washingMenuTableViewRefreshControl.tintColor = appThemeColor
+        washingMenuTableViewRefreshControl.tintColor = .clear
         washingMenuTableViewRefreshControl.layer.zPosition = -1
         washingMenuTableView.refreshControl = washingMenuTableViewRefreshControl
         
@@ -541,7 +541,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         /** Set refresh control*/
         dryCleaningMenuTableViewRefreshControl.addTarget(self, action: #selector(self.dryCleaningMenuTableViewRefreshStart(_:)), for: .valueChanged)
-        dryCleaningMenuTableViewRefreshControl.tintColor = appThemeColor
+        dryCleaningMenuTableViewRefreshControl.tintColor = .clear
         dryCleaningMenuTableViewRefreshControl.layer.zPosition = -1
         dryCleaningMenuTableView.refreshControl = dryCleaningMenuTableViewRefreshControl
         
@@ -570,7 +570,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){ [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload the table view*/
             washingMenuTableView.reloadData()
             
@@ -591,7 +591,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){ [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload the table view*/
             dryCleaningMenuTableView.reloadData()
             
@@ -710,6 +710,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
             /** Close the editing UI for the visible cells when the user scrolls*/
             if UIScrollView == washingMenuTableView{
+                
+                /** Trigger refresh animation*/
+                washingMenuTableViewRefreshControl.updateProgress(with: UIScrollView.contentOffset.y)
+                
                 for cell in washingMenuTableView.visibleCells{
                     if let tableViewCell = cell as? OrderItemTableViewCell{
                         if tableViewCell.editingItemCount == true{
@@ -719,6 +723,9 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 }
             }
             else{
+                /** Trigger refresh animation*/
+                dryCleaningMenuTableViewRefreshControl.updateProgress(with: UIScrollView.contentOffset.y)
+                
                 for cell in dryCleaningMenuTableView.visibleCells{
                     if let tableViewCell = cell as? OrderItemTableViewCell{
                         if tableViewCell.editingItemCount == true{

@@ -120,8 +120,14 @@ public class iForgot: UIViewController, UITextFieldDelegate{
         emailTextfield.frame.size.height = 50
         emailTextfield.frame.size.width = view.frame.width * 0.9
         emailTextfield.tintColor = appThemeColor
-        emailTextfield.backgroundColor = .white
-        emailTextfield.textColor = .black
+        switch darkMode{
+        case true:
+            emailTextfield.backgroundColor = bgColor.lighter
+            emailTextfield.textColor = fontColor
+        case false:
+            emailTextfield.backgroundColor = bgColor
+            emailTextfield.textColor = fontColor
+        }
         emailTextfield.layer.cornerRadius = emailTextfield.frame.height/2
         emailTextfield.adjustsFontForContentSizeCategory = true
         emailTextfield.font = getCustomFont(name: .Ubuntu_Regular, size: 15, dynamicSize: true)
@@ -160,7 +166,7 @@ public class iForgot: UIViewController, UITextFieldDelegate{
         leftButton.setImage(UIImage(systemName: "envelope.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         leftButton.frame.size = CGSize(width: emailTextfield.frame.height/(1.5), height: emailTextfield.frame.height/(1.5))
         leftButton.frame.origin = CGPoint(x: paddingView.frame.width/2 - leftButton.frame.width/2, y: paddingView.frame.height/2 - leftButton.frame.height/2)
-        leftButton.backgroundColor = .white
+        leftButton.backgroundColor = .clear
         leftButton.tintColor = appThemeColor
         leftButton.layer.cornerRadius = leftButton.frame.height/2
         leftButton.contentMode = .scaleAspectFit
