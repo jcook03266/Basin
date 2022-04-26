@@ -40,8 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         /** Firestore settings*/
         let settings = Firestore.firestore().settings
-        /** Disable caching for offline querying*/
-        settings.isPersistenceEnabled = false
+        /** Enable caching for offline querying*/
+        settings.isPersistenceEnabled = true
         Firestore.firestore().settings = settings
         
         /** Keyboard manager settings*/

@@ -248,10 +248,11 @@ class OrderItemTableViewCell: UITableViewCell{
         itemCountButton.layer.cornerRadius = itemCountButton.frame.height/5
         itemCountButton.isExclusiveTouch = true
         itemCountButton.isEnabled = true
-        itemCountButton.isUserInteractionEnabled = true
+        itemCountButton.isUserInteractionEnabled = false
         itemCountButton.tintColor = .black
         itemCountButton.setTitleColor(.black, for: .normal)
         itemCountButton.setTitle("\(cart.getTotalCountFor(this: itemData))", for: .normal)
+        itemCountButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
         itemCountButton.titleLabel?.adjustsFontSizeToFitWidth = true
         itemCountButton.titleLabel?.adjustsFontForContentSizeCategory = true
         ///itemCountButton.addTarget(self, action: #selector(itemCountButtonPressed), for: .touchUpInside)

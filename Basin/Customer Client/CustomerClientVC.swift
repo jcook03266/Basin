@@ -468,7 +468,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         weatherView.frame.size = CGSize(width: self.view.frame.width * 0.3, height: 40)
         switch darkMode{
         case true:
-            weatherView.backgroundColor = .black
+            weatherView.backgroundColor = bgColor.darker
         case false:
             weatherView.backgroundColor = bgColor
         }
@@ -627,7 +627,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Hide the weather view in a static or animated fashion*/
     func hideWeatherView(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.175, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.175, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.weatherView.transform = CGAffineTransform(translationX: -self.view.frame.width/2, y: 0)
             }
         }
@@ -639,7 +639,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Display the weather view in a static or animated fashion*/
     func showWeatherView(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.175, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.175, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.weatherView.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
@@ -651,7 +651,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Hide the shopping cart button in a static or animated fashion*/
     func hideShoppingCartButton(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.2, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.2, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.shoppingCartButton.transform = CGAffineTransform(translationX: self.shoppingCartButton.frame.width * 2, y: 0)
             }
         }
@@ -663,7 +663,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Display the shopping cart button in a static or animated fashion*/
     func showShoppingCartButton(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.2, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.2, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.shoppingCartButton.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
@@ -675,7 +675,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Hide the customer support button in a static or animated fashion*/
     func hideCustomerSupportButton(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.customerSupportButton.transform = CGAffineTransform(translationX: self.customerSupportButton.frame.width * 2, y: 0)
             }
         }
@@ -687,7 +687,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Display the customer support button in a static or animated fashion*/
     func showCustomerSupportButton(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.customerSupportButton.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
@@ -699,7 +699,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Hide the welcome label in a static or animated fashion*/
     func hideWelcomeLabel(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.15, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.15, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.welcomeLabelShadowView.transform = CGAffineTransform(translationX: -self.view.frame.width/2, y: 0)
             }
         }
@@ -711,7 +711,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Display the welcome label in a static or animated fashion*/
     func showWelcomeLabel(animated: Bool){
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0.15, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0.15, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.welcomeLabelShadowView.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
@@ -724,7 +724,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     func hideCurrentLocationButton(animated: Bool){
         currentLocationButton.isEnabled = false
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.currentLocationButton.transform = CGAffineTransform(translationX: self.currentLocationButton.frame.width * 2, y: 0)
             }
         }
@@ -737,7 +737,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     func showCurrentLocationButton(animated: Bool){
         currentLocationButton.isEnabled = true
         if animated{
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                 self.currentLocationButton.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
@@ -943,9 +943,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         ordersTableView.clipsToBounds = true
         switch darkMode{
         case true:
-            laundromatLocationsTableView.backgroundColor = .black
+            ordersTableView.backgroundColor = bgColor.darker
         case false:
-            laundromatLocationsTableView.backgroundColor = bgColor
+            ordersTableView.backgroundColor = bgColor
         }
         ordersTableView.tintColor = fontColor
         ordersTableView.isOpaque = false
@@ -986,7 +986,12 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         let topBorder = CALayer()
         topBorder.frame = CGRect(x: 0, y: ordersTableView.frame.minY, width: ordersTableView.frame.width, height: 1)
-        topBorder.backgroundColor = bgColor.darker.cgColor
+        switch darkMode{
+        case true:
+            topBorder.backgroundColor = UIColor.black.cgColor
+        case false:
+            topBorder.backgroundColor = bgColor.darker.cgColor
+        }
         ordersBottomSheet.layer.addSublayer(topBorder)
         
         /** Layout these subviews*/
@@ -1055,7 +1060,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         laundromatLocationsTableView.clipsToBounds = true
         switch darkMode{
         case true:
-            laundromatLocationsTableView.backgroundColor = .black
+            laundromatLocationsTableView.backgroundColor = bgColor.darker
         case false:
             laundromatLocationsTableView.backgroundColor = bgColor
         }
@@ -1095,7 +1100,12 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         let topBorder = CALayer()
         topBorder.frame = CGRect(x: 0, y: laundromatLocationsTableView.frame.minY, width: laundromatLocationsTableView.frame.width, height: 1)
-        topBorder.backgroundColor = bgColor.darker.cgColor
+        switch darkMode{
+        case true:
+            topBorder.backgroundColor = UIColor.black.cgColor
+        case false:
+            topBorder.backgroundColor = bgColor.darker.cgColor
+        }
         bottomSheet.layer.addSublayer(topBorder)
         
         /** Sort button in order for the user to sort through the various laundromat locations*/
@@ -2124,11 +2134,13 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             ordersBottomSheetRefreshControl.updateProgress(with: scrollView.contentOffset.y)
         }
         
-        if scrollView == laundromatLocationsCollectionView{
-            let pageIndex = round(scrollView.contentOffset.x/self.view.frame.width)
-            
+        if scrollView == laundromatLocationsTableView{
             /** Trigger refresh animation*/
             bottomSheetRefreshControl.updateProgress(with: scrollView.contentOffset.y)
+        }
+        
+        if scrollView == laundromatLocationsCollectionView{
+            let pageIndex = round(scrollView.contentOffset.x/self.view.frame.width)
             
             for (marker, laundromat) in mapMarkers{
                 let laundromatCell = laundromatLocationsCollectionView.cellForItem(at: IndexPath(row: Int(pageIndex), section: 0))

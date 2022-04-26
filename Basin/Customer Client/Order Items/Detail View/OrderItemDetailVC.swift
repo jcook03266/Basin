@@ -251,7 +251,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         mask.strokeEnd = 1
         mask.masksToBounds = false
         mask.shadowColor = UIColor.darkGray.cgColor
-        mask.shadowRadius = 10
+        mask.shadowRadius = 4
         mask.shadowOpacity = 1
         mask.shadowOffset = CGSize(width: 0, height: 2)
         mask.shadowPath = curvedPath.cgPath
@@ -324,7 +324,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         priceLabel.sizeToFit()
         
         menuTypeLabel = UILabel()
-        menuTypeLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.9, height: 400)
+        menuTypeLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.9, height: 40)
         menuTypeLabel.font = getCustomFont(name: .Bungee_Regular, size: 23, dynamicSize: true)
         menuTypeLabel.backgroundColor = .clear
         menuTypeLabel.textColor = appThemeColor
@@ -578,7 +578,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         bannerAdContainer.backgroundColor = .clear
         bannerAdContainer.layer.cornerRadius = bannerAdContainer.frame.height/5
         bannerAdContainer.layer.borderColor = UIColor.lightGray.cgColor
-        bannerAdContainer.layer.borderWidth = 1
+        bannerAdContainer.layer.borderWidth = 0
         bannerAdContainer.clipsToBounds = true
         bannerAdContainer.isSkeletonable = true
         /** Display skeleton view until the GAD is loaded*/
@@ -619,7 +619,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         menuTypeLabel.frame.origin = CGPoint(x: 0, y: 5)
         
-        nameLabel.frame.origin = CGPoint(x: menuTypeLabel.frame.minX, y: menuTypeLabel.frame.maxY + 5)
+        nameLabel.frame.origin = CGPoint(x: menuTypeLabel.frame.minX, y: menuTypeLabel.frame.maxY)
         
         priceLabel.frame.origin = CGPoint(x: menuTypeLabel.frame.minX, y: nameLabel.frame.maxY + 5)
         
@@ -638,12 +638,12 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         addToCartButton.frame.origin = CGPoint(x: view.frame.width/2 - addToCartButton.frame.width/2, y: view.frame.maxY - (addToCartButton.frame.height * 2.5))
         
-        specialInstructionsLabelContainer.frame.origin = CGPoint(x: 0, y: itemChoicesTableView.frame.maxY + specialInstructionsLabelContainer.frame.height/2)
+        specialInstructionsLabelContainer.frame.origin = CGPoint(x: 0, y: itemChoicesTableView.frame.maxY + 0)
         
         specialInstructionsTextViewContainer.frame.origin = CGPoint(x: 0, y: specialInstructionsLabelContainer.frame.maxY + 10)
         
         if displayRecommendations == true{
-            recommendedForYouCollectionViewLabel.frame.origin = CGPoint(x: stackView.frame.width * 0.05, y: specialInstructionsTextViewContainer.frame.maxY + recommendedForYouCollectionViewLabel.frame.height/2)
+            recommendedForYouCollectionViewLabel.frame.origin = CGPoint(x: stackView.frame.width * 0.05, y: specialInstructionsTextViewContainer.frame.maxY + recommendedForYouCollectionViewLabel.frame.height * 2)
         
         recommendedForYouCollectionViewContainer.frame.origin = CGPoint(x: stackView.frame.width/2 - recommendedForYouCollectionViewContainer.frame.width/2, y: recommendedForYouCollectionViewLabel.frame.maxY + 10)
         }
@@ -1197,7 +1197,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
                     
                     /** Make sure to not include the currently selected cells in the index path array*/
                     if let cell = tableView.cellForRow(at: thisIndexPath) as? ItemChoiceCell{
-                        if cell.selectionStatus == false{
+                        if cell.selectionStatus == false && tableViewCell != cell{
                             rowIndexPaths.append(thisIndexPath)
                         }
                     }

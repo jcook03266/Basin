@@ -8,6 +8,7 @@ import UIKit
 import Network
 import FirebaseAuth
 import GoogleMaps
+import Lottie
 
 /** Detail view controller for the laundromat location cells that allows the user to create an order and proceed to check out*/
 public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIBarPositioningDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, CartDelegate, CLLocationManagerDelegate{
@@ -43,6 +44,13 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     /** Create navigation bar to host navigation items*/
     private var navBar = UINavigationBar()
     private var searchController: UISearchController? = nil
+    /** A filtered collection of order item sets and their coresponding categories that matches the current characters entered by the user into the search bar*/
+    private var filteredItems: [String : [OrderItem]] = [:]
+    /** Only filter the order items and categories from the washing menu when this option is enabled*/
+    private var filterWashingMenu: Bool = true
+    /** Only filter the order items and categories from the dry cleaning menu when this option is enabled*/
+    private var filterDryCleaningMenu: Bool = false
+    
     private var washingButton = UIButton()
     private var dryCleaningButton = UIButton()
     private var buttonBar: underlinedButtonBar!
@@ -63,8 +71,19 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     var recentSearchesCollectionView: UICollectionView!
     /** Display search results from the search bar's current text and the data being searched*/
     var searchTableView: UITableView!
+    /** Container that will hold all of the subsequent views specified below*/
+    var noSearchResultsFoundContainer: UIView!
+    /** Button to cancel the search operation and go back to the base view controller*/
+    var noSearchResultsFoundBackButton: UIButton!
+    /** A textual representation of the no search results found state for those who didn't get the memo the first time*/
+    var noSearchResultsFoundLabel: UILabel!
+    /** Secondary label prompting the user to either continue with a new query or go back*/
+    var noSearchResultsFoundSecondaryLabel: UILabel!
+    /** Nice little animation to inform the user that their query turned up no results*/
+    var noSearchResultsFoundLottieView: AnimationView!
+    /** Bool used to determine whether or not the no search results panel is currently being displayed, this prevents the lottie animation from being restarted prematurely when the user enters new text into the search bar*/
+    var noSearchResultsFoundBeingDisplayed: Bool = false
     /** Search UI*/
-    
     
     /** View that will contain all of the information pertaining to this laundromat*/
     var informationPanel: UIView!
@@ -318,7 +337,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         shimmeringTableView_1.clipsToBounds = true
         switch darkMode {
         case true:
-            shimmeringTableView_1.backgroundColor = .black
+            shimmeringTableView_1.backgroundColor = bgColor
         case false:
             shimmeringTableView_1.backgroundColor = bgColor
         }
@@ -352,7 +371,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         shimmeringTableView_2.clipsToBounds = true
         switch darkMode {
         case true:
-            shimmeringTableView_2.backgroundColor = .black
+            shimmeringTableView_2.backgroundColor = bgColor
         case false:
             shimmeringTableView_2.backgroundColor = bgColor
         }
@@ -461,7 +480,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         washingMenuTableView.clipsToBounds = true
         switch darkMode {
         case true:
-            washingMenuTableView.backgroundColor = .black
+            washingMenuTableView.backgroundColor = bgColor
         case false:
             washingMenuTableView.backgroundColor = bgColor
         }
@@ -511,7 +530,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         dryCleaningMenuTableView.clipsToBounds = true
         switch darkMode {
         case true:
-            dryCleaningMenuTableView.backgroundColor = .black
+            dryCleaningMenuTableView.backgroundColor = bgColor
         case false:
             dryCleaningMenuTableView.backgroundColor = bgColor
         }
@@ -799,13 +818,19 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){[self] in
             switch currentPage{
             case 0:
+                filterWashingMenu = true
+                filterDryCleaningMenu = false
+                
                 buttonBar!.moveUnderLineTo(this: buttonBar!.buttons[currentPage])
-                searchController!.searchBar.placeholder = "Search"
-                sectionTitleLabel.text = "Wash Dry Fold"
+                searchController!.searchBar.placeholder = "Search for washing options"
+                ///sectionTitleLabel.text = "Wash Dry Fold"
             case 1:
+                filterDryCleaningMenu = true
+                filterWashingMenu = false
+                
                 buttonBar!.moveUnderLineTo(this: buttonBar!.buttons[currentPage])
-                searchController!.searchBar.placeholder = "Search"
-                sectionTitleLabel.text = "Dry Cleaning"
+                searchController!.searchBar.placeholder = "Search for dry cleaning options"
+                ///sectionTitleLabel.text = "Dry Cleaning"
             default:
                 break
             }
@@ -847,7 +872,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         informationPanel.layer.masksToBounds = false
         switch darkMode {
         case true:
-            informationPanel.backgroundColor = .black
+            informationPanel.backgroundColor = bgColor.darker
         case false:
             informationPanel.backgroundColor = bgColor
         }
@@ -1253,7 +1278,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         var underlineColor = appThemeColor
         switch darkMode{
         case true:
-            barBgColor = UIColor.black
+            barBgColor = bgColor.darker
             underlineColor = appThemeColor
         case false:
             barBgColor =  appThemeColor
@@ -1285,16 +1310,45 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         viewCartButton.addTarget(self, action: #selector(viewCartButtonPressed), for: .touchUpInside)
         addDynamicButtonGR(button: viewCartButton)
         
-        searchTableViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        searchTableViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - imageCarousel.frame.height))
         switch darkMode {
         case true:
-            searchTableViewContainer.backgroundColor = .black
+            searchTableViewContainer.backgroundColor = bgColor
         case false:
             searchTableViewContainer.backgroundColor = bgColor
         }
         searchTableViewContainer.isUserInteractionEnabled = true
         searchTableViewContainer.clipsToBounds = true
         searchTableViewContainer.frame.size.height = 0
+        
+        searchTableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height), style: .grouped)
+        searchTableView.clipsToBounds = true
+        searchTableView.backgroundColor = .clear
+        searchTableView.tintColor = fontColor
+        searchTableView.isOpaque = false
+        searchTableView.showsVerticalScrollIndicator = true
+        searchTableView.showsHorizontalScrollIndicator = false
+        searchTableView.isExclusiveTouch = true
+        searchTableView.contentInsetAdjustmentBehavior = .never
+        searchTableView.dataSource = self
+        searchTableView.delegate = self
+        searchTableView.separatorStyle = .singleLine
+        searchTableView.layer.borderColor = UIColor.white.darker.cgColor
+        searchTableView.layer.borderWidth = 0
+        
+        /** Add a little space at the bottom of the scrollview*/
+        searchTableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: imageCarousel.frame.height * 1.25, right: 0)
+        
+        searchTableView.register(OrderItemSearchTableViewCell.self, forCellReuseIdentifier: OrderItemSearchTableViewCell.identifier)
+        
+        if(darkMode == true){
+            searchTableView.indicatorStyle = .white
+        }
+        else{
+            searchTableView.indicatorStyle = .black
+        }
+        
+        searchTableViewContainer.addSubview(searchTableView)
         
         /** Delay this slightly to give the buttonbar time to be repositioned*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){[self] in
@@ -1304,14 +1358,14 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: dividingLine.frame.maxY)
             
             /**
-            sectionTitleLabel.frame = CGRect(x: 0, y: buttonBar!.frame.maxY + 20, width:  view.frame.width, height: 40)
-            sectionTitleLabel.text = "Wash Dry Fold"
-            sectionTitleLabel.font = getCustomFont(name: .Bungee_Regular, size: 25, dynamicSize: true)
-            sectionTitleLabel.textColor = appThemeColor
-            sectionTitleLabel.adjustsFontSizeToFitWidth = true
-            sectionTitleLabel.textAlignment = .left
-            sectionTitleLabel.layer.zPosition = -1
-            */
+             sectionTitleLabel.frame = CGRect(x: 0, y: buttonBar!.frame.maxY + 20, width:  view.frame.width, height: 40)
+             sectionTitleLabel.text = "Wash Dry Fold"
+             sectionTitleLabel.font = getCustomFont(name: .Bungee_Regular, size: 25, dynamicSize: true)
+             sectionTitleLabel.textColor = appThemeColor
+             sectionTitleLabel.adjustsFontSizeToFitWidth = true
+             sectionTitleLabel.textAlignment = .left
+             sectionTitleLabel.layer.zPosition = -1
+             */
             
             informationPanel.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
             
@@ -1561,8 +1615,270 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         navBar.scrollEdgeAppearance = standardAppearance
     }
     
+    /** Search bar delegate methods*/
+    /** Listen for the changes to the text in the search bar*/
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
+        
+        /** Hide the search table if no text has been entered, and display the search table once text has been entered*/
+        if searchText != ""{
+            showSearchTable()
+        }
+        else if searchText == ""{
+            hideSearchTable()
+        }
+        
+        /** Update the no search results label with the current search text*/
+        if noSearchResultsFoundBeingDisplayed == true{
+            /** Hide the no search results prompt*/
+            if searchText == ""{
+            hideNoSearchResultsFound()
+            }
+            else if noSearchResultsFoundLabel != nil{
+            noSearchResultsFoundLabel.text = "No search result matches found for '\(searchText)'"
+            }
+        }
+        
+        if filterWashingMenu == true{
+            
+            for dictionary in washingMenuCategorySections{
+                for item in dictionary.value{
+                    /** Detect if the name of the item contains the given search text*/
+                    var matchFound = false
+                    
+                    if item.name.lowercased().contains(searchText.lowercased()){
+                        matchFound = true
+                    }
+                    else{
+                        matchFound = false
+                    }
+                    
+                    if matchFound == true{
+                        /** Append this item to the filtered results if it's not already present*/
+                        if filteredItems[dictionary.key] != nil{
+                            
+                            /** Make sure the elements in the array are unique*/
+                            if !filteredItems[dictionary.key]!.contains(item){
+                                filteredItems[dictionary.key]!.append(item)
+                            }
+                        }
+                        else{
+                            /** Instantiate the array for the given key*/
+                            filteredItems[dictionary.key] = []
+                            filteredItems[dictionary.key]!.append(item)
+                        }
+                    }
+                    else{
+                        /** Remove this item from the filtered results if it's not already removed*/
+                        if filteredItems[dictionary.key] != nil{
+                            for (index,filteredItem) in filteredItems[dictionary.key]!.enumerated(){
+                                if filteredItem == item{
+                                    filteredItems[dictionary.key]!.remove(at: index)
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            /** Remove any unused sections*/
+            for pair in filteredItems{
+                if pair.value.isEmpty == true{
+                filteredItems.removeValue(forKey: pair.key)
+                }
+            }
+            searchTableView.reloadData()
+        }
+        else if filterDryCleaningMenu == true{
+            
+            for dictionary in dryCleaningMenuCategorySections{
+                for item in dictionary.value{
+                    /** Detect if the name of the item contains the given search text*/
+                    var matchFound = false
+                    
+                    if item.name.lowercased().contains(searchText.lowercased()){
+                        matchFound = true
+                    }
+                    else{
+                        matchFound = false
+                    }
+                    
+                    if matchFound == true{
+                        /** Append this item to the filtered results if it's not already present*/
+                        if filteredItems[dictionary.key] != nil{
+                            
+                            if !filteredItems[dictionary.key]!.contains(item){
+                                filteredItems[dictionary.key]!.append(item)
+                            }
+                        }
+                        else{
+                            /** Instantiate the array for the given key*/
+                            filteredItems[dictionary.key] = []
+                            filteredItems[dictionary.key]!.append(item)
+                        }
+                    }
+                    else{
+                        /** Remove this item from the filtered results if it's not already removed*/
+                        if filteredItems[dictionary.key] != nil{
+                            for (index,filteredItem) in filteredItems[dictionary.key]!.enumerated(){
+                                if filteredItem == item{
+                                    filteredItems[dictionary.key]!.remove(at: index)
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            /** Remove any unused sections*/
+            for pair in filteredItems{
+                if pair.value.isEmpty == true{
+                filteredItems.removeValue(forKey: pair.key)
+                }
+            }
+            searchTableView.reloadData()
+            
+        }
+        
+        /** If no search results are available then display the no search results available prompt*/
+        if filteredItems.isEmpty == true{
+            if noSearchResultsFoundBeingDisplayed == false{
+                displayNoSearchResultsFound()
+            }
+        }
+        else{
+            /** There are search results available so hide the no search results panel*/
+            hideNoSearchResultsFound()
+        }
+    }
+    /** Clear the search table when the user cancels the search operation */
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        filteredItems.removeAll()
+        searchTableView.reloadData()
+        
+        noSearchResultsFoundBeingDisplayed =  false
+        
+        hideNoSearchResultsFound()
+        
+        hideSearchTable()
+    }
+    
     /** Show the search results table view when the user starts editing*/
     public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    }
+    
+    /** Display the no search results found prompt*/
+    func displayNoSearchResultsFound(){
+        guard searchTableView != nil else {
+            return
+        }
+        
+        /** Get rid of the past no search results panel when a new one is to be displayed*/
+        if noSearchResultsFoundContainer != nil{
+        noSearchResultsFoundContainer.removeFromSuperview()
+        noSearchResultsFoundContainer = nil
+        }
+        
+        noSearchResultsFoundBeingDisplayed =  true
+        
+        noSearchResultsFoundContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - imageCarousel.frame.height))
+        noSearchResultsFoundContainer.clipsToBounds = true
+        noSearchResultsFoundContainer.alpha = 0
+        noSearchResultsFoundContainer.backgroundColor = bgColor
+        noSearchResultsFoundContainer.isUserInteractionEnabled = true
+        
+        noSearchResultsFoundBackButton = UIButton()
+        noSearchResultsFoundBackButton.frame.size = CGSize(width: noSearchResultsFoundContainer.frame.width * 0.9, height: 50)
+        noSearchResultsFoundBackButton.backgroundColor = bgColor
+        noSearchResultsFoundBackButton.setTitleColor(appThemeColor, for: .normal)
+        noSearchResultsFoundBackButton.setTitle("Go Back", for: .normal)
+        noSearchResultsFoundBackButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 18, dynamicSize: true)
+        noSearchResultsFoundBackButton.contentHorizontalAlignment = .center
+        noSearchResultsFoundBackButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        noSearchResultsFoundBackButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        noSearchResultsFoundBackButton.layer.cornerRadius = noSearchResultsFoundBackButton.frame.height/2
+        noSearchResultsFoundBackButton.isExclusiveTouch = true
+        noSearchResultsFoundBackButton.isEnabled = true
+        noSearchResultsFoundBackButton.castDefaultShadow()
+        noSearchResultsFoundBackButton.layer.shadowColor = UIColor.darkGray.cgColor
+        noSearchResultsFoundBackButton.layer.borderColor = appThemeColor.cgColor
+        noSearchResultsFoundBackButton.layer.borderWidth = 2
+        noSearchResultsFoundBackButton.tintColor = appThemeColor
+        noSearchResultsFoundBackButton.addTarget(self, action: #selector(noSearchResultsFoundBackButtonPressed), for: .touchUpInside)
+        addDynamicButtonGR(button: noSearchResultsFoundBackButton)
+        
+        noSearchResultsFoundLabel = UILabel()
+        noSearchResultsFoundLabel.frame = CGRect(x: 0, y: 0, width: noSearchResultsFoundContainer.frame.width * 0.85, height: 40)
+        noSearchResultsFoundLabel.font = getCustomFont(name: .Ubuntu_Medium, size: 22, dynamicSize: true)
+        noSearchResultsFoundLabel.lineBreakMode = .byClipping
+        noSearchResultsFoundLabel.numberOfLines = 2
+        noSearchResultsFoundLabel.textColor = fontColor
+        noSearchResultsFoundLabel.adjustsFontForContentSizeCategory = true
+        noSearchResultsFoundLabel.adjustsFontSizeToFitWidth = true
+        noSearchResultsFoundLabel.textAlignment = .center
+        noSearchResultsFoundLabel.text = "No search result matches found for '\(searchController!.searchBar.searchTextField.text!)'"
+        noSearchResultsFoundLabel.sizeToFit()
+        
+        noSearchResultsFoundSecondaryLabel = UILabel()
+        noSearchResultsFoundSecondaryLabel.frame = CGRect(x: 0, y: 0, width: noSearchResultsFoundContainer.frame.width * 0.85, height: 40)
+        noSearchResultsFoundSecondaryLabel.font = getCustomFont(name: .Ubuntu_Light, size: 16, dynamicSize: true)
+        noSearchResultsFoundSecondaryLabel.lineBreakMode = .byClipping
+        noSearchResultsFoundSecondaryLabel.numberOfLines = 2
+        noSearchResultsFoundSecondaryLabel.textColor = .lightGray
+        noSearchResultsFoundSecondaryLabel.adjustsFontForContentSizeCategory = true
+        noSearchResultsFoundSecondaryLabel.adjustsFontSizeToFitWidth = true
+        noSearchResultsFoundSecondaryLabel.textAlignment = .center
+        noSearchResultsFoundSecondaryLabel.text = "You can try another query or go back to the main menu"
+        noSearchResultsFoundSecondaryLabel.sizeToFit()
+        
+        noSearchResultsFoundLottieView = AnimationView(name: "noSearchResults")
+        noSearchResultsFoundLottieView.frame = CGRect(x: 0, y: 0, width: noSearchResultsFoundContainer.frame.width/2, height: noSearchResultsFoundContainer.frame.width/2)
+        noSearchResultsFoundLottieView.clipsToBounds = true
+        noSearchResultsFoundLottieView.backgroundColor = .clear
+        noSearchResultsFoundLottieView.backgroundBehavior = .pauseAndRestore
+        noSearchResultsFoundLottieView.shouldRasterizeWhenIdle = true
+        noSearchResultsFoundLottieView.play()
+        noSearchResultsFoundLottieView.loopMode = .playOnce
+        
+        /** Layout these subviews*/
+        noSearchResultsFoundLottieView.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundLottieView.frame.width/2, y: noSearchResultsFoundContainer.frame.height/2 - noSearchResultsFoundLottieView.frame.height)
+        
+        noSearchResultsFoundLabel.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundLabel.frame.width/2, y: noSearchResultsFoundLottieView.frame.minY - (noSearchResultsFoundLabel.frame.height * 1.15))
+        
+        noSearchResultsFoundSecondaryLabel.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundSecondaryLabel.frame.width/2, y: noSearchResultsFoundLottieView.frame.maxY + (noSearchResultsFoundLabel.frame.height * 0.15))
+        
+        noSearchResultsFoundBackButton.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundBackButton.frame.width/2, y: noSearchResultsFoundContainer.frame.maxY - (noSearchResultsFoundBackButton.frame.height * 1.75))
+        
+        noSearchResultsFoundContainer.addSubview(noSearchResultsFoundLabel)
+        noSearchResultsFoundContainer.addSubview(noSearchResultsFoundLottieView)
+        noSearchResultsFoundContainer.addSubview(noSearchResultsFoundSecondaryLabel)
+        noSearchResultsFoundContainer.addSubview(noSearchResultsFoundBackButton)
+        
+        searchTableView.addSubview(noSearchResultsFoundContainer)
+        
+        UIView.animate(withDuration: 0.5, delay: 0){[self] in
+        noSearchResultsFoundContainer.alpha = 1
+        }
+    }
+    
+    /** Hide the no search results found panel*/
+    func hideNoSearchResultsFound(){
+        guard noSearchResultsFoundContainer != nil else {
+            return
+        }
+        
+        noSearchResultsFoundBeingDisplayed = false
+        
+        noSearchResultsFoundContainer.isUserInteractionEnabled = false
+        
+        UIView.animate(withDuration: 0.5, delay: 0){[self] in
+        noSearchResultsFoundContainer.alpha = 0
+        }
+    }
+    
+    /** Methods for showing and hiding the search table in an animated fashion*/
+    func showSearchTable(){
         /** Expand*/
         searchTableViewExpanded = true
         
@@ -1575,12 +1891,11 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         }
         
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
-            searchTableViewContainer.frame.size.height = self.view.frame.height
+            searchTableViewContainer.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         }
     }
     
-    /** Hide the search results table view when the user stops editing*/
-    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    func hideSearchTable(){
         /** Contract*/
         searchTableViewExpanded = false
         
@@ -1596,6 +1911,16 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             searchTableViewContainer.frame.size.height = 0
         }
     }
+    /** Methods for showing and hiding the search table in an animated fashion*/
+    
+    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        
+    }
+    
+    public func updateSearchResults(for searchController: UISearchController){
+        //
+    }
+    /** Search bar delegate methods*/
     
     /**Customize and set up the search controller for this view*/
     func setSearchController(){
@@ -1603,7 +1928,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchController!.hidesNavigationBarDuringPresentation = false
         searchController!.searchResultsUpdater = self
         searchController!.obscuresBackgroundDuringPresentation = false
-        searchController!.searchBar.placeholder = "Search"
+        searchController!.searchBar.placeholder = "Search for washing options"
         
         /**Cancel button and editing carot*/
         switch darkMode {
@@ -1622,20 +1947,16 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchController?.searchBar.searchTextField.textColor = fontColor
         searchController?.searchBar.searchTextField.backgroundColor = bgColor.lighter
         searchController?.searchBar.searchTextField.leftView?.tintColor = appThemeColor/**change color of searchbar icon*/
-        searchController?.searchBar.searchTextField.font = getCustomFont(name: .Ubuntu_Light, size: 16, dynamicSize: true)
+        searchController?.searchBar.searchTextField.font = getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true)
         searchController?.searchBar.searchTextField.layer.cornerRadius = (searchController?.searchBar.frame.height)!/3.2
         searchController?.searchBar.searchTextField.layer.masksToBounds = true
-    }
-    
-    public func updateSearchResults(for searchController: UISearchController){
-        //
     }
     
     func configure(){
         switch darkMode {
         case true:
             scrollView.indicatorStyle = .white
-            view.backgroundColor = .black
+            view.backgroundColor = bgColor
         case false:
             scrollView.indicatorStyle = .black
             view.backgroundColor = bgColor
@@ -1696,6 +2017,16 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         }
     }
     
+    /** Cancel the current search operation*/
+    @objc func noSearchResultsFoundBackButtonPressed(sender: UIButton){
+        guard searchController != nil else {
+            return
+        }
+        
+        self.searchBarCancelButtonClicked(searchController!.searchBar)
+        self.searchController!.isActive = false
+    }
+    
     /** Present the cart associated with this session*/
     @objc func viewCartButtonPressed(sender: UIButton){
         /** This button will now act as an undo button*/
@@ -1727,7 +2058,6 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     
     @objc func optionsButtonPressed(sender: UIButton){
         lightHaptic()
-        
         
     }
     
@@ -1962,6 +2292,66 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
             view = container
         }
+        else if tableView == searchTableView{
+            if filterWashingMenu == true{
+                let container = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableViewHeaderHeight))
+                container.backgroundColor = .clear
+                container.clipsToBounds = true
+                
+                /** Describe the name of this category*/
+                let categoryLabel = UILabel()
+                categoryLabel.frame = CGRect(x: 0, y: 0, width: container.frame.width * 0.95, height: container.frame.height/2)
+                categoryLabel.font = getCustomFont(name: .Bungee_Regular, size: 22, dynamicSize: true)
+                categoryLabel.textColor = appThemeColor
+                categoryLabel.adjustsFontForContentSizeCategory = true
+                categoryLabel.adjustsFontSizeToFitWidth = true
+                categoryLabel.textAlignment = .left
+                
+                for (index, pair) in filteredItems.enumerated(){
+                    if section == index{
+                        categoryLabel.text = pair.key
+                    }
+                }
+                
+                categoryLabel.sizeToFit()
+                
+                /** Layout subviews*/
+                categoryLabel.frame.origin = CGPoint(x: container.frame.width * 0.025, y: container.frame.height/2 - categoryLabel.frame.height/2)
+                
+                container.addSubview(categoryLabel)
+                
+                view = container
+            }
+            else if filterDryCleaningMenu == true{
+                let container = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: tableViewHeaderHeight))
+                container.backgroundColor = .clear
+                container.clipsToBounds = true
+                
+                /** Describe the name of this category*/
+                let categoryLabel = UILabel()
+                categoryLabel.frame = CGRect(x: 0, y: 0, width: container.frame.width * 0.95, height: container.frame.height/2)
+                categoryLabel.font = getCustomFont(name: .Bungee_Regular, size: 22, dynamicSize: true)
+                categoryLabel.textColor = appThemeColor
+                categoryLabel.adjustsFontForContentSizeCategory = true
+                categoryLabel.adjustsFontSizeToFitWidth = true
+                categoryLabel.textAlignment = .left
+                
+                for (index, pair) in filteredItems.enumerated(){
+                    if section == index{
+                        categoryLabel.text = pair.key
+                    }
+                }
+                
+                categoryLabel.sizeToFit()
+                
+                /** Layout subviews*/
+                categoryLabel.frame.origin = CGPoint(x: container.frame.width * 0.025, y: container.frame.height/2 - categoryLabel.frame.height/2)
+                
+                container.addSubview(categoryLabel)
+                
+                view = container
+            }
+        }
         
         return view
     }
@@ -2003,6 +2393,35 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             vc.isModalInPresentation = true
             self.show(vc, sender: self)
         }
+        
+        if tableView == searchTableView{
+            lightHaptic()
+            
+            guard laundromatCart != nil && washingMenu != nil else {
+                return
+            }
+            
+            /** Fetch the cell at the given index path without dequeuing it and destroying its stored data*/
+            let tableViewCell = tableView.cellForRow(at: indexPath) as! OrderItemSearchTableViewCell
+            
+            var laundromatMenu = washingMenu!
+            if filterWashingMenu == true{
+                laundromatMenu = washingMenu!
+            }
+            else if filterDryCleaningMenu == true{
+                laundromatMenu = dryCleaningMenu!
+            }
+            
+            let vc = OrderItemDetailVC(itemData: tableViewCell.itemData, laundromatCart: self.laundromatCart, laundromatMenu: laundromatMenu)
+            
+            if filterWashingMenu == true || filterDryCleaningMenu == true{
+                vc.presentingTableView = searchTableView
+            }
+            
+            /** Prevent the user from using interactive dismissal*/
+            vc.isModalInPresentation = true
+            self.show(vc, sender: self)
+        }
     }
     
     /**Here we pass the table view all of the data for the cells*/
@@ -2037,8 +2456,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
             cell = tableViewCell
         }
-        
-        if tableView == dryCleaningMenuTableView{
+        else if tableView == dryCleaningMenuTableView{
             let tableViewCell = tableView.dequeueReusableCell(withIdentifier: OrderItemTableViewCell.identifier, for: indexPath) as! OrderItemTableViewCell
             
             if dryCleaningMenu != nil{
@@ -2053,6 +2471,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                         tableViewCell.create(with: items![indexPath.row], cart: laundromatCart)
                         tableViewCell.presentingVC = self
                         tableViewCell.presentingTableView = dryCleaningMenuTableView
+                        
+                        tableViewCell.updateBorder()
                     }
                 }
             }
@@ -2062,8 +2482,73 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
             cell = tableViewCell
         }
-        
-        if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
+        else if tableView == searchTableView{
+            if filterWashingMenu == true{
+                let tableViewCell = tableView.dequeueReusableCell(withIdentifier: OrderItemSearchTableViewCell.identifier, for: indexPath) as! OrderItemSearchTableViewCell
+                
+                if washingMenu != nil{
+                    /** Get the category for this section and use this to pin-point the array of items associated with this section*/
+                    var category = ""
+                    
+                    /** Match the indexPath's section up with the index of a pair in the filtered dictionary*/
+                    for (index, pair) in filteredItems.enumerated(){
+                        if indexPath.section == index{
+                            category = pair.key
+                        }
+                    }
+                    
+                    let items = filteredItems[category]
+                    if items != nil{
+                        /** Avoid going out of bounds*/
+                        if indexPath.row < items!.count{
+                            tableViewCell.create(with: items![indexPath.row], cart: laundromatCart)
+                            tableViewCell.presentingVC = self
+                            tableViewCell.presentingTableView = searchTableView
+                            
+                            tableViewCell.updateBorder()
+                        }
+                    }
+                }
+                else{
+                    /** Inform the user that no menu of this type exists for this laundromat*/
+                }
+                
+                cell = tableViewCell
+            }
+            else if filterDryCleaningMenu == true{
+                let tableViewCell = tableView.dequeueReusableCell(withIdentifier: OrderItemSearchTableViewCell.identifier, for: indexPath) as! OrderItemSearchTableViewCell
+                
+                if dryCleaningMenu != nil{
+                    /** Get the category for this section and use this to pin-point the array of items associated with this section*/
+                    var category = ""
+          
+                    /** Match the indexPath's section up with the index of a pair in the filtered dictionary*/
+                    for (index, pair) in filteredItems.enumerated(){
+                        if indexPath.section == index{
+                            category = pair.key
+                        }
+                    }
+                    
+                    let items = filteredItems[category]
+                    if items != nil{
+                        /** Avoid going out of bounds*/
+                        if indexPath.row < items!.count{
+                            tableViewCell.create(with: items![indexPath.row], cart: laundromatCart)
+                            tableViewCell.presentingVC = self
+                            tableViewCell.presentingTableView = searchTableView
+                            
+                            tableViewCell.updateBorder()
+                        }
+                    }
+                }
+                else{
+                    /** Inform the user that no menu of this type exists for this laundromat*/
+                }
+                
+                cell = tableViewCell
+            }
+        }
+        else if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ShimmeringTableViewCell.identifier, for: indexPath) as! ShimmeringTableViewCell
             
             tableViewCell.create(with: .lightGray, duration: 2)
@@ -2178,6 +2663,15 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
         }
         
+        if tableView == searchTableView{
+            if filteredItems.isEmpty == false{
+                numberOfSections = filteredItems.count
+            }
+            else{
+                numberOfSections = 0
+            }
+        }
+        
         if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             /** Specify a random number of sections for these table views*/
             numberOfSections = [3,4,5,6].randomElement()!
@@ -2217,6 +2711,30 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
         }
         
+        /** Display the amount of rows based on the number of matching cases in the filtered items dictionary*/
+        if tableView == searchTableView{
+            if filteredItems.isEmpty == false{
+                if filterWashingMenu == true{
+                    /** Organize the sections used the presorted menu categories used for the other tableview*/
+                    for (index, pair) in filteredItems.enumerated(){
+                        if section == index{
+                            count =  pair.value.count
+                        }
+                    }
+                }
+                else if filterDryCleaningMenu == true{
+                    for (index, pair) in filteredItems.enumerated(){
+                        if section == index{
+                            count =  pair.value.count
+                        }
+                    }
+                }
+            }
+            else{
+                count = 0
+            }
+        }
+        
         if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             /** Specify a random number of cells for each section*/
             count = [1,3,4,6].randomElement()!
@@ -2229,7 +2747,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         var height:CGFloat  = 0
         
-        if tableView == washingMenuTableView || tableView == dryCleaningMenuTableView || tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
+        if tableView == washingMenuTableView || tableView == dryCleaningMenuTableView || tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2 || tableView == searchTableView{
             height = tableViewHeaderHeight
         }
         
@@ -2240,10 +2758,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         var height:CGFloat = 0
         
-        if tableView == washingMenuTableView{
-            height = tableViewFooterHeight
-        }
-        if tableView == dryCleaningMenuTableView{
+        if tableView == washingMenuTableView || tableView ==  dryCleaningMenuTableView || tableView == searchTableView{
             height = tableViewFooterHeight
         }
         
@@ -2256,6 +2771,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         if tableView == washingMenuTableView || tableView == dryCleaningMenuTableView || tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             height = 100
+        }
+        
+        if tableView == searchTableView{
+            height = 60
         }
         
         return height

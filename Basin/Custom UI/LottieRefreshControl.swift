@@ -31,7 +31,7 @@ func updateProgress(with offsetY: CGFloat) {
     let progress = min(abs(offsetY / maxPullDistance), 1)
     
     /** Don't complete the animation*/
-    animationView.currentProgress = progress * 0.75
+    animationView.currentProgress = progress * 0.6
 }
 
 override func beginRefreshing() {
@@ -39,7 +39,7 @@ override func beginRefreshing() {
     isAnimating = true
     animationView.animationSpeed = 2
     /** Start the animation from the middle*/
-    animationView.currentProgress = 0.75
+    animationView.currentProgress = 0.6
     animationView.play()
 }
 
