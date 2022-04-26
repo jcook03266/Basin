@@ -312,7 +312,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         priceLabel = UILabel()
         priceLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.7, height: 50)
-        priceLabel.font = getCustomFont(name: .Ubuntu_Medium, size: 20, dynamicSize: true)
+        priceLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true)
         priceLabel.text = "$\(String(format: "%.2f", itemData.price)) /Item"
         priceLabel.backgroundColor = .clear
         priceLabel.textColor = fontColor
@@ -320,7 +320,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         priceLabel.adjustsFontForContentSizeCategory = true
         priceLabel.adjustsFontSizeToFitWidth = true
         priceLabel.layer.masksToBounds = true
-        priceLabel.attributedText = attribute(this: priceLabel.text!, font: getCustomFont(name: .Ubuntu_Medium, size: 20, dynamicSize: true), mainColor: fontColor, subColor: .lightGray, subString: "/Item")
+        priceLabel.attributedText = attribute(this: priceLabel.text!, font: getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true), mainColor: fontColor, subColor: .lightGray, subString: "/Item")
         priceLabel.sizeToFit()
         
         menuTypeLabel = UILabel()
@@ -330,7 +330,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         menuTypeLabel.textColor = appThemeColor
         menuTypeLabel.textAlignment = .left
         menuTypeLabel.adjustsFontForContentSizeCategory = true
-        menuTypeLabel.adjustsFontSizeToFitWidth = false
+        menuTypeLabel.adjustsFontSizeToFitWidth = true
         menuTypeLabel.text = "\(laundromatMenu.category) Serivce"
         menuTypeLabel.sizeToFit()
         
@@ -422,7 +422,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemCountDisplay.adjustsFontSizeToFitWidth = true
         itemCountDisplay.adjustsFontForContentSizeCategory = true
         itemCountDisplay.layer.cornerRadius = itemCountDisplay.frame.height/2
-        itemCountDisplay.layer.borderColor = bgColor.darker.cgColor
+        itemCountDisplay.layer.borderColor = UIColor.darkGray.cgColor
         itemCountDisplay.layer.borderWidth = 3
         itemCountDisplay.clipsToBounds = true
         itemCountDisplay.alpha = 0
@@ -617,11 +617,11 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         imageView.frame.origin = CGPoint(x: maskedHeaderView.frame.width/2 - imageView.frame.width/2, y: maskedHeaderView.frame.height/2 - imageView.frame.height/2)
         
-        menuTypeLabel.frame.origin = CGPoint(x: 0, y: 5)
+        menuTypeLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - menuTypeLabel.frame.width/2, y: 0)
         
-        nameLabel.frame.origin = CGPoint(x: menuTypeLabel.frame.minX, y: menuTypeLabel.frame.maxY)
+        nameLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - nameLabel.frame.width/2, y: menuTypeLabel.frame.maxY)
         
-        priceLabel.frame.origin = CGPoint(x: menuTypeLabel.frame.minX, y: nameLabel.frame.maxY + 5)
+        priceLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - priceLabel.frame.width/2, y: nameLabel.frame.maxY + 0)
         
         subtractButton.frame.origin = CGPoint(x: imageView.frame.minX - (addButton.frame.width * 2), y: 0)
         subtractButton.center.y = imageView.center.y
@@ -677,6 +677,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         }
         
         /** Don't resize these views*/
+        menuTypeLabel.translatesAutoresizingMaskIntoConstraints = true
         bannerAdContainer.translatesAutoresizingMaskIntoConstraints = true
         itemChoicesTableView.translatesAutoresizingMaskIntoConstraints = true
         specialInstructionsLabelContainer.translatesAutoresizingMaskIntoConstraints = true

@@ -133,6 +133,12 @@ class OrderItemSearchTableViewCell: UITableViewCell{
         itemCountButton.isUserInteractionEnabled = false
         itemCountButton.tintColor = .white
         itemCountButton.setTitleColor(.white, for: .normal)
+        
+        /** Hide the button if its not present in the cart*/
+        if cart.getTotalCountFor(this: itemData) == 0{
+            itemCountButton.alpha = 0
+        }
+        
         itemCountButton.setTitle("\(cart.getTotalCountFor(this: itemData))", for: .normal)
         itemCountButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
         itemCountButton.titleLabel?.adjustsFontSizeToFitWidth = true

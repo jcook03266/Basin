@@ -86,7 +86,7 @@ public class Cart: NSObject{
         var quantity: Int = 0
         
         for thisItem in items{
-            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription{
+            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription && thisItem.menu.id == item.menu.id{
                 quantity += thisItem.count
             }
         }
@@ -97,7 +97,7 @@ public class Cart: NSObject{
     /** Clear out the cart of all similar instances of this item*/
     func clearAllInstancesOf(this item: OrderItem){
         for thisItem in items{
-            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription{
+            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription && thisItem.menu.id == item.menu.id{
                 self.removeThis(item: thisItem)
             }
         }
@@ -402,7 +402,7 @@ func fetchThisCart(cart: Cart, completion: @escaping (Cart?)-> ()){
                     /** Don't try to parse an empty map, errors will occur*/
                     if itemChoiceMap.isEmpty == true{break}
                     
-                    var itemChoice = itemChoice(category: itemChoiceMap["Category"] as! String, name: itemChoiceMap["Name"] as! String, price: itemChoiceMap["Price"] as! Double, overridesTotalPrice: itemChoiceMap["Overrides Total"] as! Bool, choiceDescription: itemChoiceMap["Description"] as! String, required: itemChoiceMap["Required"] as! Bool, limit: itemChoiceMap["Limit"] as! Int)
+                    let itemChoice = itemChoice(category: itemChoiceMap["Category"] as! String, name: itemChoiceMap["Name"] as! String, price: itemChoiceMap["Price"] as! Double, overridesTotalPrice: itemChoiceMap["Overrides Total"] as! Bool, choiceDescription: itemChoiceMap["Description"] as! String, required: itemChoiceMap["Required"] as! Bool, limit: itemChoiceMap["Limit"] as! Int)
                     itemChoice.selected = itemChoiceMap["Selected"] as? Bool ?? false
                     
                     orderItem.itemChoices.update(with: itemChoice)
