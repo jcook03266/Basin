@@ -194,18 +194,11 @@ public class MapViewTileGrid: CALayer{
             let line = CAShapeLayer()
             line.path = CGPath(rect: CGRect(x: lineSpacing.width * CGFloat(int), y: 0, width: lineWidth, height: gridDimesions.height), transform: nil)
             line.frame.size = CGSize(width: lineWidth, height: gridDimesions.height)
-            /** Don't enable the fill color, the line will have ghosting as we only want to animate the stroke being drawn*/
-            line.fillColor = UIColor.clear.cgColor
+            /** Don't enable the fill color if you want to draw the line from scratch, the line will have ghosting as we only want to animate the stroke being drawn*/
+            line.fillColor = lineColor.withAlphaComponent(0.1).cgColor
+            line.lineCap = .round
             line.strokeColor = lineColor.withAlphaComponent(0.5).cgColor
             line.lineWidth = lineWidth
-           
-            /** Adding a shadow to the shape*/
-            line.shadowColor = UIColor.darkGray.cgColor
-            line.shadowRadius = 2
-            line.shadowOpacity = 1
-            line.masksToBounds = false
-            line.shadowOffset = CGSize(width: 0, height: 2)
-            line.shadowPath = line.path
             
             self.addSublayer(line)
             
@@ -216,17 +209,10 @@ public class MapViewTileGrid: CALayer{
             let line = CAShapeLayer()
             line.path = CGPath(rect: CGRect(x: 0, y: lineSpacing.height * CGFloat(int), width: gridDimesions.width, height: lineWidth), transform: nil)
             line.frame.size = CGSize(width: lineWidth, height: gridDimesions.height)
-            line.fillColor = UIColor.clear.cgColor
+            line.fillColor = lineColor.withAlphaComponent(0.1).cgColor
+            line.lineCap = .round
             line.strokeColor = lineColor.withAlphaComponent(0.5).cgColor
             line.lineWidth = lineWidth
-
-            /** Adding a shadow to the shape*/
-            line.shadowColor = UIColor.darkGray.cgColor
-            line.shadowRadius = 2
-            line.shadowOpacity = 1
-            line.masksToBounds = false
-            line.shadowOffset = CGSize(width: 0, height: 2)
-            line.shadowPath = line.path
             
             self.addSublayer(line)
             
@@ -242,9 +228,8 @@ public class MapViewTileGrid: CALayer{
     func animateDrawing(with duration: CGFloat){
         
         for (index, line) in horizontalLines.enumerated(){
-            /** Hide the shadow and set the line's end point to it's starting point*/
+            /** Set the line's end point to it's starting point*/
             line.strokeEnd = 0
-            line.shadowOpacity = 0
             
             /** Animate each line with a slight delay calculated by dividing the total duration by the number of lines*/
             DispatchQueue.main.asyncAfter(deadline: .now() + duration/CGFloat(index + 1)){
@@ -256,17 +241,12 @@ public class MapViewTileGrid: CALayer{
             strokeEndAnim.isRemovedOnCompletion = false
             strokeEndAnim.fillMode = .forwards
             
-            UIView.animate(withDuration: 0.5, delay: duration){
-            line.shadowOpacity = 1
-            }
-            
             line.add(strokeEndAnim, forKey: "strokeEnd")
             }
         }
         
         for (index, line) in verticalLines.enumerated(){
             line.strokeEnd = 0
-            line.shadowOpacity = 0
             
             DispatchQueue.main.asyncAfter(deadline: .now() + duration/CGFloat(index + 1)){
             let strokeEndAnim = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
@@ -276,10 +256,6 @@ public class MapViewTileGrid: CALayer{
             strokeEndAnim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
             strokeEndAnim.isRemovedOnCompletion = false
             strokeEndAnim.fillMode = .forwards
-            
-            UIView.animate(withDuration: 0.5, delay: (duration + 1)){
-            line.shadowOpacity = 1
-            }
             
             line.add(strokeEndAnim, forKey: "strokeEnd")
             }
