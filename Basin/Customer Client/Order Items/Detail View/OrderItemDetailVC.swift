@@ -561,7 +561,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemChoicesTableView.contentInsetAdjustmentBehavior = .never
         itemChoicesTableView.dataSource = self
         itemChoicesTableView.delegate = self
-        itemChoicesTableView.separatorStyle = .none
+        itemChoicesTableView.separatorStyle = .singleLine
         itemChoicesTableView.isScrollEnabled = false
         itemChoicesTableView.layer.borderColor = UIColor.white.darker.cgColor
         itemChoicesTableView.layer.borderWidth = 0
@@ -1020,7 +1020,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         /** Check to see if this item already exists in the cart, if so then simply update the count of the item*/
         for item in laundromatCart.items{
-            if item.name == itemData.name && item.category == itemData.category && compareItemChoiceSets(set1: item.itemChoices, set2: itemData.itemChoices) == true && item.id == itemData.id && item.price == itemData.price{
+            if item.name == itemData.name && item.category == itemData.category && compareItemChoiceSets(set1: item.itemChoices, set2: itemData.itemChoices) == true && item.id == itemData.id && item.price == itemData.price && item.menu.id == itemData.menu.id{
                 item.count += itemCount
                 
                 /** Update the cart with the mutated item*/

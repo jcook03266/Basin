@@ -137,3 +137,156 @@ public enum AddressType: Int{
     case business = 1
     case other = 2
 }
+
+/** Return a layer with a grid of lines forming a tile grid array for the mapview to display when the tiles aren't loaded yet
+ - Parameter backgroundColor: The desired color of the tile grid array
+ - Parameter lineWidth: The width of each line in the grid
+ - Parameter lineColor: The color of the grid's lines
+ - Parameter lineSpacing: Spacing between each line, X and Y
+ - Parameter gridDimesions: The desired dimensions of the grid, the lines will only be rendered within this space
+ - Parameter animated: Determine whether or not the lines should be drawn onto the screen when first displayed*/
+func drawTileGrid(backgroundColor: UIColor, lineWidth: CGFloat, lineColor: UIColor, lineSpacing: CGSize, gridDimesions: CGFloat, animated: Bool)->CALayer{
+    let parentLayer = CALayer()
+    
+    return parentLayer
+}
+
+/** Grid of intersecting vertical and horizontal lines displayed in a CALayer*/
+public class MapViewTileGrid: CALayer{
+    /** The desired color of the tile grid array*/
+    var lineWidth: CGFloat!
+    /** The color of the grid's lines*/
+    var lineColor: UIColor!
+    /** Spacing between each line, X and Y*/
+    var lineSpacing: CGSize!
+    /** The desired dimensions of the grid, the lines will only be rendered within this space*/
+    var gridDimesions: CGSize!
+    /** Keep track of all the horizontal lines from top to bottom in order*/
+    var horizontalLines: [CAShapeLayer] = []
+    /** Keep track of all the vertical lines left to right in order*/
+    var verticalLines: [CAShapeLayer] = []
+    
+    /** Create a CALayer with a grid of lines forming a tile grid array for the mapview to display when the tiles aren't loaded yet
+     - Parameter backgroundColor: The desired color of the tile grid array
+     - Parameter lineWidth: The width of each line in the grid
+     - Parameter lineColor: The color of the grid's lines
+     - Parameter lineSpacing: Spacing between each line, X and Y
+     - Parameter gridDimesions: The desired dimensions of the grid, the lines will only be rendered within this space*/
+    init(backgroundColor: UIColor, lineWidth: CGFloat, lineColor: UIColor, lineSpacing: CGSize, gridDimesions: CGSize){
+        self.lineWidth = lineWidth
+        self.lineColor = lineColor
+        self.lineSpacing = lineSpacing
+        self.gridDimesions = gridDimesions
+        
+        super.init()
+        self.backgroundColor = backgroundColor.cgColor
+        
+        construct()
+    }
+    
+    private func construct(){
+        /** Calculate the amount of lines to display given the dimensions, line width and line spacing*/
+        let verticalLineCount = Int(gridDimesions.width/(lineWidth + lineSpacing.width))
+        let horizontalLineCount = Int(gridDimesions.height/(lineWidth + lineSpacing.height))
+        
+        /** Start at 1 because the line must be offset from the edge of the container by the given spacing*/
+        for int in 1..<(verticalLineCount + 1){
+            let line = CAShapeLayer()
+            line.path = CGPath(rect: CGRect(x: lineSpacing.width * CGFloat(int), y: 0, width: lineWidth, height: gridDimesions.height), transform: nil)
+            line.frame.size = CGSize(width: lineWidth, height: gridDimesions.height)
+            /** Don't enable the fill color, the line will have ghosting as we only want to animate the stroke being drawn*/
+            line.fillColor = UIColor.clear.cgColor
+            line.strokeColor = lineColor.withAlphaComponent(0.5).cgColor
+            line.lineWidth = lineWidth
+           
+            /** Adding a shadow to the shape*/
+            line.shadowColor = UIColor.darkGray.cgColor
+            line.shadowRadius = 2
+            line.shadowOpacity = 1
+            line.masksToBounds = false
+            line.shadowOffset = CGSize(width: 0, height: 2)
+            line.shadowPath = line.path
+            
+            self.addSublayer(line)
+            
+            verticalLines.append(line)
+        }
+        
+        for int in 1..<(horizontalLineCount + 1){
+            let line = CAShapeLayer()
+            line.path = CGPath(rect: CGRect(x: 0, y: lineSpacing.height * CGFloat(int), width: gridDimesions.width, height: lineWidth), transform: nil)
+            line.frame.size = CGSize(width: lineWidth, height: gridDimesions.height)
+            line.fillColor = UIColor.clear.cgColor
+            line.strokeColor = lineColor.withAlphaComponent(0.5).cgColor
+            line.lineWidth = lineWidth
+
+            /** Adding a shadow to the shape*/
+            line.shadowColor = UIColor.darkGray.cgColor
+            line.shadowRadius = 2
+            line.shadowOpacity = 1
+            line.masksToBounds = false
+            line.shadowOffset = CGSize(width: 0, height: 2)
+            line.shadowPath = line.path
+            
+            self.addSublayer(line)
+            
+            horizontalLines.append(line)
+        }
+        
+        /** Orient the arrays in a FIFO order*/
+        verticalLines.reverse()
+        horizontalLines.reverse()
+    }
+    
+    /** Animate the grid being drawn, horizontal lines first then vertical, from left to right and top to bottom*/
+    func animateDrawing(with duration: CGFloat){
+        
+        for (index, line) in horizontalLines.enumerated(){
+            /** Hide the shadow and set the line's end point to it's starting point*/
+            line.strokeEnd = 0
+            line.shadowOpacity = 0
+            
+            /** Animate each line with a slight delay calculated by dividing the total duration by the number of lines*/
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration/CGFloat(index + 1)){
+            let strokeEndAnim = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+            strokeEndAnim.fromValue = 0
+            strokeEndAnim.toValue = 1
+            strokeEndAnim.duration = duration
+            strokeEndAnim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            strokeEndAnim.isRemovedOnCompletion = false
+            strokeEndAnim.fillMode = .forwards
+            
+            UIView.animate(withDuration: 0.5, delay: duration){
+            line.shadowOpacity = 1
+            }
+            
+            line.add(strokeEndAnim, forKey: "strokeEnd")
+            }
+        }
+        
+        for (index, line) in verticalLines.enumerated(){
+            line.strokeEnd = 0
+            line.shadowOpacity = 0
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration/CGFloat(index + 1)){
+            let strokeEndAnim = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+            strokeEndAnim.fromValue = 0
+            strokeEndAnim.toValue = 1
+            strokeEndAnim.duration = duration + 1
+            strokeEndAnim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            strokeEndAnim.isRemovedOnCompletion = false
+            strokeEndAnim.fillMode = .forwards
+            
+            UIView.animate(withDuration: 0.5, delay: (duration + 1)){
+            line.shadowOpacity = 1
+            }
+            
+            line.add(strokeEndAnim, forKey: "strokeEnd")
+            }
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

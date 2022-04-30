@@ -16,6 +16,7 @@ import Nuke
 import Network
 import AppTrackingTransparency
 import AdSupport
+import SkeletonView
 
 /** View controller that hosts all customer client side operations*/
 class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate, GMSMapViewDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, JCTabbarDelegate{
@@ -52,6 +53,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     var laundromatLocations: [CLLocationCoordinate2D] = []
     /** Store the current map marker that the user has selected*/
     var currentlySelectedMapMarker: GMSMarker? = nil
+    /** A placeholder tile grid to display whent he mapview is still loading*/
+    var placeholderMapViewGrid: MapViewTileGrid!
     /** Google map UI*/
     
     /** Location Management*/
@@ -124,6 +127,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Monitor network conditions for changes in order to load data after an internet connection has been established*/
     private var networkMonitor: NWPathMonitor = NWPathMonitor()
     
+    /** Determine when the app is in the background*/
+    var movedToBackground = false
+    
     /** Request app tracking transparency*/
     func requestIDFA(){
       ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
@@ -148,19 +154,28 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** Clear the previous snapshot from the view hierarchy to prevent layering stale snapshots*/
         clearMapViewSnapshotRT()
         addMapViewSnapshot()
+        
+        movedToBackground = true
     }
     
     @objc func appMovedToForeground(){
+        movedToBackground = false
     }
     
     /** Activates when the application regains focus*/
     @objc func appDidBecomeActive(){
+        movedToBackground = false
+        
         /** Remove the snapshot when the app becomes focused again*/
-        ///clearMapViewSnapshotAsync()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25){[self] in
+        /** Since this is delayed it's important to only execute the code when the app is in the appropriate state*/
+        clearMapViewSnapshotRT()
+        }
     }
     
     /** Activates when app is fully in the background state*/
     @objc func appIsInBackground(){
+        movedToBackground = true
     }
     
     /** Add a snapshot of the mapview to its view hierarchy when the application changes states as the mapview can't be rendered in the background due to memory management requirements*/
@@ -180,7 +195,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Remove the snapshot UIView on top of the map view on the main thread*/
     func clearMapViewSnapshotRT(){
-        guard mapView != nil else {
+        guard mapView != nil && movedToBackground == false else {
             return
         }
         
@@ -192,7 +207,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Remove the snapshot UIView on top of the map view asynchronously to provide a slight update delay*/
     func clearMapViewSnapshotAsync(){
-        guard mapView != nil else {
+        guard mapView != nil && movedToBackground == false else {
             return
         }
         
@@ -207,6 +222,24 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** When the map's current tiles finish rendering then remove any snapshots from the view hierarchy**/
     func mapViewDidFinishTileRendering(_ mapView: GMSMapView){
         clearMapViewSnapshotAsync()
+        
+        /** Unhide the mapview when the tiles are finished rendering*/
+        if mapView.isHidden == true{
+            mapView.alpha = 0
+            mapView.isHidden = false
+            
+            /** Remove the grid from memory*/
+            if placeholderMapViewGrid != nil{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1){[self] in
+            placeholderMapViewGrid.removeFromSuperlayer()
+            }
+            }
+            
+            /** Fade the mapview in*/
+            UIView.animate(withDuration: 1, delay: 0){
+            mapView.alpha = 1
+            }
+        }
     }
     
     public override func viewDidLoad() {
@@ -253,11 +286,11 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         showCustomerSupportButton(animated: true)
         showShoppingCartButton(animated: true)
         showWeatherView(animated: true)
+        
         /** Shift the button back to its original position*/
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
             shoppingCartButton.frame.origin = CGPoint(x: self.view.frame.maxX - (shoppingCartButton.frame.width * 1.25), y: customerSupportButton.frame.maxY + 10)
         }
-        
         
         /** Don't need these buttons on this screen*/
         hideOrdersTitleLabel(animated: true)
@@ -512,7 +545,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         mapContainer.frame = CGRect(origin: .zero, size: CGSize(width: view.frame.width, height: view.frame.height * 1))
         
         mapView = GMSMapView(frame: CGRect(origin: .zero, size: CGSize(width: view.frame.width, height: view.frame.height * 1)), mapID: GMSMapID(identifier: mapIDString), camera: camera)
-        mapView.backgroundColor = bgColor
         mapView.settings.myLocationButton = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.isMyLocationEnabled = true
@@ -522,6 +554,10 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         mapView.settings.consumesGesturesInView = false
         mapView.delegate = self
         mapView.layer.isOpaque = false
+        
+        placeholderMapViewGrid = MapViewTileGrid(backgroundColor: bgColor, lineWidth: 0.5, lineColor: UIColor.lightGray, lineSpacing: CGSize(width: 40, height: 40), gridDimesions: self.view.frame.size)
+        self.view.layer.addSublayer(placeholderMapViewGrid)
+        placeholderMapViewGrid.animateDrawing(with: 0.5)
         
         currentLocationButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         currentLocationButton.frame.size.height = 50
@@ -575,21 +611,14 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         view.addSubview(weatherView)
         view.addSubview(welcomeLabelShadowView)
         
-        /**Add the map to the view, hide it until we've got a location update.*/
-        mapView.isHidden = true
-        
         /** Set the initial position of the map to be the user's current location*/
         let currentZoomLevel = locationManager.accuracyAuthorization == .fullAccuracy ? preciseLocationZoomLevel : approximateLocationZoomLevel
         
         let camera = GMSCameraPosition.camera(withLatitude: locationManager.location?.coordinate.latitude ?? coordinate.latitude, longitude: locationManager.location?.coordinate.longitude ?? coordinate.longitude, zoom: currentZoomLevel)
         
-        if mapView.isHidden{
-            mapView.isHidden = false
-            mapView.camera = camera
-        } else {
-            /** Set the initial position of the map to be the user's current location*/
-            mapView.animate(to: camera)
-        }
+        /**Add the map to the view, hide it until the tiles are fully rendered.*/
+        mapView.isHidden = true
+        mapView.camera = camera
         
         /** Layout these subviews*/
         currentLocationButton.frame.origin = CGPoint(x: self.view.frame.maxX - (currentLocationButton.frame.width * 1.25), y: searchBar.frame.maxY + (currentLocationButton.frame.height * 0.9))
@@ -857,6 +886,13 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 }
                 
                 /** Use the user's profile picture as the image for this button*/
+                
+                /** Display skeleton view until the image is loaded*/
+                searchBarRightViewButton.isSkeletonable = true
+                let animation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .bottomRightTopLeft)
+                let gradient = SkeletonGradient(baseColor: .lightGray)
+                searchBarRightViewButton.showAnimatedGradientSkeleton(usingGradient: gradient, animation: animation)
+                
                 if let user = Auth.auth().currentUser{
                     if user.photoURL != nil{
                         
@@ -868,11 +904,15 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                         searchBarRightViewButton.layer.borderColor = appThemeColor.cgColor
                         Nuke.loadImage(with: request, options: options, into: searchBarRightViewButton){ [self] _ in
                             userProfilePicture = searchBarRightViewButton.imageView?.image
+                            searchBarRightViewButton.stopSkeletonAnimation()
+                            searchBarRightViewButton.hideSkeleton()
                         }
                     }
                     else{
                         searchBarRightViewButton.layer.borderColor = appThemeColor.cgColor
                         searchBarRightViewButton.setImage(UIImage(named: "user"), for: .normal)
+                        searchBarRightViewButton.stopSkeletonAnimation()
+                        searchBarRightViewButton.hideSkeleton()
                     }
                 }
                 

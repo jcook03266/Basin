@@ -412,7 +412,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             return
         }
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
+        UIView.animate(withDuration: 0.1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
             shimmeringTableView_1.alpha = 0
             shimmeringTableView_2.alpha = 0
         }
@@ -1757,6 +1757,14 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         filteredItems.removeAll()
         searchTableView.reloadData()
         
+        /** Reload the table views when the user exits the search table view*/
+        if washingMenuTableView != nil && filterWashingMenu == true{
+        washingMenuTableView.reloadData()
+        }
+        if dryCleaningMenuTableView != nil && filterDryCleaningMenu == true{
+        dryCleaningMenuTableView.reloadData()
+        }
+        
         noSearchResultsFoundBeingDisplayed =  false
         
         hideNoSearchResultsFound()
@@ -2551,7 +2559,12 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         else if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ShimmeringTableViewCell.identifier, for: indexPath) as! ShimmeringTableViewCell
             
-            tableViewCell.create(with: .lightGray, duration: 2)
+            var color = UIColor.lightGray
+            if darkMode == true{
+                color = UIColor.darkGray
+            }
+            
+            tableViewCell.create(with: color, duration: 2)
             
             cell = tableViewCell
         }

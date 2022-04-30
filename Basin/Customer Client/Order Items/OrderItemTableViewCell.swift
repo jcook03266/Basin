@@ -203,7 +203,7 @@ class OrderItemTableViewCell: UITableViewCell{
         addButton.isEnabled = true
         addButton.isUserInteractionEnabled = true
         addButton.castDefaultShadow()
-        addButton.layer.shadowColor = UIColor.lightGray.cgColor
+        addButton.layer.shadowColor = UIColor.darkGray.cgColor
         addButton.tintColor = .white
         if itemData.count < 1{
             addButton.setTitle(nil, for: .normal)
@@ -229,7 +229,7 @@ class OrderItemTableViewCell: UITableViewCell{
         subtractButton.isEnabled = true
         subtractButton.isUserInteractionEnabled = true
         subtractButton.castDefaultShadow()
-        subtractButton.layer.shadowColor = UIColor.lightGray.cgColor
+        subtractButton.layer.shadowColor = UIColor.darkGray.cgColor
         subtractButton.tintColor = .white
         subtractButton.setImage(UIImage(systemName: "minus", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         subtractButton.addTarget(self, action: #selector(subtractButtonPressed), for: .touchUpInside)
