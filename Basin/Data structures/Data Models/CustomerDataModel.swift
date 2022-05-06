@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import GooglePlaces
+
 /** Custom data model class and various other utils used to represent and store the information associated with customer entities*/
 
 //MARK: - User Class
@@ -59,14 +61,74 @@ public class Address{
     var streetAddress2: String
     /** Contains any edge case special instructions that a driver would need to know*/
     var specialInstructions: String
+    /** Classify the given address*/
+    var addressType: AddressType
     
-    init(borough: Borough, zipCode: UInt, alias: String, streetAddress1: String, streetAddress2: String, specialInstructions: String) {
+    init(borough: Borough, zipCode: UInt, alias: String, streetAddress1: String, streetAddress2: String, specialInstructions: String, addressType: AddressType) {
         self.borough = borough
         self.zipCode = zipCode
         self.alias = alias
         self.streetAddress1 = streetAddress1
         self.streetAddress2 = streetAddress2
         self.specialInstructions = specialInstructions
+        self.addressType = addressType
+    }
+}
+
+/** Get the coordinates of the given address using google's geocoding API*/
+func getCoordinatesOf(this address: Address)->CLLocation?{
+    var location: CLLocation? = nil
+    
+    
+    
+    return location
+}
+
+/** For the user to specify what kind of address the given address is*/
+public enum AddressType: Int{
+    case home = 0
+    /** Can be used to specify if the user's address is a business or not (useful for company orders)*/
+    case business = 1
+    case hotel = 2
+    /** Unspecified address type for special cases where the user can't describe the location*/
+    case other = 3
+    /** Reserved for laundromat and dry cleaning businesses using the services, users aren't permitted to use this*/
+    case retail = 4
+}
+
+/** Init this enum using the given raw value*/
+extension AddressType{
+    public init?(rawValue: Int) {
+        switch rawValue{
+        case AddressType.home.rawValue:
+            self = AddressType.home
+        case AddressType.business.rawValue:
+            self = AddressType.business
+        case AddressType.hotel.rawValue:
+            self = AddressType.hotel
+        case AddressType.other.rawValue:
+            self = AddressType.other
+        case AddressType.retail.rawValue:
+            self = AddressType.retail
+        default:
+            return nil
+        }
+    }
+}
+
+/** - Returns: A suitable image icon for the address type given*/
+func getImageFor(this addressType: AddressType)->UIImage{
+    switch addressType{
+    case AddressType.home:
+        return UIImage(named: "home-type")!
+    case AddressType.business:
+        return UIImage(named: "business-type")!
+    case AddressType.hotel:
+        return UIImage(named: "hotel-type")!
+    case AddressType.other:
+        return UIImage(named: "other-type")!
+    case AddressType.retail:
+        return UIImage(named: "retail-type")!
     }
 }
 
@@ -98,7 +160,8 @@ func addressToDictionary(address: Address)->[String:String]{
         "Alias": address.alias,
         "Address 1": address.streetAddress1,
         "Address 2": address.streetAddress2,
-        "Instructions": address.specialInstructions
+        "Instructions": address.specialInstructions,
+        "Address Type": address.addressType.rawValue.description
     ]
     
     return dictionary
@@ -118,7 +181,8 @@ func addressToMap(addresses: [Address])->[[String : String]]{
             "Alias": address.alias,
             "Address 1": address.streetAddress1,
             "Address 2": address.streetAddress2,
-            "Instructions": address.specialInstructions
+            "Instructions": address.specialInstructions,
+            "Address Type": address.addressType.rawValue.description
         ]
 
         dictionaries.append(dictionary)
@@ -127,16 +191,70 @@ func addressToMap(addresses: [Address])->[[String : String]]{
     return dictionaries
 }
 
+// MARK: - Genders
+/** Return a string containing the gender specified by the given number*/
+func getGender(from number: UInt)->String?{
+    switch number{
+    case 0:
+        return "Male"
+    case 1:
+        return "Female"
+    case 2:
+        return "Unspecified"
+    default:
+        return nil
+    }
+}
+
+/** Array containing acceptable genders*/
+let genders = ["Male","Female","Unspecified"]
+
+/** Return a number associated with the gender specified by the given string*/
+func getGender(from string: String)->UInt?{
+    switch string{
+    case "Male":
+        return 0
+    case "Female":
+        return 1
+    case "Unspecified":
+        return 2
+    default:
+        return nil
+    }
+}
+
+/** Return a separated first and last name from the given string
+ - Important: The full name has to have a space character separating the first and last names!
+ - Returns: A two element large tuple where the first element is the first name (String) and the second is the last name (String) */
+func parseFirstLastNames(fullName: String)->(String,String){
+    let splitStrings = fullName.split(separator: " ")
+    
+    var firstName = ""
+    var lastName = ""
+    
+    if splitStrings.count >= 1{
+        firstName = String(splitStrings[0])
+    }
+    if splitStrings.count >= 2{
+        lastName = String(splitStrings[1])
+    }
+    
+    return(firstName, lastName)
+}
+
 // MARK: - Customer Class
 /** Customer profile model that stores the customer's profile properties and updates the remote entry using local changes*/
 public class Customer: User{
     /** Where do you live?*/
     var addresses: [Address]
     /** Default membership level for a new user is 1, anything higher is obtained through a subscription*/
-    var membership_level: UInt8
+    var membershipLevel: UInt8
+    /** Indicator of whether or not the user has verified their email*/
+    var emailVerified: Bool
     
-    init(profile_picture: URL?, created: Date, updated: Date, user_id: String, username: String, email: String, password: String, name: String, firstName: String, lastName: String, phoneNumber: String, gender: String, DOB: Date, verified_email: Bool, membership_level: UInt8, addresses: [Address]){
-        self.membership_level = membership_level
+    init(profile_picture: URL?, created: Date, updated: Date, user_id: String, username: String, email: String, password: String, name: String, firstName: String, lastName: String, phoneNumber: String, gender: String, DOB: Date, emailVerified: Bool, membershipLevel: UInt8, addresses: [Address]){
+        self.membershipLevel = membershipLevel
+        self.emailVerified = emailVerified
         self.addresses = addresses
         
         super.init(created: created, updated: updated, profile_picture: profile_picture, user_id: user_id, username: username, email: email, password: password, name: name, firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, gender: gender, DOB: DOB)

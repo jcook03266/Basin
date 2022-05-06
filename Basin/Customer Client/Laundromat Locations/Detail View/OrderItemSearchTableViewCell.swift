@@ -170,12 +170,10 @@ class OrderItemSearchTableViewCell: UITableViewCell{
         
         /** If this item is already in the user's cart then highlight the cell*/
         if self.cart.getTotalCountFor(this: self.itemData) > 0{
-            self.contentView.layer.borderColor = appThemeColor.cgColor
-            self.contentView.layer.borderWidth = 1
+            itemImageView.layer.borderColor = appThemeColor.withAlphaComponent(1).cgColor
         }
         else{
-            self.contentView.layer.borderColor = UIColor.clear.cgColor
-            self.contentView.layer.borderWidth = 0
+            itemImageView.layer.borderColor = appThemeColor.withAlphaComponent(0.2).cgColor
         }
     }
     

@@ -320,18 +320,18 @@ func uploadThisImage(image: UIImage, directory: String, fileName: String, imageC
 func autoGenDriverEmployeeID()->String{
     var ID: String = ""
     
-    let numbers = [0,1,2,3,4,5,6,7,8,9]
-    let letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    let numbers = "0123456789"
+    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     
-    ID += letters.randomElement()!
-    ID += numbers.randomElement()!.description
-    ID += numbers.randomElement()!.description
-    ID += letters.randomElement()!
-    ID += letters.randomElement()!
-    ID += numbers.randomElement()!.description
-    ID += letters.randomElement()!
-    ID += letters.randomElement()!
-    ID += numbers.randomElement()!.description
+    ID.append(letters.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(numbers.randomElement()!)
     
     return ID
 }
@@ -340,18 +340,18 @@ func autoGenDriverEmployeeID()->String{
 func autoGenBusinessClientEmployeeID()->String{
     var ID: String = ""
     
-    let numbers = [0,1,2,3,4,5,6,7,8,9]
-    let letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    let numbers = "0123456789"
+    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     
-    ID += numbers.randomElement()!.description
-    ID += letters.randomElement()!
-    ID += letters.randomElement()!
-    ID += numbers.randomElement()!.description
-    ID += letters.randomElement()!
-    ID += numbers.randomElement()!.description
-    ID += numbers.randomElement()!.description
-    ID += letters.randomElement()!
-    ID += letters.randomElement()!
+    ID.append(numbers.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(numbers.randomElement()!)
+    ID.append(letters.randomElement()!)
+    ID.append(letters.randomElement()!)
     
     return ID
 }
@@ -620,7 +620,9 @@ func pushCustomerUserToCollection(customer: Customer, completion: @escaping (Cus
                     "Updated": customer.updated,
                     "Gender": getGender(from: customer.gender)!,
                     "Addresses": addressToMap(addresses: customer.addresses),
-                    "Profile Picture": customer.profile_picture?.description ?? ""
+                    "Profile Picture": customer.profile_picture?.description ?? "",
+                    "Membership Level": customer.membershipLevel,
+                    "Email Verified": customer.emailVerified
                 ]){
                     err in
                     if let err = err{
@@ -1060,12 +1062,69 @@ func fetchThisLogin(from collection: String, email: String, password: String, em
 }
 
 /** Pulls all data for this customer from the customer profile collection and formulates a customer object from that data*/
-func pullThisCustomer(customerID: String){
+func pullThisCustomer(customerID: String, completion: @escaping (Customer?)-> ()){
+    let db = Firestore.firestore()
+    let collectionPath = "Customers"
     
+    db.collection(collectionPath).document(customerID).getDocument(){
+        (querySnapshot, err) in
+            if let err = err{
+                print("Error getting document: \(err)")
+                completion(nil)
+            }
+            else{
+                guard querySnapshot!.data() != nil else {
+                    print("Error the document is empty!")
+                    completion(nil)
+                    return
+                }
+                
+                let dictionary = querySnapshot!.data()!
+                
+                let profilePictureURL = URL(string: dictionary["Profile Picture"] as! String)
+                let userID = querySnapshot!.documentID
+                
+                /** A user has to be signed in to read data*/
+                guard Auth.auth().currentUser != nil else {
+                    completion(nil)
+                    return
+                }
+                
+                let verifiedEmail = Auth.auth().currentUser!.isEmailVerified
+                let fullName = dictionary["Name"] as! String
+                let firstName = dictionary["First Name"] as! String
+                let lastName = dictionary["Last Name"] as! String
+                let gender = getGender(from: dictionary["Gender"] as! UInt)!
+                let addressMap = dictionary["Addresses"] as! [[String:String]]
+                
+                var addresses: [Address] = []
+                
+                for address in addressMap {
+                    let zipCode = address["Zip Code"]!
+                    let borough = getBoroughFrom(string: address["Borough"]!)!
+                    let addressType = AddressType(rawValue: Int(address["Address Type"]!)!) ?? AddressType.other
+                     
+                    
+                    let parsedAddress = Address(borough: borough, zipCode: UInt(zipCode)!, alias: address["Alias"]!, streetAddress1: address["Address 1"]!, streetAddress2: address["Address 2"]!, specialInstructions: address["Instructions"]!, addressType: addressType)
+
+                    /**
+                    parsedAddress.country = ["Country"] as! String
+                    parsedAddress.state = ["State"] as! String
+                    parsedAddress.city = ["City"] as! String
+                     */
+                    
+                    addresses.append(parsedAddress)
+                }
+   
+                let customer = Customer(profile_picture: profilePictureURL, created: (dictionary["Created"] as! Timestamp).dateValue(), updated: (dictionary["Updated"] as! Timestamp).dateValue(), user_id: userID, username: dictionary["Username"] as! String, email: dictionary["Email"] as! String, password: dictionary["Password"] as! String, name: fullName, firstName: firstName, lastName: lastName, phoneNumber: dictionary["Phone Number"] as! String, gender: gender, DOB: (dictionary["DOB"] as! Timestamp).dateValue(), emailVerified: verifiedEmail, membershipLevel: dictionary["Membership Level"] as! UInt8, addresses: addresses)
+                
+                completion(customer)
+            }
+    }
 }
 
 /** Pulls all data for this business client from the business client profile collection and formulates a business client object from that data*/
-func pullThisCustomer(businessClientID: String){
+func pullThisEmployee(businessClientID: String){
     
 }
 

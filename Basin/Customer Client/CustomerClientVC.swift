@@ -25,6 +25,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Store a reference to the user's profile picture image stored in the button view in the search bar textfield*/
     var userProfilePicture: UIImage? = nil
     
+    /** Logged In User data*/
+    private var currentUser: Customer!
+    
     /** Google map UI*/
     /** A UIView that acts a snapshot of the map at a specific point in time, this is used as a placeholder view when the map view is deinitialized for memory management after the user goes to the background*/
     var mapViewSnapShot: UIView? = nil
@@ -171,6 +174,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** Since this is delayed it's important to only execute the code when the app is in the appropriate state*/
         clearMapViewSnapshotRT()
         }
+        
+        /** Move to the user's current location if they've moved since reopening the application*/
+        moveToCurrentLocation()
     }
     
     /** Activates when app is fully in the background state*/
@@ -297,10 +303,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** The map is interactive in this tab*/
         mapView.isUserInteractionEnabled = true
+        
         /** Zoom into the user's current location at a normal distance*/
-        if mapView.myLocation != nil{
-            currentLocationButtonPressed(sender: currentLocationButton)
-        }
+        moveToCurrentLocation()
         
         /** Change the context of the search bar*/
         searchBar.attributedPlaceholder = NSAttributedString(string:"Search for a laundromat", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
@@ -775,6 +780,11 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         }
     }
     
+    /** Add markers for the user's provided addresses*/
+    func addUserAddressMarkers(){
+        
+    }
+    
     /** Add the markers to the map*/
     func addMarkers(){
         /** Make sure there are in fact laundromats to be added to the map as markers*/
@@ -824,6 +834,24 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         }
     }
     
+    /** Get the data associated with the currently logged in user*/
+    func getUserData(){
+        guard let loggedInUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        pullThisCustomer(customerID: loggedInUser.uid) { [self] customer in
+            if customer == nil{
+                print("Fatal Error: This customer doesn't exist, log out immediately")
+                return
+            }
+            else{
+                currentUser = customer!
+                print(currentUser.debugDescription)
+            }
+        }
+    }
+    
     /** Fetch the data for the laundromats and display them on the screen for the user to see, if internet isn't available then this function will use the listener to trigger itself again in a recursive manner when internet is available*/
     func getLaundromatData(){
         /** Fetch all the laundromats*/
@@ -861,6 +889,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 /** Fetch all of the carts made by this user*/
                 fetchCarts()
                 
+                getUserData()
+                
                 /** Update the weather view when the internet is available*/
                 if mapView != nil{
                     
@@ -890,7 +920,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 /** Display skeleton view until the image is loaded*/
                 searchBarRightViewButton.isSkeletonable = true
                 let animation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .bottomRightTopLeft)
-                let gradient = SkeletonGradient(baseColor: .lightGray)
+                let gradient = SkeletonGradient(baseColor: darkMode ? .lightGray : .darkGray)
                 searchBarRightViewButton.showAnimatedGradientSkeleton(usingGradient: gradient, animation: animation)
                 
                 if let user = Auth.auth().currentUser{
@@ -928,6 +958,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 createAccountBottomSheet()
                 createCollectionView()
                 addMarkers()
+                addUserAddressMarkers()
             }
         }
     }
@@ -1598,6 +1629,13 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** Initialize this timer if it hasn't been initialized already, this prevents the timer from being overwritten*/
         if weatherTimer == nil{
+            
+            /** Skeleton view to hide the blank view*/
+            weatherView.isSkeletonable = true
+            let animation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
+            let gradient = SkeletonGradient(baseColor: darkMode ? .lightGray : .darkGray)
+            weatherView.showAnimatedGradientSkeleton(usingGradient: gradient, animation: animation)
+            
             /** Get the current weather initially and then wait 20 minutes in the timer*/
             getCurrentWeather(latitude: latitude, longitude: longitude){ [self]
                 (result: Result<CurrentWeather,APIService.APIError>) in
@@ -1608,6 +1646,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                     weatherView.temperature = convertFromKelvinToFahrenheit(k: currentWeather.main.temp)
                     
                     weatherView.weatherIcon = currentWeather.weather.first?.weatherIconURL
+                    
+                    weatherView.stopSkeletonAnimation()
+                    weatherView.hideSkeleton()
                     
                     /** Depending on what time of day it is specify the 'sky' color of the weather icon*/
                     switch whatTimeOfDayIsIt(){
@@ -2686,6 +2727,27 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         self.tabBarController?.present(vc, animated: true)
     }
     
+    /** Animate the camera moving to the current location of the user if location services are enabled*/
+    func moveToCurrentLocation(){
+        guard mapView != nil else {
+            return
+        }
+        guard mapView!.myLocation != nil else {
+            return
+        }
+    
+        let location = mapView.myLocation!
+        
+        /** Zoom in to the user's current location (if available) (Animated)*/
+        let position = GMSCameraPosition(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, zoom: preciseLocationZoomLevel)
+        
+        /** Specify the animation duration of the camera position update animation*/
+        CATransaction.begin()
+        CATransaction.setValue(0.5, forKey: kCATransactionAnimationDuration)
+        mapView.animate(to: position)
+        CATransaction.commit()
+    }
+    
     /** Go to the user's current location when they press this button*/
     @objc func currentLocationButtonPressed(sender: UIButton){
         guard mapView != nil else {
@@ -2697,16 +2759,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             return
         }
         
-        let location = mapView.myLocation!
-        
-        /** Zoom in to the user's current location (if available) (Animated)*/
-        let position = GMSCameraPosition(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, zoom: preciseLocationZoomLevel)
-        
-        /** Specify the animation duration of the camera position update animation*/
-        CATransaction.begin()
-        CATransaction.setValue(0.5, forKey: kCATransactionAnimationDuration)
-        mapView.animate(to: position)
-        CATransaction.commit()
+        moveToCurrentLocation()
         
         bottomSheet.show(animated: true)
     }

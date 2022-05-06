@@ -267,28 +267,50 @@ let states = ["New York","Alaska", "Alabama", "Arkansas", "American Samoa", "Ari
 /** List of all cities in New York State (towns aren't cities)*/
 let NYCities = ["New York","Buffalo","Rochester","Yonkers","Syracuse","Albany","New Rochelle","Cheektowaga","Mount Vernon","Schenectady","Brentwood","Utica","White Plains","Tonawanda","Hempstead","Irondequoit","Levittown","Troy","Niagara Falls","Binghamton","West Seneca","West Babylon","Freeport","Hicksville"]
 
+/** - Returns: A Borough enum matching the given borough (String)*/
+func getBoroughFrom(string: String)->Borough?{
+    var borough: Borough? = nil
+    
+    switch string{
+    case Borough.Brookyln.rawValue:
+        borough = .Brookyln
+    case Borough.Queens.rawValue:
+        borough = .Queens
+    case Borough.Manhattan.rawValue:
+        borough = .Manhattan
+    case Borough.Bronx.rawValue:
+        borough = .Bronx
+    case Borough.StatenIsland.rawValue:
+        borough = .StatenIsland
+    default:
+        borough = .none
+    }
+    
+    return borough
+}
+
 /**
  - Returns: The borough associated with the provided zipcode, else nil if no borough is matched*/
 func getBoroughFor(this zipcode: Int)->Borough?{
     var borough: Borough? = nil
     
+    /** Make sure the given zipcode exists in the allowed zipcodes*/
     for (key,value) in nycZipCodes{
         if key == zipcode{
             
-            if value == Borough.Brookyln.rawValue{
+            switch value {
+            case Borough.Brookyln.rawValue:
                 borough = .Brookyln
-            }
-            else if value == Borough.Queens.rawValue{
-                borough = .Brookyln
-            }
-            else if value == Borough.Manhattan.rawValue{
+            case Borough.Queens.rawValue:
+                borough = .Queens
+            case Borough.Manhattan.rawValue:
                 borough = .Manhattan
-            }
-            else if value == Borough.Bronx.rawValue{
+            case Borough.Bronx.rawValue:
                 borough = .Bronx
-            }
-            else if value == Borough.StatenIsland.rawValue{
+            case Borough.StatenIsland.rawValue:
                 borough = .StatenIsland
+            default:
+                borough = .none
             }
         }
     }

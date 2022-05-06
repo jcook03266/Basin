@@ -443,7 +443,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         specialInstructionsLabelSubtitle = UILabel(frame: CGRect(x: 0, y: 0, width: specialInstructionsLabelContainer.frame.width * 0.95, height: specialInstructionsLabelContainer.frame.height/2))
         specialInstructionsLabelSubtitle.font = getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true)
-        specialInstructionsLabelSubtitle.textColor = .lightGray.lighter
+        specialInstructionsLabelSubtitle.textColor = .lightGray
         specialInstructionsLabelSubtitle.adjustsFontForContentSizeCategory = true
         specialInstructionsLabelSubtitle.adjustsFontSizeToFitWidth = true
         specialInstructionsLabelSubtitle.textAlignment = .left
@@ -561,7 +561,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemChoicesTableView.contentInsetAdjustmentBehavior = .never
         itemChoicesTableView.dataSource = self
         itemChoicesTableView.delegate = self
-        itemChoicesTableView.separatorStyle = .singleLine
+        itemChoicesTableView.separatorStyle = .none
         itemChoicesTableView.isScrollEnabled = false
         itemChoicesTableView.layer.borderColor = UIColor.white.darker.cgColor
         itemChoicesTableView.layer.borderWidth = 0
@@ -1336,7 +1336,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             /** Describe the name of this category*/
             let categoryLabel = UILabel(frame: CGRect(x: 0, y: 0, width: container.frame.width * 0.95, height: container.frame.height/2))
             categoryLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
-            categoryLabel.textColor = .lightGray.lighter
+            categoryLabel.textColor = fontColor
             categoryLabel.adjustsFontForContentSizeCategory = true
             categoryLabel.adjustsFontSizeToFitWidth = true
             categoryLabel.textAlignment = .left

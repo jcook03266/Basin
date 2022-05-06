@@ -135,37 +135,6 @@ func removeLoadingIndicator(){
 }
 /** Custom animated loading indicator*/
 
-/** Return a string containing the gender specified by the given number*/
-func getGender(from number: UInt)->String?{
-    switch number{
-    case 0:
-        return "Male"
-    case 1:
-        return "Female"
-    case 2:
-        return "Unspecified"
-    default:
-        return nil
-    }
-}
-
-/** Array containing acceptable genders*/
-let genders = ["Male","Female","Unspecified"]
-
-/** Return a number associated with the gender specified by the given string*/
-func getGender(from string: String)->UInt?{
-    switch string{
-    case "Male":
-        return 0
-    case "Female":
-        return 1
-    case "Unspecified":
-        return 2
-    default:
-        return nil
-    }
-}
-
 /** Parse the given phone number object into a CSV containing the country code and the national number like so: [country code, national number]*/
 func parsePhoneNumberIntoCSV(phoneNumber: PhoneNumber)->String{
     return "\(phoneNumber.countryCode),\(phoneNumber.nationalNumber)"

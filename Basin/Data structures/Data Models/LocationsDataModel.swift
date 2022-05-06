@@ -92,7 +92,7 @@ func fetchAllLaundromats(completion: @escaping (Set<Laundromat>)-> ()){
                 
                 /** Parse the address map into an address object*/
                 let addressMap = dictionary["Address"] as! [String : Any]
-                let address = Address(borough: getBoroughFor(this: (addressMap["Zip Code"] as! Int)) ?? .Brookyln, zipCode: UInt(addressMap["Zip Code"] as! Int), alias: addressMap["Alias"] as! String, streetAddress1: addressMap["Address 1"] as! String, streetAddress2: addressMap["Address 2"] as! String, specialInstructions: addressMap["Instructions"] as! String)
+                let address = Address(borough: getBoroughFor(this: (addressMap["Zip Code"] as! Int)) ?? .Brookyln, zipCode: UInt(addressMap["Zip Code"] as! Int), alias: addressMap["Alias"] as! String, streetAddress1: addressMap["Address 1"] as! String, streetAddress2: addressMap["Address 2"] as! String, specialInstructions: addressMap["Instructions"] as! String, addressType: .retail)
                 
                 /** Parse the two menu IDs from the menu map*/
                 let menuMap = dictionary["Menus"] as! [String : Any]

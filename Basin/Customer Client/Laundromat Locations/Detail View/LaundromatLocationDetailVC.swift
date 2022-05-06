@@ -891,7 +891,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         case true:
             expansionButton.backgroundColor = .darkGray
         case false:
-            expansionButton.backgroundColor = .lightGray
+            expansionButton.backgroundColor = appThemeColor
         }
         expansionButton.setImage(UIImage(systemName: "chevron.compact.down")?.withTintColor(.white), for: .normal)
         expansionButton.castDefaultShadow()
@@ -1008,7 +1008,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             distanceLabel.textColor = .darkGray
         }
         
-        pickUpDropOffSegmentedControl = UISegmentedControl(items: ["Pick-Up","Drop-off"])
+        pickUpDropOffSegmentedControl = UISegmentedControl(items: ["Pick-Up \n Use Delivery","Drop-off \n Go In-person"])
         pickUpDropOffSegmentedControl.frame = CGRect(x: 0, y: 0, width: informationPanel.frame.width * 0.95, height: 40)
         pickUpDropOffSegmentedControl.backgroundColor = .lightGray.lighter
         pickUpDropOffSegmentedControl.setTitleTextAttributes([.font: getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true), .foregroundColor: UIColor.white], for: .normal)
@@ -1332,7 +1332,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchTableView.contentInsetAdjustmentBehavior = .never
         searchTableView.dataSource = self
         searchTableView.delegate = self
-        searchTableView.separatorStyle = .singleLine
+        searchTableView.separatorStyle = .none
         searchTableView.layer.borderColor = UIColor.white.darker.cgColor
         searchTableView.layer.borderWidth = 0
         
