@@ -13,7 +13,9 @@ import PhoneNumberKit
 import FirebaseStorage
 import FirebaseAuth
 import CryptoKit
+import CoreLocation
 
+// MARK: - Global Vars
 /** Various methods for interfacing with Firebase for this application*/
 /** Global var used to inform the app delegate if an account is being created, if so then the account should be deleted if the user unexpectedly quits the application*/
 var accountCreationInProgress: Bool = false
@@ -242,6 +244,7 @@ func checkIfPhoneNumberExistsInDatabase(phoneNumber: PhoneNumber, completion: @e
     }
 }
 
+// MARK: - Upload Profile Picture
 /** Uploads the given profile picture to the appropriate firebase cloud storage bucket and directory
  - Parameter image: The image to be converted to the .jpeg format and uploaded to the given directory with the supplemented fileName
  - Parameter directory: The directory where this file will be placed, a blank string or no string will place this file in the root directory
@@ -316,6 +319,7 @@ func uploadThisImage(image: UIImage, directory: String, fileName: String, imageC
     }
 }
 
+// MARK: - Auto-Gen ID
 /** Autogenerate an employeeID for Drivers*/
 func autoGenDriverEmployeeID()->String{
     var ID: String = ""
@@ -356,18 +360,18 @@ func autoGenBusinessClientEmployeeID()->String{
     return ID
 }
 
+// MARK: - Sign Out
 /** Signs out the current user (if any)*/
 func signOutCurrentUser(){
-    
     do {
         try Auth.auth().signOut()
     } catch let signOutError as NSError {
         print("Error signing out: %@", signOutError)
     }
-    
     clearLoggedInUserType()
 }
 
+// MARK: - User Profile Picture
 /** Updates the user's profile picture by deleting the old one and uploading the new one with a fresh unique file name, followed by updating the profile picture field in the corresponding collection*/
 func updateUserProfilePicture(){
 }
@@ -395,6 +399,7 @@ func deleteUserProfilePicture(at path: String){
     }
 }
 
+// MARK: - Delete User
 /** Deletes the current user from the authentication provider table as well as the database (if present)*/
 func deleteCurrentUser(){
     let user = getCurrentUser()
@@ -533,16 +538,7 @@ func deleteCurrentUser(){
     }
 }
 
-/** Sign the current Auth user out*/
-func signAuthUserOut(){
-    let firebaseAuth = Auth.auth()
-    do {
-        try firebaseAuth.signOut()
-    } catch let signOutError as NSError {
-        print("Error signing out: %@", signOutError)
-    }
-}
-
+// MARK: - Get Current User
 /** Get the currently signed in user (if any)*/
 func getCurrentUser()->FirebaseAuth.User?{
     var currentUser: FirebaseAuth.User? = nil
@@ -554,6 +550,7 @@ func getCurrentUser()->FirebaseAuth.User?{
     return currentUser
 }
 
+// MARK: - Push New User
 /** Push and pull methods for User profiles*/
 /** Pushes the given customer object to the customer user profile collection
  - Returns: Completion handler with the complete customer object fitted with the documentID for the user's profile as the userID*/
@@ -626,10 +623,15 @@ func pushCustomerUserToCollection(customer: Customer, completion: @escaping (Cus
                 ]){
                     err in
                     if let err = err{
-                        print("Error adding document to customer collection: \(err)")
+                        print("Error adding document to Customers collection: \(err)")
                     }
                     else{
-                        print("Document added to customer collection with ID: \(customer.user_id)")
+                        print("Document added to Customers collection with ID: \(customer.user_id)")
+                        
+                        /** Add the coordinates for the customer's addresses*/
+                        for address in customer.addresses{
+                            updateTheCoordinatesOfThisCustomerAddress(address: address, customer: customer)
+                        }
                         
                         completion(customer)
                     }
@@ -707,10 +709,12 @@ func pushBusinessClientUserToCollection(businessClient: BusinessClient, completi
                 ]){
                     err in
                     if let err = err{
-                        print("Error adding document to customer collection: \(err)")
+                        print("Error adding document to Business collection: \(err)")
                     }
                     else{
-                        print("Document added to customer collection with ID: \(businessClient.user_id)")
+                        print("Document added to Business collection with ID: \(businessClient.user_id)")
+                        
+                        updateTheCoordinatesOfThisEmployeeAddress(address: businessClient.address, employee: businessClient)
                         
                         completion(businessClient)
                     }
@@ -789,10 +793,12 @@ func pushDriverUserToCollection(driver: Driver, completion: @escaping (Driver)->
                 ]){
                     err in
                     if let err = err{
-                        print("Error adding document to customer collection: \(err)")
+                        print("Error adding document to Drivers collection: \(err)")
                     }
                     else{
-                        print("Document added to customer collection with ID: \(driver.user_id)")
+                        print("Document added to Drivers collection with ID: \(driver.user_id)")
+                        
+                        updateTheCoordinatesOfThisDriverAddress(address: driver.address, driver: driver)
                         
                         completion(driver)
                     }
@@ -802,6 +808,7 @@ func pushDriverUserToCollection(driver: Driver, completion: @escaping (Driver)->
     }
 }
 
+// MARK: - Get User Login
 /** Get the user data from the customer collection associated with the given third party auth provider's email address. Only customers can use third-party providers to login therefore the default collection referenced is Customers*/
 func fetchCustomerLoginUsingThirdParty(userEmail: String?, completion: @escaping (UserLogin?)-> ()){
     
@@ -847,70 +854,6 @@ func fetchCustomerLoginUsingThirdParty(userEmail: String?, completion: @escaping
             completion(userLogin)
         }
     }
-}
-
-/** Use the given input [email, phone, username] and password to detect if an account matches the given credentials, and then sign in using the associated email and password combination from the given collection
- - Returns: AuthDataResult which provides details on the signed in user (if any)*/
-func signInUsing(input: String, password: String, employeeID: String?, collection: String, completion: @escaping (AuthDataResult?)-> ()){
-    
-    switch classifyInput(input: input){
-    case "username":
-        /** Find the user profile associated with this username and password and then use the email and password to sign in*/
-        fetchThisLogin(from: collection, username: input, password: password, employeeID: employeeID) { (userLogin) in
-            /** If a user login doesn't exist then the account doesn't exist*/
-            guard userLogin != nil else {
-                return completion(nil)
-            }
-            
-            Auth.auth().signIn(withEmail: userLogin!.email, password: userLogin!.password, completion: {(result,error) in
-                if let error = error{
-                    print(error)
-                    completion(nil)
-                }
-                else{
-                    print("Sign in successful for user: \(result!.user.description)")
-                    completion(result)
-                }
-            })
-        }
-    case "email":
-        /** Sign in like normal with the email and password*/
-        Auth.auth().signIn(withEmail: input, password: password, completion: {(result,error)  in
-            if let error = error{
-                print(error)
-                completion(nil)
-            }
-            else{
-                print("Sign in successful for user: \(result!.user.description)")
-                completion(result)
-            }
-        })
-    case "phone":
-        /** Turn the given phone number into a CSV with the default country code of 1 for the "US"*/
-        let phoneNumberCSV = "1,\(input)"
-        
-        /** Find the user profile associated with this number and password and then use the email and password to sign in*/
-        fetchThisLogin(from: collection, phoneNumber: phoneNumberCSV, password: password, employeeID: employeeID) { (userLogin) in
-            /** If a user login doesn't exist then the account doesn't exist*/
-            guard userLogin != nil else {
-                return completion(nil)
-            }
-            
-            Auth.auth().signIn(withEmail: userLogin!.email, password: userLogin!.password, completion: {(result,error) in
-                if let error = error{
-                    print(error)
-                    completion(nil)
-                }
-                else{
-                    print("Sign in successful for user: \(result!.user.description)")
-                    completion(result)
-                }
-            })
-        }
-    default:
-        break
-    }
-    
 }
 
 /** Fetch the login information for a user using a username password combination*/
@@ -1061,6 +1004,72 @@ func fetchThisLogin(from collection: String, email: String, password: String, em
     }
 }
 
+// MARK: - Sign In The User
+/** Use the given input [email, phone, username] and password to detect if an account matches the given credentials, and then sign in using the associated email and password combination from the given collection
+ - Returns: AuthDataResult which provides details on the signed in user (if any)*/
+func signInUsing(input: String, password: String, employeeID: String?, collection: String, completion: @escaping (AuthDataResult?)-> ()){
+    
+    switch classifyInput(input: input){
+    case "username":
+        /** Find the user profile associated with this username and password and then use the email and password to sign in*/
+        fetchThisLogin(from: collection, username: input, password: password, employeeID: employeeID) { (userLogin) in
+            /** If a user login doesn't exist then the account doesn't exist*/
+            guard userLogin != nil else {
+                return completion(nil)
+            }
+            
+            Auth.auth().signIn(withEmail: userLogin!.email, password: userLogin!.password, completion: {(result,error) in
+                if let error = error{
+                    print(error)
+                    completion(nil)
+                }
+                else{
+                    print("Sign in successful for user: \(result!.user.description)")
+                    completion(result)
+                }
+            })
+        }
+    case "email":
+        /** Sign in like normal with the email and password*/
+        Auth.auth().signIn(withEmail: input, password: password, completion: {(result,error)  in
+            if let error = error{
+                print(error)
+                completion(nil)
+            }
+            else{
+                print("Sign in successful for user: \(result!.user.description)")
+                completion(result)
+            }
+        })
+    case "phone":
+        /** Turn the given phone number into a CSV with the default country code of 1 for the "US"*/
+        let phoneNumberCSV = "1,\(input)"
+        
+        /** Find the user profile associated with this number and password and then use the email and password to sign in*/
+        fetchThisLogin(from: collection, phoneNumber: phoneNumberCSV, password: password, employeeID: employeeID) { (userLogin) in
+            /** If a user login doesn't exist then the account doesn't exist*/
+            guard userLogin != nil else {
+                return completion(nil)
+            }
+            
+            Auth.auth().signIn(withEmail: userLogin!.email, password: userLogin!.password, completion: {(result,error) in
+                if let error = error{
+                    print(error)
+                    completion(nil)
+                }
+                else{
+                    print("Sign in successful for user: \(result!.user.description)")
+                    completion(result)
+                }
+            })
+        }
+    default:
+        break
+    }
+    
+}
+
+// MARK: - Pull User Data
 /** Pulls all data for this customer from the customer profile collection and formulates a customer object from that data*/
 func pullThisCustomer(customerID: String, completion: @escaping (Customer?)-> ()){
     let db = Firestore.firestore()
@@ -1095,17 +1104,24 @@ func pullThisCustomer(customerID: String, completion: @escaping (Customer?)-> ()
                 let firstName = dictionary["First Name"] as! String
                 let lastName = dictionary["Last Name"] as! String
                 let gender = getGender(from: dictionary["Gender"] as! UInt)!
-                let addressMap = dictionary["Addresses"] as! [[String:String]]
+                let addressMap = dictionary["Addresses"] as! [[String : Any]]
                 
                 var addresses: [Address] = []
                 
                 for address in addressMap {
-                    let zipCode = address["Zip Code"]!
-                    let borough = getBoroughFrom(string: address["Borough"]!)!
-                    let addressType = AddressType(rawValue: Int(address["Address Type"]!)!) ?? AddressType.other
+                    let zipCode = address["Zip Code"] as! Int
+                    let borough = getBoroughFrom(string: address["Borough"] as! String)!
+                    let addressType = AddressType(rawValue: address["Address Type"] as! Int) ?? AddressType.other
+                    let coordinates = address["Coordinates"] as? GeoPoint
                      
+                    let parsedAddress = Address(borough: borough, zipCode: UInt(exactly: zipCode)!, alias: address["Alias"] as! String, streetAddress1: address["Address 1"] as! String, streetAddress2: address["Address 2"] as! String, specialInstructions: address["Instructions"] as! String, addressType: addressType)
                     
-                    let parsedAddress = Address(borough: borough, zipCode: UInt(zipCode)!, alias: address["Alias"]!, streetAddress1: address["Address 1"]!, streetAddress2: address["Address 2"]!, specialInstructions: address["Instructions"]!, addressType: addressType)
+                    if coordinates != nil{
+                    parsedAddress.coordinates = geopointToCLLocationCoordinate(geopoint: coordinates!)
+                    }
+                    else{
+                    parsedAddress.coordinates = nil
+                    }
 
                     /**
                     parsedAddress.country = ["Country"] as! String
@@ -1133,3 +1149,29 @@ func pullThisDriver(driverID: String){
     
 }
 /** Push and pull methods for User profiles*/
+
+// MARK: - Update Address
+/** Update the user's current address(es)*/
+func updateAddressesOfThisCustomer(customer: Customer){
+    let db = Firestore.firestore()
+    let collectionPath = "Customers"
+    let mappedAddresses = addressToMap(addresses: customer.addresses)
+    
+    db.collection(collectionPath).document(customer.user_id).updateData(["Addresses" : mappedAddresses])
+}
+
+func updateAddressOfThisEmployee(employee: BusinessClient){
+    let db = Firestore.firestore()
+    let collectionPath = "Business"
+    let mappedAddress = addressToDictionary(address: employee.address)
+    
+    db.collection(collectionPath).document(employee.user_id).updateData(["Addresses" : mappedAddress])
+}
+
+func updateAddressOfThisDriver(driver: Driver){
+    let db = Firestore.firestore()
+    let collectionPath = "Drivers"
+    let mappedAddress = addressToDictionary(address: driver.address)
+    
+    db.collection(collectionPath).document(driver.user_id).updateData(["Addresses" : mappedAddress])
+}

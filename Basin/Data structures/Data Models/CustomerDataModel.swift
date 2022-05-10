@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import GooglePlaces
+import CoreLocation
+import Firebase
 
 /** Custom data model class and various other utils used to represent and store the information associated with customer entities*/
 
@@ -63,6 +64,8 @@ public class Address{
     var specialInstructions: String
     /** Classify the given address*/
     var addressType: AddressType
+    /** The coordinates of this address*/
+    var coordinates: CLLocationCoordinate2D? = nil
     
     init(borough: Borough, zipCode: UInt, alias: String, streetAddress1: String, streetAddress2: String, specialInstructions: String, addressType: AddressType) {
         self.borough = borough
@@ -75,13 +78,80 @@ public class Address{
     }
 }
 
-/** Get the coordinates of the given address using google's geocoding API*/
-func getCoordinatesOf(this address: Address)->CLLocation?{
-    var location: CLLocation? = nil
+// MARK: - Update address, Local and Remote
+/** If no coordinates exist for this address then add the coordinates via an API request and then push this change to the remote, this is used in order to prevent the over usage of the geocoding API which costs a lot over time*/
+func updateTheCoordinatesOfThisCustomerAddress(address: Address, customer: Customer){
+    guard internetAvailable == true else {
+        return
+    }
     
+    getCoordinatesOf(this: address){(result: Result<CLLocation,APIService.APIError>) in
+        switch result{
+        case .success(let location):
+            address.coordinates = location.coordinate
+            
+            /** Find this address in the stored address array*/
+            for (index, storedAddress) in customer.addresses.enumerated(){
+                if storedAddress.streetAddress1 == address.streetAddress1{
+                    customer.addresses[index] = address
+                }
+            }
+            
+            updateAddressesOfThisCustomer(customer: customer)
+        case .failure(let apiError):
+            switch apiError{
+            case .error(let errorString):
+                print("Error: The geocoded location for the provided address could not be fetched and decoded")
+                print(errorString)
+            }
+        }
+    }
+}
+
+func updateTheCoordinatesOfThisEmployeeAddress(address: Address, employee: BusinessClient){
+    guard internetAvailable == true else {
+        return
+    }
     
+    getCoordinatesOf(this: address){(result: Result<CLLocation,APIService.APIError>) in
+        switch result{
+        case .success(let location):
+            address.coordinates = location.coordinate
+            
+            employee.address = address
+            
+            updateAddressOfThisEmployee(employee: employee)
+        case .failure(let apiError):
+            switch apiError{
+            case .error(let errorString):
+                print("Error: The geocoded location for the provided address could not be fetched and decoded")
+                print(errorString)
+            }
+        }
+    }
+}
+
+func updateTheCoordinatesOfThisDriverAddress(address: Address, driver: Driver){
+    guard internetAvailable == true else {
+        return
+    }
     
-    return location
+    getCoordinatesOf(this: address){(result: Result<CLLocation,APIService.APIError>) in
+        switch result{
+        case .success(let location):
+            address.coordinates = location.coordinate
+            
+            driver.address = address
+            
+            updateAddressOfThisDriver(driver: driver)
+        case .failure(let apiError):
+            switch apiError{
+            case .error(let errorString):
+                print("Error: The geocoded location for the provided address could not be fetched and decoded")
+                print(errorString)
+            }
+        }
+    }
 }
 
 /** For the user to specify what kind of address the given address is*/
@@ -98,6 +168,23 @@ public enum AddressType: Int{
 
 /** Init this enum using the given raw value*/
 extension AddressType{
+    /** Return the address type as a string representation of its case*/
+    func toString()->String{
+        switch self{
+        case .home:
+            return "Home"
+        case .business:
+            return "Business"
+        case .hotel:
+            return "Hotel"
+        case .other:
+            return "Other"
+        case .retail:
+            return "Retail"
+        }
+    }
+    
+    
     public init?(rawValue: Int) {
         switch rawValue{
         case AddressType.home.rawValue:
@@ -149,40 +236,65 @@ public class UserLogin{
     }
 }
 
+// MARK: - Coordinate data type casting
+/** Cast a geopoint to a CLLocation Coordinate2D*/
+func geopointToCLLocationCoordinate(geopoint: GeoPoint)->CLLocationCoordinate2D{
+    return CLLocationCoordinate2D(latitude: geopoint.latitude, longitude: geopoint.longitude)
+}
+
+/** Cast a CLLocation Coordinate2D to a geopoint*/
+func CLLocationCoordinateToGeoPoint(coordinate: CLLocationCoordinate2D)->GeoPoint{
+    return GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+}
+
 /** - Returns: A dictionary containing the properties of the given addresses in string form*/
-func addressToDictionary(address: Address)->[String:String]{
-    let dictionary: [String : String] = [
+func addressToDictionary(address: Address)->[String : Any?]{
+    /** Firestore only knows geopoint objects, CLL can't be casted to that type unless manually done*/
+    var geopoint: GeoPoint? = nil
+    if let coordinates = address.coordinates{
+    geopoint = CLLocationCoordinateToGeoPoint(coordinate: coordinates)
+    }
+    
+    let dictionary: [String : Any?] = [
         "Country": address.country,
         "State": address.state,
         "City": address.city,
-        "Zip Code": address.zipCode.description,
+        "Zip Code": address.zipCode,
         "Borough": address.borough.rawValue,
         "Alias": address.alias,
         "Address 1": address.streetAddress1,
         "Address 2": address.streetAddress2,
         "Instructions": address.specialInstructions,
-        "Address Type": address.addressType.rawValue.description
+        "Address Type": address.addressType.rawValue,
+        "Coordinates": geopoint
     ]
     
     return dictionary
 }
 
 /** - Returns: An array of dictionaries containing the properties of the given addresses in string form*/
-func addressToMap(addresses: [Address])->[[String : String]]{
-    var dictionaries: [[String : String]] = []
+func addressToMap(addresses: [Address])->[[String : Any?]]{
+    var dictionaries: [[String : Any?]] = []
     
-    for address in addresses {
-        let dictionary: [String : String] = [
+    for address in addresses{
+        
+        var geopoint: GeoPoint? = nil
+        if let coordinates = address.coordinates{
+        geopoint = CLLocationCoordinateToGeoPoint(coordinate: coordinates)
+        }
+        
+        let dictionary: [String : Any?] = [
             "Country": address.country,
             "State": address.state,
             "City": address.city,
-            "Zip Code": address.zipCode.description,
+            "Zip Code": address.zipCode,
             "Borough": address.borough.rawValue,
             "Alias": address.alias,
             "Address 1": address.streetAddress1,
             "Address 2": address.streetAddress2,
             "Instructions": address.specialInstructions,
-            "Address Type": address.addressType.rawValue.description
+            "Address Type": address.addressType.rawValue,
+            "Coordinates": geopoint
         ]
 
         dictionaries.append(dictionary)

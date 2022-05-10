@@ -10,6 +10,9 @@
 		06FFB877B4897C49E7404EC7 /* Pods_Basin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B7A2A321562BED27B68B92 /* Pods_Basin.framework */; };
 		497A1A52281774B600D9D653 /* OrderItemSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497A1A51281774B600D9D653 /* OrderItemSearchTableViewCell.swift */; };
 		497A1A542817DB1900D9D653 /* noSearchResults.json in Resources */ = {isa = PBXBuildFile; fileRef = 497A1A532817DB1900D9D653 /* noSearchResults.json */; };
+		49A352F528253D7200691F1B /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352F428253D7200691F1B /* APIService.swift */; };
+		49A352F828253E2B00691F1B /* GeocodingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352F728253E2800691F1B /* GeocodingAPI.swift */; };
+		49A352FB282B03BD00691F1B /* QuickQueryQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */; };
 		49C1FA9528148B3B0020EB4A /* DriverClientVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0928148B3B0020EB4A /* DriverClientVC.swift */; };
 		49C1FA9628148B3B0020EB4A /* DriverDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0C28148B3B0020EB4A /* DriverDataModel.swift */; };
 		49C1FA9728148B3B0020EB4A /* CustomerDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0D28148B3B0020EB4A /* CustomerDataModel.swift */; };
@@ -128,6 +131,9 @@
 		49426E6427ADF03E004274F4 /* Basin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		497A1A51281774B600D9D653 /* OrderItemSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemSearchTableViewCell.swift; sourceTree = "<group>"; };
 		497A1A532817DB1900D9D653 /* noSearchResults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = noSearchResults.json; sourceTree = "<group>"; };
+		49A352F428253D7200691F1B /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		49A352F728253E2800691F1B /* GeocodingAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingAPI.swift; sourceTree = "<group>"; };
+		49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickQueryQueue.swift; sourceTree = "<group>"; };
 		49C1FA0928148B3B0020EB4A /* DriverClientVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverClientVC.swift; sourceTree = "<group>"; };
 		49C1FA0C28148B3B0020EB4A /* DriverDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverDataModel.swift; sourceTree = "<group>"; };
 		49C1FA0D28148B3B0020EB4A /* CustomerDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerDataModel.swift; sourceTree = "<group>"; };
@@ -288,6 +294,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		49A352F628253DFD00691F1B /* APIs */ = {
+			isa = PBXGroup;
+			children = (
+				49A352F428253D7200691F1B /* APIService.swift */,
+				49C1FA9028148B3B0020EB4A /* CurrentWeatherAPI.swift */,
+				49A352F728253E2800691F1B /* GeocodingAPI.swift */,
+			);
+			path = APIs;
+			sourceTree = "<group>";
+		};
 		49C1FA0728148B3B0020EB4A /* Basin */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +322,7 @@
 				49C1FA4B28148B3B0020EB4A /* fonts */,
 				49C1FA7228148B3B0020EB4A /* Assets */,
 				49C1FA8528148B3B0020EB4A /* Start Up */,
+				49A352F628253DFD00691F1B /* APIs */,
 				49C1FA8C28148B3B0020EB4A /* Global */,
 				49C1FA9428148B3B0020EB4A /* Info.plist */,
 			);
@@ -365,6 +382,7 @@
 				49C1FA2128148B3B0020EB4A /* DetentedBottomSheetView.swift */,
 				49C1FA2228148B3B0020EB4A /* LottieButton.swift */,
 				49FF371528151624009E8E2D /* LottieRefreshControl.swift */,
+				49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -614,7 +632,6 @@
 				49C1FA8D28148B3B0020EB4A /* attributeThisString.swift */,
 				49C1FA8E28148B3B0020EB4A /* UniversalProperties.swift */,
 				49C1FA8F28148B3B0020EB4A /* nycZipCodes.swift */,
-				49C1FA9028148B3B0020EB4A /* CurrentWeatherAPI.swift */,
 				49C1FA9128148B3B0020EB4A /* StringExtension.swift */,
 				49C1FA9228148B3B0020EB4A /* GoodVibrations.swift */,
 				49C1FA9328148B3B0020EB4A /* TimeAndDate.swift */,
@@ -873,6 +890,8 @@
 				49C1FAA928148B3B0020EB4A /* DatabaseInterface.swift in Sources */,
 				49C1FA9628148B3B0020EB4A /* DriverDataModel.swift in Sources */,
 				49C1FA9728148B3B0020EB4A /* CustomerDataModel.swift in Sources */,
+				49A352F828253E2B00691F1B /* GeocodingAPI.swift in Sources */,
+				49A352FB282B03BD00691F1B /* QuickQueryQueue.swift in Sources */,
 				49C1FA9C28148B3B0020EB4A /* DoublyLinkedList.swift in Sources */,
 				49C1FB0028148B3C0020EB4A /* StringExtension.swift in Sources */,
 				49C1FA9828148B3B0020EB4A /* CartsDataModel.swift in Sources */,
@@ -884,6 +903,7 @@
 				49C1FAA528148B3B0020EB4A /* MapUI.swift in Sources */,
 				49C1FAAD28148B3B0020EB4A /* BusinessClientVC.swift in Sources */,
 				49C1FABC28148B3B0020EB4A /* LaundromatLocationDetailVC.swift in Sources */,
+				49A352F528253D7200691F1B /* APIService.swift in Sources */,
 				49C1FAF728148B3C0020EB4A /* CustomerSupportVC.swift in Sources */,
 				49FF371628151624009E8E2D /* LottieRefreshControl.swift in Sources */,
 				49C1FABF28148B3B0020EB4A /* OrderDetailView.swift in Sources */,

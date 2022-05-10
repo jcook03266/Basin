@@ -27,6 +27,13 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Logged In User data*/
     private var currentUser: Customer!
+    /** Keep track of each address marker icon by correlating it to a map marker which is also correlated to an address*/
+    var userAddressMapMarkerIconViews: [GMSMarker : AddressIconView] = [:]
+    /** Dictionary that correlates map markers with addresses in the user's addresses*/
+    var userAddressMapMarkers: [GMSMarker : Address] = [:]
+    /** Push the user to the address menu of the settings menu*/
+    var editAddressButton: UIButton = UIButton()
+    var addressInformationPanel: AddressInformationPanel!
     
     /** Google map UI*/
     /** A UIView that acts a snapshot of the map at a specific point in time, this is used as a placeholder view when the map view is deinitialized for memory management after the user goes to the background*/
@@ -48,7 +55,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     var shoppingCartButton = UIButton()
     var mapView: GMSMapView!
     var camera: GMSCameraPosition = GMSCameraPosition()
-    var mapMarker: GMSMarker = GMSMarker()
     /** Array of map markers that represent the locations of Stuy Wash N Dry laundromats*/
     var mapMarkers: [GMSMarker : Laundromat] = [:]
     /** Map containing a marker icon view and an marker that acts a key for that view*/
@@ -163,6 +169,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     @objc func appMovedToForeground(){
         movedToBackground = false
+        
+        /** Move to the user's current location if they've moved since reopening the application*/
+        moveToCurrentLocation()
     }
     
     /** Activates when the application regains focus*/
@@ -174,9 +183,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** Since this is delayed it's important to only execute the code when the app is in the appropriate state*/
         clearMapViewSnapshotRT()
         }
-        
-        /** Move to the user's current location if they've moved since reopening the application*/
-        moveToCurrentLocation()
     }
     
     /** Activates when app is fully in the background state*/
@@ -233,6 +239,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         if mapView.isHidden == true{
             mapView.alpha = 0
             mapView.isHidden = false
+            
+            placeholderMapViewGrid.animateErasing(with: 0.15)
             
             /** Remove the grid from memory*/
             if placeholderMapViewGrid != nil{
@@ -479,6 +487,35 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Create the discrete user interface for this view controller*/
     func createUI(){
+        editAddressButton = UIButton(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.95, height: 60))
+        editAddressButton.backgroundColor = bgColor
+        editAddressButton.tintColor = appThemeColor
+        editAddressButton.titleLabel!.adjustsFontSizeToFitWidth = true
+        editAddressButton.titleLabel!.adjustsFontForContentSizeCategory = true
+        editAddressButton.setImage(UIImage(systemName: "house.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
+        editAddressButton.layer.cornerRadius = editAddressButton.frame.height/2
+        editAddressButton.clipsToBounds = true
+        editAddressButton.castDefaultShadow()
+        editAddressButton.layer.shadowColor = UIColor.darkGray.cgColor
+        editAddressButton.isExclusiveTouch = true
+        
+        var buttonConfig = UIButton.Configuration.plain()
+        buttonConfig.title = "Edit Address"
+        buttonConfig.cornerStyle = .capsule
+        buttonConfig.imagePadding =  5
+        buttonConfig.titleTextAttributesTransformer =
+          UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
+            outgoing.foregroundColor = fontColor
+            return outgoing
+          }
+        editAddressButton.configuration = buttonConfig
+        editAddressButton.addTarget(self, action: #selector(editAddressButtonPressed), for: .touchUpInside)
+        addDynamicButtonGR(button: editAddressButton)
+        
+        addressInformationPanel = AddressInformationPanel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.95, height: view.frame.height * 0.25))
+        
         welcomeLabel.frame.size = CGSize(width: self.view.frame.width * 0.4, height: 40)
         welcomeLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true)
         welcomeLabel.backgroundColor = bgColor
@@ -615,6 +652,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         view.addSubview(shoppingCartButton)
         view.addSubview(weatherView)
         view.addSubview(welcomeLabelShadowView)
+        view.addSubview(editAddressButton)
+        view.addSubview(addressInformationPanel)
         
         /** Set the initial position of the map to be the user's current location*/
         let currentZoomLevel = locationManager.accuracyAuthorization == .fullAccuracy ? preciseLocationZoomLevel : approximateLocationZoomLevel
@@ -626,6 +665,10 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         mapView.camera = camera
         
         /** Layout these subviews*/
+        editAddressButton.frame.origin = CGPoint(x: self.view.frame.width/2 - editAddressButton.frame.width/2, y: self.view.frame.maxY + (editAddressButton.frame.height * 1.5))
+        
+        addressInformationPanel.frame.origin = CGPoint(x: self.view.frame.width/2 - addressInformationPanel.frame.width/2, y: editAddressButton.frame.maxY + 10)
+        
         currentLocationButton.frame.origin = CGPoint(x: self.view.frame.maxX - (currentLocationButton.frame.width * 1.25), y: searchBar.frame.maxY + (currentLocationButton.frame.height * 0.9))
         
         customerSupportButton.frame.origin = CGPoint(x: self.view.frame.maxX - (currentLocationButton.frame.width * 1.25), y: currentLocationButton.frame.maxY + 10)
@@ -782,7 +825,106 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Add markers for the user's provided addresses*/
     func addUserAddressMarkers(){
+        guard currentUser != nil else {
+            return
+        }
         
+        /** Ensure the user actually has addresses to geocode*/
+        guard currentUser.addresses.isEmpty == false else {
+            return
+        }
+        
+        for address in currentUser.addresses{
+            
+            /** Check to see if the address has coordinates already defined, if not then update the address with geocoded coordinates*/
+            guard address.coordinates == nil else {
+                
+                let mapMarker = GMSMarker(position: address.coordinates!)
+                mapMarker.title = ""
+                mapMarker.map = mapView
+                mapMarker.appearAnimation = .pop
+                
+                /** Custom marker icon views*/
+                userAddressMapMarkerIconViews[mapMarker] = AddressIconView(address: address)
+                
+                userAddressMapMarkerIconViews[mapMarker]!.imageView.backgroundColor = .white
+                
+                userAddressMapMarkers[mapMarker] = address
+                
+                mapMarker.iconView = userAddressMapMarkerIconViews[mapMarker]
+                mapMarker.isTappable = true
+                
+                /** Animate the marker icon views appearing after a slight delay*/
+                for pair in userAddressMapMarkerIconViews{
+                    let view = pair.value
+                    
+                    view.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
+                    for pair in userAddressMapMarkerIconViews{
+                        let view = pair.value
+                        
+                        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+                            view.transform = CGAffineTransform(scaleX: 1, y: 1)
+                        }
+                    }
+                }
+             
+                /** Jump to the next address*/
+                continue
+            }
+            
+            getCoordinatesOf(this: address){ [self] (result: Result<CLLocation,APIService.APIError>) in
+                switch result{
+                case .success(let location):
+                    ///print("\(location)")
+                    
+                    DispatchQueue.main.async{ [self] in
+                    let mapMarker = GMSMarker(position: location.coordinate)
+                    mapMarker.title = ""
+                    mapMarker.map = mapView
+                    mapMarker.appearAnimation = .pop
+                    
+                    address.coordinates = location.coordinate
+                    updateTheCoordinatesOfThisCustomerAddress(address: address, customer: currentUser)
+                    
+                    /** Custom marker icon views*/
+                    userAddressMapMarkerIconViews[mapMarker] = AddressIconView(address: address)
+                    
+                    userAddressMapMarkerIconViews[mapMarker]!.imageView.backgroundColor = .white
+                    
+                    userAddressMapMarkers[mapMarker] = address
+                    
+                    mapMarker.iconView = userAddressMapMarkerIconViews[mapMarker]
+                    mapMarker.isTappable = true
+                    
+                    /** Animate the marker icon views appearing after a slight delay*/
+                    for pair in userAddressMapMarkerIconViews{
+                        let view = pair.value
+                        
+                        view.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
+                        for pair in userAddressMapMarkerIconViews{
+                            let view = pair.value
+                            
+                            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+                                view.transform = CGAffineTransform(scaleX: 1, y: 1)
+                            }
+                        }
+                    }
+                    }
+                case .failure(let apiError):
+                    switch apiError{
+                    case .error(let errorString):
+                        print("Error: The geocoded location for the provided address could not be fetched and decoded")
+                        print(errorString)
+                    }
+                }
+            }
+        }
     }
     
     /** Add the markers to the map*/
@@ -818,14 +960,14 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** Animate the marker icon views appearing after a slight delay*/
         for pair in mapMarkerIconViews{
-            let view = pair.value.shadowView
+            let view = pair.value
             
             view.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
             for pair in mapMarkerIconViews{
-                let view = pair.value.shadowView
+                let view = pair.value
                 
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                     view.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -847,7 +989,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             }
             else{
                 currentUser = customer!
-                print(currentUser.debugDescription)
+                
+                addUserAddressMarkers()
             }
         }
     }
@@ -958,7 +1101,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 createAccountBottomSheet()
                 createCollectionView()
                 addMarkers()
-                addUserAddressMarkers()
             }
         }
     }
@@ -1518,8 +1660,18 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** Present the bottom sheet whenever the user taps on the screen to dismiss any other views occupying the screen if there is a currently selected map marker and if the user isn't tapping directly on it*/
         if currentlySelectedMapMarker != nil{
             if currentlySelectedMapMarker!.position.longitude != coordinate.longitude && currentlySelectedMapMarker!.position.latitude != coordinate.latitude{
+                
                 bottomSheet.show(animated: true)
-                hideCollectionView()
+                
+                /** Hide specific UI components depending on the type of marker that is selected*/
+                if mapMarkers[currentlySelectedMapMarker!] != nil{
+                    hideCollectionView()
+                }
+                if userAddressMapMarkers[currentlySelectedMapMarker!] != nil{
+                    hideEditAddressButton(animated: true)
+                }
+                /** Just in case the tabbar doesn't show the first time*/
+                showTabbar()
                 
                 currentlySelectedMapMarker = nil
             }
@@ -1541,6 +1693,15 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 iconView.transform = CGAffineTransform(scaleX: 1, y: 1)
             }
         }
+        else if let addressIconView = userAddressMapMarkerIconViews[marker]{
+            /** A little shrink and pop out animation*/
+            UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+                addressIconView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }
+            UIView.animate(withDuration: 0.25, delay: 0.15, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+                addressIconView.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+        }
         
         /** Zoom in on the location designated by the marker (Animated)*/
         let position = GMSCameraPosition(latitude: marker.position.latitude, longitude: marker.position.longitude, zoom: streetLevelZoomLevel)
@@ -1557,6 +1718,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         currentlySelectedMapMarker = marker
         
+        /** Only pop up the collection view when the map marker is a laundromat location*/
+        if mapMarkerIconViews[marker] != nil{
         /** Offset the collection view's scrollview so that it is centered on the item at the given index, the collectionview's data is the laundromats array, therefore this collection's indexes are indicative of the position of the views inside of the collectionview*/
         let selectedLaundromat = mapMarkers[marker]
         for (index, laundromat) in laundromats.enumerated(){
@@ -1568,11 +1731,61 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 laundromatLocationsCollectionView.setContentOffset(CGPoint(x: (self.view.frame.width * CGFloat(index)), y: 0), animated: true)
             }
         }
-        
+    
+        hideEditAddressButton(animated: true)
         popUpCollectionView()
+        }
+        
+        /** Address marker selected*/
+        if let address = userAddressMapMarkers[marker]{
+        hideCollectionView()
+        addressInformationPanel.build(with: address)
+        showEditAddressButton(animated: true)
+        }
         
         return true
     }
+    
+    /** Hide or show the edit address UI in an animated or static fashion*/
+    func hideEditAddressButton(animated: Bool){
+        showTabbar()
+        
+        switch animated{
+        case true:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
+                editAddressButton.frame.origin = CGPoint(x: self.view.frame.width/2 - editAddressButton.frame.width/2, y: self.view.frame.maxY + (editAddressButton.frame.height * 1.5))
+            }
+            
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
+                addressInformationPanel.frame.origin = CGPoint(x: self.view.frame.width/2 - addressInformationPanel.frame.width/2, y: editAddressButton.frame.maxY + 10)
+            }
+        case false:
+            editAddressButton.frame.origin = CGPoint(x: self.view.frame.width/2 - editAddressButton.frame.width/2, y: self.view.frame.maxY + (editAddressButton.frame.height * 1.5))
+            
+            addressInformationPanel.frame.origin = CGPoint(x: self.view.frame.width/2 - addressInformationPanel.frame.width/2, y: editAddressButton.frame.maxY + 10)
+        }
+    }
+    
+    func showEditAddressButton(animated: Bool){
+        /** Tabbar covers the edit button*/
+        hideTabbar()
+ 
+        switch animated{
+        case true:
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
+                editAddressButton.frame.origin = CGPoint(x: self.view.frame.width/2 - editAddressButton.frame.width/2, y: self.view.frame.height - (editAddressButton.frame.height * 1.5))
+            }
+            
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
+                addressInformationPanel.frame.origin = CGPoint(x: self.view.frame.width/2 - addressInformationPanel.frame.width/2, y: editAddressButton.frame.minY - (addressInformationPanel.frame.height + 10))
+            }
+        case false:
+            editAddressButton.frame.origin = CGPoint(x: self.view.frame.width/2 - editAddressButton.frame.width/2, y: self.view.frame.height - (editAddressButton.frame.height * 1.5))
+            
+            addressInformationPanel.frame.origin = CGPoint(x: self.view.frame.width/2 - addressInformationPanel.frame.width/2, y: editAddressButton.frame.minY - (addressInformationPanel.frame.height + 10))
+        }
+    }
+    /** Hide or show the edit address UI in an animated or static fashion*/
     
     /** Popup the collectionview and center it on the laundromat in question that was clicked with the marker*/
     func popUpCollectionView(){
@@ -1602,7 +1815,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** When the user has zoomed out too far minimize the title labels of the markers*/
         if position.zoom < 11{
             for pair in mapMarkerIconViews{
-                let view = pair.value.shadowView
+                let view = pair.value
                 
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                     view.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
@@ -1611,7 +1824,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         }
         else{
             for pair in mapMarkerIconViews{
-                let view = pair.value.shadowView
+                let view = pair.value
                 
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
                     view.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -1647,9 +1860,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                     
                     weatherView.weatherIcon = currentWeather.weather.first?.weatherIconURL
                     
-                    weatherView.stopSkeletonAnimation()
-                    weatherView.hideSkeleton()
-                    
                     /** Depending on what time of day it is specify the 'sky' color of the weather icon*/
                     switch whatTimeOfDayIsIt(){
                     case .morning:
@@ -1661,6 +1871,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                     case .night:
                         weatherView.weatherIconBackgroundColor = UIColor(red: 20/255, green: 24/255, blue: 82/255, alpha: 1)
                     }
+                    
+                    weatherView.stopSkeletonAnimation()
+                    weatherView.hideSkeleton()
                     
                     ///print("Current weather fetched and decoded successfully")
                     ///print("\(currentWeather.main) \(currentWeather.dt)")
@@ -2257,11 +2470,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 self.customTabbar.frame.origin = CGPoint(x: 0, y: self.view.frame.height * 1.1)
             }
         }
-        
-        /** Prevent the tabbar from being unhidden*/
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1){
-            self.customTabbar.isHidden = true
-        }
     }
     
     /** Show the tabbar in an animated fashion*/
@@ -2764,6 +2972,12 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         bottomSheet.show(animated: true)
     }
     /** Button pressed methods*/
+    @objc func editAddressButtonPressed(sender: UIButton){
+        lightHaptic()
+        
+        /** Move to the settings menu*/
+    }
+    
     @objc func rightButtonPressed(sender: UIButton){
         lightHaptic()
         

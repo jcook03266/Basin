@@ -916,12 +916,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         /** Attributed string with a system image in the front*/
         let nicknameLabelImageAttachment = NSTextAttachment()
-        switch darkMode {
-        case true:
-            nicknameLabelImageAttachment.image = UIImage(systemName: "building.2.fill")?.withTintColor(.white)
-        case false:
-            nicknameLabelImageAttachment.image = UIImage(systemName: "building.2.fill")?.withTintColor(.darkGray)
-        }
+        nicknameLabelImageAttachment.image = UIImage(systemName: "building.2.fill")?.withTintColor(.darkGray)
         
         let nicknameLabelAttributedString = NSMutableAttributedString()
         nicknameLabelAttributedString.append(NSAttributedString(attachment: nicknameLabelImageAttachment))

@@ -13,7 +13,6 @@ import Nuke
 
 /** API key to pass when fetching JSON data*/
 let openWeatherAPIKey = "43f330b80fec92f73843a6e979b15a81"
-let apiService = APIService.shared
 
 /** Send an API call to retrieve the current weather data for the given coordinate point*/
 func getCurrentWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping (Result<CurrentWeather,APIService.APIError>) -> Void){
@@ -22,11 +21,19 @@ func getCurrentWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees
     let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(openWeatherAPIKey)"
     
     /** API Service to fetch the data and decode it into a usable object*/
-    apiService.getJSON(urlString: urlString, dateDecodingStrategy: .secondsSince1970, keyDecodingStrategy: .useDefaultKeys, APIType: .openWeatherAPI){ (result: Result<CurrentWeather,APIService.APIError>) in
+    apiService.getJSON(urlString: urlString, dateDecodingStrategy: .secondsSince1970, keyDecodingStrategy: .useDefaultKeys, APIType: .openWeatherAPI){ (result: Result<Any,APIService.APIError>) in
         
-        completion(result)
+        switch result{
+        case .success(let success):
+            guard let currentWeather = success as? CurrentWeather else{
+                return
+            }
+            completion(.success(currentWeather))
+        case .failure(let failure):
+            completion(.failure(failure))
+        }
         
-        /** How to handle thre result
+        /** How to handle the result
          switch result {
          case .success(let currentWeather):
          print("\(currentWeather.main) \(currentWeather.dt)")
@@ -237,59 +244,4 @@ struct CurrentWeather: Codable{
     }
     /** Array of weather objects*/
     let weather: [Weather]
-}
-
-/** Singleton class responsible for fetching and decoding JSON data into structured data usable by this platform*/
-class APIService{
-    /** Shared singleton that can handle large network intensive tasks*/
-    static let shared = APIService()
-    
-    /** Enum that simplifies error passing for this class*/
-    enum APIError: Error{
-        case error(_ errorString: String)
-    }
-    
-    /** Specify the type of API to fetch and decode data from*/
-    enum APIType: Int{
-        case openWeatherAPI = 1
-    }
-    
-    func getJSON(urlString: String, dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .useDefaultKeys, APIType: APIType, completion: @escaping (Result<CurrentWeather,APIError>) -> Void){
-        
-        guard let url = URL(string: urlString) else{
-            completion(.failure(.error(NSLocalizedString("Error: Invalid URL in JSON fetch request", comment: ""))))
-            return
-        }
-        
-        /** Get the JSON data from the url and decode it into a current weather struct*/
-        let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request){(data, response, error) in
-            if let error = error {
-                completion(.failure(.error("Error: \(error.localizedDescription)")))
-            }
-            
-            guard let data = data else{
-                completion(.failure(.error(NSLocalizedString("Error: Data is corrupt", comment: ""))))
-                return
-            }
-            
-            /** Attempt to decode the data into a current weather struct*/
-            let decoder = JSONDecoder()
-            /** Set the decoding strategies for the JSON decoder when decoding to these specific types*/
-            decoder.dateDecodingStrategy = dateDecodingStrategy
-            decoder.keyDecodingStrategy = keyDecodingStrategy
-            
-            switch APIType {
-            case .openWeatherAPI:
-                do{
-                    let decodedData = try decoder.decode(CurrentWeather.self, from: data)
-                    completion(.success(decodedData))
-                    return
-                }catch let decodingError{
-                    completion(.failure(APIError.error("Error: \(decodingError.localizedDescription)")))
-                    return
-                }
-            }
-        }.resume() ///Start the task
-    }
 }
