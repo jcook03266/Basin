@@ -13,8 +13,12 @@ import Lottie
 import Nuke
 
 /** Simple File that contains many global variables and methods used throughout the application*/
+/** Single reference to the root view controller for ease of access to other scenes across the app*/
+var homeVCReference: HomeVC? = nil
+/** QuickQueryQueue Settings*/
+var useQuickQueryQueues: Bool = true
 /**Google AdMob variables*/
-let bannerViewAdUnitID = "ca-app-pub-3940256099942544/2934735716"//TEST ID REPLACE
+let bannerViewAdUnitID = "ca-app-pub-5858678841144806/5957808574"//TEST ID REPLACE
 /**Network Monitoring and UI*/
 var monitor: NWPathMonitor = NWPathMonitor()
 var internetAvailable = true
@@ -74,7 +78,7 @@ func userCompletedOnboarding(){
     UserDefaults.standard.set(true, forKey: "onboardingComplete")
 }
 
-/** Determine if the user has completed the onboarding flow befor*/
+/** Determine if the user has completed the onboarding flow before or signed in previously*/
 func didUserCompletedOnboarding()->Bool{
     var completed = false
     

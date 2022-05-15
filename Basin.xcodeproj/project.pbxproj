@@ -13,6 +13,8 @@
 		49A352F528253D7200691F1B /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352F428253D7200691F1B /* APIService.swift */; };
 		49A352F828253E2B00691F1B /* GeocodingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352F728253E2800691F1B /* GeocodingAPI.swift */; };
 		49A352FB282B03BD00691F1B /* QuickQueryQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */; };
+		49A352FE283046BC00691F1B /* QueryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352FD283046BC00691F1B /* QueryCollectionViewCell.swift */; };
+		49A3530028304AB000691F1B /* Shortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A352FF28304AB000691F1B /* Shortcuts.swift */; };
 		49C1FA9528148B3B0020EB4A /* DriverClientVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0928148B3B0020EB4A /* DriverClientVC.swift */; };
 		49C1FA9628148B3B0020EB4A /* DriverDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0C28148B3B0020EB4A /* DriverDataModel.swift */; };
 		49C1FA9728148B3B0020EB4A /* CustomerDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA0D28148B3B0020EB4A /* CustomerDataModel.swift */; };
@@ -22,7 +24,7 @@
 		49C1FA9B28148B3B0020EB4A /* LocationsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1128148B3B0020EB4A /* LocationsDataModel.swift */; };
 		49C1FA9C28148B3B0020EB4A /* DoublyLinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1228148B3B0020EB4A /* DoublyLinkedList.swift */; };
 		49C1FA9D28148B3B0020EB4A /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1528148B3B0020EB4A /* CoreData.swift */; };
-		49C1FA9E28148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1628148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodeld */; };
+		49C1FA9E28148B3B0020EB4A /* Basin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1628148B3B0020EB4A /* Basin.xcdatamodeld */; };
 		49C1FA9F28148B3B0020EB4A /* JCTabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1928148B3B0020EB4A /* JCTabbar.swift */; };
 		49C1FAA028148B3B0020EB4A /* ImageCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1A28148B3B0020EB4A /* ImageCarousel.swift */; };
 		49C1FAA128148B3B0020EB4A /* ImageCarouselCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1FA1B28148B3B0020EB4A /* ImageCarouselCollectionViewCell.swift */; };
@@ -134,6 +136,8 @@
 		49A352F428253D7200691F1B /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		49A352F728253E2800691F1B /* GeocodingAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingAPI.swift; sourceTree = "<group>"; };
 		49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickQueryQueue.swift; sourceTree = "<group>"; };
+		49A352FD283046BC00691F1B /* QueryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryCollectionViewCell.swift; sourceTree = "<group>"; };
+		49A352FF28304AB000691F1B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		49C1FA0928148B3B0020EB4A /* DriverClientVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverClientVC.swift; sourceTree = "<group>"; };
 		49C1FA0C28148B3B0020EB4A /* DriverDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverDataModel.swift; sourceTree = "<group>"; };
 		49C1FA0D28148B3B0020EB4A /* CustomerDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerDataModel.swift; sourceTree = "<group>"; };
@@ -304,6 +308,15 @@
 			path = APIs;
 			sourceTree = "<group>";
 		};
+		49A352FC2830469D00691F1B /* QuickQueryQueue */ = {
+			isa = PBXGroup;
+			children = (
+				49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */,
+				49A352FD283046BC00691F1B /* QueryCollectionViewCell.swift */,
+			);
+			path = QuickQueryQueue;
+			sourceTree = "<group>";
+		};
 		49C1FA0728148B3B0020EB4A /* Basin */ = {
 			isa = PBXGroup;
 			children = (
@@ -363,7 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				49C1FA1528148B3B0020EB4A /* CoreData.swift */,
-				49C1FA1628148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodeld */,
+				49C1FA1628148B3B0020EB4A /* Basin.xcdatamodeld */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -371,6 +384,7 @@
 		49C1FA1828148B3B0020EB4A /* Custom UI */ = {
 			isa = PBXGroup;
 			children = (
+				49A352FC2830469D00691F1B /* QuickQueryQueue */,
 				49C1FA1928148B3B0020EB4A /* JCTabbar.swift */,
 				49C1FA1A28148B3B0020EB4A /* ImageCarousel.swift */,
 				49C1FA1B28148B3B0020EB4A /* ImageCarouselCollectionViewCell.swift */,
@@ -382,7 +396,6 @@
 				49C1FA2128148B3B0020EB4A /* DetentedBottomSheetView.swift */,
 				49C1FA2228148B3B0020EB4A /* LottieButton.swift */,
 				49FF371528151624009E8E2D /* LottieRefreshControl.swift */,
-				49A352FA282B03BD00691F1B /* QuickQueryQueue.swift */,
 			);
 			path = "Custom UI";
 			sourceTree = "<group>";
@@ -635,6 +648,7 @@
 				49C1FA9128148B3B0020EB4A /* StringExtension.swift */,
 				49C1FA9228148B3B0020EB4A /* GoodVibrations.swift */,
 				49C1FA9328148B3B0020EB4A /* TimeAndDate.swift */,
+				49A352FF28304AB000691F1B /* Shortcuts.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -855,9 +869,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49A352FE283046BC00691F1B /* QueryCollectionViewCell.swift in Sources */,
 				49C1FAB928148B3B0020EB4A /* LaundromatLocationCollectionViewCell.swift in Sources */,
 				49C1FAF628148B3C0020EB4A /* iForgotVC.swift in Sources */,
-				49C1FA9E28148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodeld in Sources */,
+				49C1FA9E28148B3B0020EB4A /* Basin.xcdatamodeld in Sources */,
 				49C1FAFE28148B3C0020EB4A /* nycZipCodes.swift in Sources */,
 				49C1FAFC28148B3C0020EB4A /* attributeThisString.swift in Sources */,
 				49C1FAB328148B3B0020EB4A /* HomeVC.swift in Sources */,
@@ -911,6 +926,7 @@
 				49C1FAE728148B3C0020EB4A /* LottieAnimationContainer.swift in Sources */,
 				49C1FAF928148B3C0020EB4A /* SignUpVC.swift in Sources */,
 				49C1FAA728148B3B0020EB4A /* DetentedBottomSheetView.swift in Sources */,
+				49A3530028304AB000691F1B /* Shortcuts.swift in Sources */,
 				49C1FABA28148B3B0020EB4A /* LaundromatLocationTableViewCell.swift in Sources */,
 				49C1FABE28148B3B0020EB4A /* ordersTableViewCell.swift in Sources */,
 				49C1FAC728148B3B0020EB4A /* customUIFonts.swift in Sources */,
@@ -1166,13 +1182,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		49C1FA1628148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodeld */ = {
+		49C1FA1628148B3B0020EB4A /* Basin.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				49C1FA1728148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodel */,
 			);
 			currentVersion = 49C1FA1728148B3B0020EB4A /* Stuy_Wash_N_Dry.xcdatamodel */;
-			path = Stuy_Wash_N_Dry.xcdatamodeld;
+			path = Basin.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -1,6 +1,6 @@
 //
 //  LaundromatLocationCollectionViewCell.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/26/22.
 //

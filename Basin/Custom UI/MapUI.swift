@@ -202,9 +202,9 @@ public class AddressInformationPanel: UIView{
         self.layer.masksToBounds = true
         self.clipsToBounds = false
         self.layer.shadowColor = UIColor.darkGray.cgColor
-        self.layer.cornerRadius = self.frame.height/4
+        self.layer.cornerRadius = self.frame.height/5
         self.layer.shadowOpacity = 0.5
-        self.layer.shadowRadius = self.frame.height/4
+        self.layer.shadowRadius = self.layer.cornerRadius
         self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.layer.cornerRadius).cgPath
         self.layer.shadowOffset = CGSize(width: 0, height: 2)
         
@@ -215,7 +215,7 @@ public class AddressInformationPanel: UIView{
         container.layer.borderWidth =  1
         container.clipsToBounds = true
         
-        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: container.frame.width, height: container.frame.width * 0.25))
+        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: container.frame.width * 1.05, height: container.frame.width * 0.3))
         imageView.contentMode = .scaleAspectFit
         imageView.image = getImageFor(this: address.addressType)
         imageView.backgroundColor = .white
@@ -284,13 +284,13 @@ public class AddressInformationPanel: UIView{
         
         streetAddress1Label = PaddedLabel(withInsets: 1, 1, 5, 5)
         streetAddress1Label.frame = CGRect(x: 0, y: 0, width: container.frame.width * 0.25, height: (container.frame.height * 0.2))
-        streetAddress1Label.backgroundColor = .lightGray
-        streetAddress1Label.textColor = .white
+        streetAddress1Label.backgroundColor = .clear
+        streetAddress1Label.textColor = fontColor
         streetAddress1Label.text = address.streetAddress1
         streetAddress1Label.font = getCustomFont(name: .Ubuntu_Regular, size: 18, dynamicSize: true)
         streetAddress1Label.adjustsFontSizeToFitWidth = true
         streetAddress1Label.adjustsFontForContentSizeCategory = true
-        streetAddress1Label.tintColor = .white
+        streetAddress1Label.tintColor = fontColor
         streetAddress1Label.textAlignment = .center
         streetAddress1Label.clipsToBounds = true
         streetAddress1Label.sizeToFit()
@@ -339,7 +339,7 @@ public class AddressInformationPanel: UIView{
         container.frame.origin = CGPoint(x: self.frame.width/2 - container.frame.width/2, y: self.frame.height/2 - container.frame.height/2)
         
         /** Working with 1 - 0.35 - 0.65, so 0.6for everything else*/
-        imageView.frame.origin = CGPoint(x: 0, y: 0)
+        imageView.frame.origin = CGPoint(x: self.frame.width/2 - imageView.frame.width/2, y: 0 - container.frame.height * 0.025)
         
         //0.25 + 0.2 + 0.025 + 0.025 -> 0.5 -> 0.475 left
         addressTypeLabel.frame.origin = CGPoint(x: container.frame.width * 0.025, y: imageView.frame.maxY - container.frame.height * 0.05)

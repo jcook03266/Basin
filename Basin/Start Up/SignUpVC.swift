@@ -4701,7 +4701,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -4748,7 +4748,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -4797,7 +4797,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -4850,7 +4850,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -4892,7 +4892,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                     if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                         
                         /** The state, city, and country are all let constants*/
-                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                         
                         showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                     }
@@ -4914,7 +4914,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -4958,7 +4958,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                     if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                         
                         /** The state, city, and country are all let constants*/
-                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                         
                         showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                     }
@@ -4980,7 +4980,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -5024,7 +5024,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                     if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                         
                         /** The state, city, and country are all let constants*/
-                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                        address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                         
                         showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                     }
@@ -5046,7 +5046,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }
@@ -5101,7 +5101,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
                 if firstName != "" && lastName != "" && address1 != "" && city != "" && borough != nil && state != "" && zipCode != nil{
                     
                     /** The state, city, and country are all let constants*/
-                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "Home", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
+                    address = Address(borough: self.borough!, zipCode: UInt(zipCode!), alias: "", streetAddress1: address1, streetAddress2: address2, specialInstructions: "", addressType: .home)
                     
                     showContinueButton(animated: true, at: CGPoint(x: 10, y: view.frame.height * 0.8 - continueButton.frame.height))
                 }

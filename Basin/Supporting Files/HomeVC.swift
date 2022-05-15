@@ -15,6 +15,8 @@ import FBSDKLoginKit
 import GoogleSignIn
 import AuthenticationServices
 
+///NOTE: Remove comment for completion of onboarding when done testing sign in and out
+
 /** The first view controller displayed when the app is launched*/
 class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate, UITextViewDelegate, ASAuthorizationControllerPresentationContextProviding, LoginButtonDelegate{
     lazy var statusBarHeight = getStatusBarHeight()
@@ -45,6 +47,9 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     var getStartedButton: UIButton!
     /** Go backwards after pressing the sign in button*/
     var signInBackButton: UIButton!
+    
+    /** Used to determine whether or not the sign in UI is currently being displayed*/
+    var signInUIBeingDisplayed: Bool = false
     
     /** Various UI Views used in the onboarding process*/
     /** View that contains a masked UIView with a clear background and a full height UIView below it, this gives off the illusion that the two UIViews are one view with a curved top*/
@@ -138,6 +143,8 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        
+        homeVCReference = self
         
         //pushWashingDataToMenuCollection()
         //pushDryCleaningDataToMenuCollection()
@@ -352,6 +359,10 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){ [self] in
                 loadingBar.frame.size.height = view.frame.height
+            }
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                loadingBar.frame.origin.y = 0
             }
             
             /** If a user is logged in then go to the appropriate client for that user, if not then show the onboarding screen*/
@@ -1007,13 +1018,13 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + primingDelay){[self] in
-            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
                 onboardingTransitionView.frame.origin = CGPoint(x: 0, y: 0)
                 onboardingPageControl.alpha = 1
                 onboardingNextButton.alpha = 1
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
-                UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+                UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
                     onboardingSkipButton.transform = CGAffineTransform(scaleX: 1, y: 1)
                     onboardingSkipButton.isEnabled = true
                 }
@@ -1658,11 +1669,11 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                 case 0:
                     break
                 case 1:
-                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{
+                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{ [self] in
                         employeeIDTextFieldLeftButton.setImage(UIImage(systemName: "b.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
                     })
                 case 2:
-                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{
+                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{ [self] in
                         employeeIDTextFieldLeftButton.setImage(UIImage(systemName: "d.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
                     })
                 default:
@@ -1679,11 +1690,11 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                 case 0:
                     break
                 case 1:
-                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{
+                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{ [self] in
                         employeeIDTextFieldLeftButton.setImage(UIImage(systemName: "b.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
                     })
                 case 2:
-                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{
+                    UIView.transition(with: employeeIDTextFieldLeftButton, duration: 0.5, options: .transitionFlipFromLeft, animations:{ [self] in
                         employeeIDTextFieldLeftButton.setImage(UIImage(systemName: "d.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
                     })
                 default:
@@ -1987,22 +1998,18 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                         disableSignInButton()
                     }
                     else{
-                        /** Disable this button*/
-                        sender.isEnabled = false
-                        UIView.animate(withDuration: 0.25, delay: 0){
-                            sender.alpha = 0.5
-                        }
-                        
                         print("User: \(result!.username) signed in using Google")
                         
                         DispatchQueue.main.asyncAfter(deadline: .now()){
-                            globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                            globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                         }
                         
                         setLoggedInUserType(userType: "Customer")
                         
                         /** Present Customer UI*/
                         presentCustomerVC()
+                        /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                        ///userCompletedOnboarding()
                     }
                 })
             }
@@ -2092,21 +2099,17 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                         disableSignInButton()
                     }
                     else{
-                        /** Disable this button*/
-                        faceBookSignInButton.isEnabled = false
-                        UIView.animate(withDuration: 0.25, delay: 0){[self] in
-                            faceBookSignInButton.alpha = 0
-                        }
-                        
                         print("User: \(result!.username) signed in using Facebook")
                         
                         DispatchQueue.main.asyncAfter(deadline: .now()){
-                            globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                            globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                         }
                         
                         setLoggedInUserType(userType: "Customer")
                         
                         presentCustomerVC()
+                        /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                        ///userCompletedOnboarding()
                     }
                 })
                 
@@ -2141,12 +2144,14 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                     print(result!.user.metadata)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now()){
-                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                     }
                     
                     setLoggedInUserType(userType: "Customer")
                     
                     presentCustomerVC()
+                    /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                    ///userCompletedOnboarding()
                 }
             })
         }
@@ -2172,12 +2177,14 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                     print(result!.user.metadata)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now()){
-                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                     }
                     
                     setLoggedInUserType(userType: "Business")
                     
                     presentBusinessVC()
+                    /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                    ///userCompletedOnboarding()
                 }
             })
         }
@@ -2203,12 +2210,14 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
                     print(result!.user.metadata)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now()){
-                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                        globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                     }
                     
                     setLoggedInUserType(userType: "Driver")
                     
                     presentDriverVC()
+                    /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                    ///userCompletedOnboarding()
                 }
             })
         }
@@ -2256,8 +2265,8 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     
     /** Keyboard will hide and show methods*/
     @objc func keyboardWillShow(notification: NSNotification){
-        guard let userInfo = notification.userInfo else {return}
-        guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {return}
+        ///guard let userInfo = notification.userInfo else {return}
+        ///guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {return}
         /*let keyboardFrame = keyboardSize.cgRectValue*/
         
         guard currentlySelectedTextField != nil else {
@@ -2589,6 +2598,8 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
     @objc func signInBackButtonPressed(sender: UIButton){
         sender.isEnabled = false
         
+        signInUIBeingDisplayed = false
+        
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
             sender.alpha = 0
         }
@@ -2709,6 +2720,8 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         UIView.animate(withDuration: 0.5, delay: 0.25, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
             sender.transform = CGAffineTransform(scaleX: 1, y: 1)
         }
+        
+        signInUIBeingDisplayed = true
         
         displaySignInFlow()
         forwardTraversalShake()
@@ -3190,21 +3203,18 @@ extension HomeVC: ASAuthorizationControllerDelegate {
                             disableSignInButton()
                         }
                         else{
-                            /** Disable this button*/
-                            appleSignInButton.isEnabled = false
-                            UIView.animate(withDuration: 0.25, delay: 0){[self] in
-                                appleSignInButton.alpha = 0
-                            }
-                            
                             print("User: \(result!.username) signed in using Apple")
                             
                             DispatchQueue.main.asyncAfter(deadline: .now()){
-                                globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+                                globallyTransmit(this: "Welcome back \(Auth.auth().currentUser?.displayName ?? "")", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
                             }
                             
                             setLoggedInUserType(userType: "Customer")
                             
                             presentCustomerVC()
+                            
+                            /** If the user signs in then they don't need to be shown the onboarding again in case they log out*/
+                            ///userCompletedOnboarding()
                         }
                     })
                 }

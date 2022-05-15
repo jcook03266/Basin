@@ -11,7 +11,7 @@ import GoogleMaps
 import Lottie
 
 /** Detail view controller for the laundromat location cells that allows the user to create an order and proceed to check out*/
-public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIBarPositioningDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, CartDelegate, CLLocationManagerDelegate{
+public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIBarPositioningDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, CartDelegate, CLLocationManagerDelegate, QQQViewDelegate{
     /** Status bar styling variables*/
     public override var preferredStatusBarStyle: UIStatusBarStyle{
         /** The pictures are dark so use a light color*/
@@ -63,6 +63,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     private var sectionTitleLabel = UILabel()
     
     /** Search UI*/
+    /** Data model for the quick query queue (loaded up from coredata)*/
+    var searchTableQQQ: QuickQueryQueue!
+    /** UI Component that allows the user to store their past queries and inject them into the search bar immediately upon tapping them*/
+    var searchTableQQQView: QuickQueryQueueView!
     /** A container that drops down and retracts when the user uses the search bar*/
     var searchTableViewContainer: UIView!
     /** Control the expansion and contraction states of the search table view*/
@@ -201,6 +205,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         setNotificationCenter()
         
+        fetchQQQ()
+        
         configure()
         setSearchController()
         setViews()
@@ -221,6 +227,32 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         notificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(appIsInBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
+    
+    /** Fetch the quick query queue data for this laundromat*/
+    func fetchQQQ(){
+        guard useQuickQueryQueues == true else {
+            return
+        }
+        
+        /** Check to see if the quick query queue exists already in the set*/
+        for quickQueryQueue in quickQueryQueues{
+            if quickQueryQueue.primaryKey == laundromatData.storeID{
+                searchTableQQQ = quickQueryQueue
+            }
+        }
+
+        /** Load up from core data or create a new object*/
+            if let QQQ = fetchQuickQueryQueueCoreDataFor(this: laundromatData.storeID){
+                searchTableQQQ = QQQ
+            }
+            else{
+                /** No prior object loaded create a new one and save it*/
+                searchTableQQQ = QuickQueryQueue(primaryKey: laundromatData.storeID, created: .now)
+                searchTableQQQ.queryLimit = 10
+                
+                saveThisQuickQueryQueue(from: searchTableQQQ)
+            }
+        }
     
     /** Fetch the cart associated with this laundromat or create a new one if one isn't located*/
     func fetchCart(){
@@ -1316,6 +1348,11 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchTableViewContainer.clipsToBounds = true
         searchTableViewContainer.frame.size.height = 0
         
+        searchTableQQQView = QuickQueryQueueView(data: searchTableQQQ, frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
+        searchTableQQQView.frame.origin.y = 0
+        searchTableQQQView.useShadow = true
+        searchTableQQQView.delegate = self
+        
         searchTableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height), style: .grouped)
         searchTableView.clipsToBounds = true
         searchTableView.backgroundColor = .clear
@@ -1327,12 +1364,15 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchTableView.contentInsetAdjustmentBehavior = .never
         searchTableView.dataSource = self
         searchTableView.delegate = self
-        searchTableView.separatorStyle = .none
+        searchTableView.separatorStyle = .singleLine
         searchTableView.layer.borderColor = UIColor.white.darker.cgColor
         searchTableView.layer.borderWidth = 0
         
         /** Add a little space at the bottom of the scrollview*/
         searchTableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: imageCarousel.frame.height * 1.25, right: 0)
+        
+        /** Depending on if the QQQ view is hidden, place the tableview accordingly so that no content is disjointed*/
+        searchTableView.frame.origin.y = searchTableQQQView.viewHidden ? 0 : searchTableQQQView.frame.maxY
         
         searchTableView.register(OrderItemSearchTableViewCell.self, forCellReuseIdentifier: OrderItemSearchTableViewCell.identifier)
         
@@ -1344,6 +1384,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         }
         
         searchTableViewContainer.addSubview(searchTableView)
+        searchTableViewContainer.addSubview(searchTableQQQView)
         
         /** Delay this slightly to give the buttonbar time to be repositioned*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){[self] in
@@ -1615,12 +1656,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
         
         /** Hide the search table if no text has been entered, and display the search table once text has been entered*/
-        if searchText != ""{
-            showSearchTable()
-        }
-        else if searchText == ""{
-            hideSearchTable()
-        }
+        ///showSearchTable()
         
         /** Update the no search results label with the current search text*/
         if noSearchResultsFoundBeingDisplayed == true{
@@ -1736,8 +1772,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
         }
         
-        /** If no search results are available then display the no search results available prompt*/
-        if filteredItems.isEmpty == true{
+        /** If no search results are available if something is actively being searched then display the no search results available prompt*/
+        if filteredItems.isEmpty == true && searchText != ""{
             if noSearchResultsFoundBeingDisplayed == false{
                 displayNoSearchResultsFound()
             }
@@ -1851,7 +1887,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         noSearchResultsFoundSecondaryLabel.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundSecondaryLabel.frame.width/2, y: noSearchResultsFoundLottieView.frame.maxY + (noSearchResultsFoundLabel.frame.height * 0.15))
         
-        noSearchResultsFoundBackButton.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundBackButton.frame.width/2, y: noSearchResultsFoundContainer.frame.maxY - (noSearchResultsFoundBackButton.frame.height * 1.75))
+        noSearchResultsFoundBackButton.frame.origin = CGPoint(x: noSearchResultsFoundContainer.frame.width/2 - noSearchResultsFoundBackButton.frame.width/2, y: noSearchResultsFoundSecondaryLabel.frame.maxY + (noSearchResultsFoundBackButton.frame.height * 1.75))
         
         noSearchResultsFoundContainer.addSubview(noSearchResultsFoundLabel)
         noSearchResultsFoundContainer.addSubview(noSearchResultsFoundLottieView)
@@ -1864,6 +1900,60 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         noSearchResultsFoundContainer.alpha = 1
         }
     }
+    
+    /** QQQView Delegate methods*/
+    func quickQueryQueueView(_ quickQueryQueueView: QuickQueryQueueView, didSelect query: String) {
+        
+        injectQuery(query: query)
+    }
+    
+    /** Search the given string by passing it to the search bar*/
+    func injectQuery(query: String){
+        searchController!.isActive = true
+        searchController!.searchBar.searchTextField.text = query
+        searchController!.searchBar.text = query
+        
+        /**Trigger a search action for the specific search controller in this view*/
+        /** Add a slight delay to allow the animation engine to catch on to the updated position*/
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){ [self] in
+            searchBar(searchController!.searchBar, textDidChange: query)
+            searchBarSearchButtonClicked(searchController!.searchBar)
+        }
+    }
+    
+    func quickQueryQueueViewDidRemoveAllQueries(_ quickQueryQueueView: QuickQueryQueueView) {
+        hideQQQ(animated: true)
+    }
+    /** QQQView Delegate methods*/
+    
+    /** Hide or show the quick query queue appearing in a static or animated fashion*/
+    func showQQQ(animated: Bool){
+        searchTableQQQView.frame.origin.y = -searchTableQQQView.frame.height
+        searchTableView.frame.origin.y = 0
+        switch animated{
+        case true:
+            UIView.animate(withDuration: 1, delay: 0.25, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
+                searchTableQQQView.frame.origin.y = 0
+                searchTableView.frame.origin.y = searchTableQQQView.frame.maxY
+            }
+        case false:
+            searchTableQQQView.frame.origin.y = 0
+            searchTableView.frame.origin.y = searchTableQQQView.frame.maxY
+        }
+    }
+    func hideQQQ(animated: Bool){
+        switch animated{
+        case true:
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
+                searchTableQQQView.frame.origin.y = -searchTableQQQView.frame.height
+                searchTableView.frame.origin.y = 0
+            }
+        case false:
+            searchTableQQQView.frame.origin.y = -searchTableQQQView.frame.height
+            searchTableView.frame.origin.y = 0
+        }
+    }
+    /** Hide or show the quick query queue appearing in a static or animated fashion*/
     
     /** Hide the no search results found panel*/
     func hideNoSearchResultsFound(){
@@ -1882,6 +1972,15 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     
     /** Methods for showing and hiding the search table in an animated fashion*/
     func showSearchTable(){
+        
+        /** Depending on if the QQQ view is hidden, place the tableview accordingly so that no content is disjointed*/
+        searchTableView.frame.origin.y = searchTableQQQView.viewHidden ? 0 : searchTableQQQView.frame.maxY
+        
+        /** Only play this animation once and only if the QQQ has queries*/
+        if searchTableQQQView.viewHidden == false && searchTableViewExpanded == false{
+        showQQQ(animated: true)
+        }
+        
         /** Expand*/
         searchTableViewExpanded = true
         
@@ -1893,7 +1992,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
         }
         
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
             searchTableViewContainer.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         }
     }
@@ -1901,6 +2000,13 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     func hideSearchTable(){
         /** Contract*/
         searchTableViewExpanded = false
+        
+        /** Depending on if the QQQ view is hidden, place the tableview accordingly so that no content is disjointed*/
+        searchTableView.frame.origin.y = searchTableQQQView.viewHidden ? 0 : searchTableQQQView.frame.maxY
+        
+        if searchTableQQQView.viewHidden == false{
+        hideQQQ(animated: true)
+        }
         
         /** If the information panel is not hidden then set the container's minY to the bottom of the image carousel's dividing line*/
         if scrollView.frame.origin.y != buttonBar.frame.maxY{
@@ -1910,11 +2016,41 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
         }
         
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
             searchTableViewContainer.frame.size.height = 0
         }
     }
     /** Methods for showing and hiding the search table in an animated fashion*/
+    
+    /** Save the query in the search bar when the user presses the search button*/
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
+        
+        /** Don't append useless queries onto the query queue*/
+        if noSearchResultsFoundBeingDisplayed == false && useQuickQueryQueues == true{
+            mediumHaptic()
+            
+            /** If the QQQView is hidden prior to adding this query then unhide it*/
+            if searchTableQQQView.viewHidden == true{
+            searchTableQQQView.show(animated: false)
+            showQQQ(animated: true)
+            }
+            
+            searchTableQQQ.add(this: searchBar.text!)
+        }
+        else if noSearchResultsFoundBeingDisplayed == false{
+            unsuccessfulActionHaptic()
+        }
+        else{
+            lightHaptic()
+        }
+    }
+    
+    /** Show the search table UI when the user focuses the search bar*/
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        showSearchTable()
+        
+        return true
+    }
     
     public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         
@@ -2069,6 +2205,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         /** Dismiss the keyboard if any*/
         view.endEditing(true)
+        searchBarCancelButtonClicked(searchController!.searchBar)
         
         /** The cart is empty, delete it from memory and the remote collection (only if internet is available, if internet is not available then this cart will be maintained in its last local form until it updates the remote, if the user comes back to the app after quiting the remote copy will overwrite the local data*/
         if laundromatCart != nil{
@@ -2828,7 +2965,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             /** Add to favorites list and save updated record*/
             favorite()
             
-            globallyTransmit(this: "Added to favorites", with: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 2, selfDismiss: true)
+            globallyTransmit(this: "Added to favorites", with: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 2, selfDismiss: true)
         }
         else{
             /** Complete the animation since it reverses at the end anyways*/
@@ -2837,7 +2974,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             /** Remove from favorites list and save updated record*/
             unFavorite()
             
-            globallyTransmit(this: "Removed from favorites", with: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 2, selfDismiss: true)
+            globallyTransmit(this: "Removed from favorites", with: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 2, selfDismiss: true)
         }
     }
     

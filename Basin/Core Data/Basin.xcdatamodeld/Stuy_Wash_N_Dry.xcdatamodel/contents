@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FavoriteLaundromatsModel" representedClassName="FavoriteLaundromatsModel" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="laundromatID" optional="YES" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="laundromatID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="QuickQueryQueueModel" representedClassName="QuickQueryQueueModel" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="primaryKey" optional="YES" attributeType="String"/>
+        <attribute name="queries" optional="YES" attributeType="Transformable"/>
+        <attribute name="queryLimit" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="secondaryKey" optional="YES" attributeType="String"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="primaryKey"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="FavoriteLaundromatsModel" positionX="-63" positionY="-18" width="128" height="59"/>
+        <element name="QuickQueryQueueModel" positionX="-63" positionY="0" width="128" height="119"/>
+    </elements>
+</model>

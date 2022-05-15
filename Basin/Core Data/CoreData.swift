@@ -1,6 +1,6 @@
 //
 //  CoreData.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/26/22.
 //
@@ -8,19 +8,20 @@
 import CoreData
 import UIKit
 
-/**NSManagedObject Array for storing fetched entity objects when loading core data from favorite laundromats model entity*/
+/**NSManagedObject Arrays for storing fetched entity objects when loading core data from the entities*/
 var favoriteLaundromatCoreDataArray: [NSManagedObject] = []
+var quickQueryQueuesCoreDataArray: [NSManagedObject] = []
 
 /** Enum for entity names to make things simpler to type*/
 enum entities: String{
     /**Favorite Laundromats Model**/
     case FL = "FavoriteLaundromatsModel"
+    case QQQ = "QuickQueryQueueModel"
 }
 
 final class CoreDataManager{
     // MARK: - Properties
     private let modelName: String
-    
     
     // MARK: - Initialization
     init(modelName: String) {
@@ -128,6 +129,114 @@ func loadCoreData(in entity: entities, NSManagedObjectArray: inout [NSManagedObj
     }
 }
 
+///Start of QQQ Data methods//
+/** Unique set of quick query queues since each one is unique*/
+var quickQueryQueues: Set<QuickQueryQueue> = []
+
+/**Save Core data objects to entity*/
+func saveThisQuickQueryQueue(from dataModel: QuickQueryQueue){
+    if let appDelegate = UIApplication.shared.delegate as? AppDelegate{
+        let managedContext = appDelegate.coreDataManager.managedObjectContext
+        
+        managedContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
+        guard let entity = NSEntityDescription.entity(forEntityName: entities.QQQ.rawValue, in: managedContext) else{return}
+        
+        let object = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        object.setValue(dataModel.primaryKey, forKey: #keyPath(QuickQueryQueueModel.primaryKey))
+        
+        object.setValue(dataModel.secondaryKey, forKey: #keyPath(QuickQueryQueueModel.secondaryKey))
+        
+        object.setValue(dataModel.queries, forKey: #keyPath(QuickQueryQueueModel.queries))
+        
+        object.setValue(dataModel.queryLimit, forKey: #keyPath(QuickQueryQueueModel.queryLimit))
+        
+        object.setValue(dataModel.created, forKey: #keyPath(QuickQueryQueueModel.created))
+        
+        object.setValue(dataModel.updated, forKey: #keyPath(QuickQueryQueueModel.updateDate))
+        
+        do{
+            try managedContext.save()
+            print("Saved Quick Query Queue: \(dataModel.primaryKey)")
+        }catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+}
+
+/** Form a fetch request for a single object from the entity*/
+func fetchQuickQueryQueueCoreDataFor(this primaryKey: String)->QuickQueryQueue?{
+    var quickQueryQueue: QuickQueryQueue? = nil
+    
+    if let appDelegate = UIApplication.shared.delegate as? AppDelegate{
+        
+        let fetchRequest: NSFetchRequest<QuickQueryQueueModel>
+        fetchRequest = QuickQueryQueueModel.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(format: "primaryKey = %@", primaryKey)
+        
+        let managedContext = appDelegate.coreDataManager.managedObjectContext
+        
+        do{
+            let objects = try managedContext.fetch(fetchRequest)
+            
+            if objects.isEmpty == false{
+                let NSManagedObject = objects[0]
+                
+                let item = QuickQueryQueue(primaryKey: NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.primaryKey)) as! String, created: NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.created)) as! Date)
+                
+                item.queries = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.queries)) as! Set<String>
+                
+                item.queryLimit = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.queryLimit)) as! Int
+                
+                item.created = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.created)) as! Date
+                
+                item.updated = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.updateDate)) as? Date
+                
+                quickQueryQueue = item
+            }
+            else{
+                return quickQueryQueue
+            }
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+        }
+    }
+    
+    return quickQueryQueue
+}
+
+/** Load up the saved data from core data*/
+func loadQuickQueryQueueCoreData(){
+    quickQueryQueuesCoreDataArray.removeAll()
+    /**Prevent duplicate information by removing any appended data*/
+    quickQueryQueues.removeAll()
+    
+    loadCoreData(in: .QQQ, NSManagedObjectArray: &quickQueryQueuesCoreDataArray)
+    
+    for NSManagedObject in quickQueryQueuesCoreDataArray{
+        
+        let item = QuickQueryQueue(primaryKey: NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.primaryKey)) as! String, created: NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.created)) as! Date)
+        
+        item.queries = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.queries)) as! Set<String>
+        
+        item.queryLimit = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.queryLimit)) as! Int
+        
+        item.created = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.created)) as! Date
+        
+        item.updated = NSManagedObject.value(forKey: #keyPath(QuickQueryQueueModel.updateDate)) as! Date
+        
+        quickQueryQueues.insert(item)
+    }
+}
+
+/** Use this when toggling the QQQ's to off in the settings menu*/
+func eraseAllQuickQueryQueues(){
+    resetAllEntityRecords(in: entities.QQQ.rawValue)
+}
+///End of QQQ Data methods//
+
 ///Start of Favorite Laundromats Core Data methods///
 /** A simple list of favorited laundromats,*/
 var favoriteLaundromats = LinkedList<FavoriteLaundromat>()
@@ -200,6 +309,8 @@ func FavoriteThisLaundromat(from dataModel: FavoriteLaundromat){
     if let appDelegate = UIApplication.shared.delegate as? AppDelegate{
         let managedContext = appDelegate.coreDataManager.managedObjectContext
         
+        managedContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
         guard let entity = NSEntityDescription.entity(forEntityName: entities.FL.rawValue, in: managedContext) else{return}
         
         let object = NSManagedObject(entity: entity, insertInto: managedContext)
@@ -225,7 +336,7 @@ func loadFavoriteLaundromatsCoreData(){
     
     for NSManagedObject in favoriteLaundromatCoreDataArray{
         let item = FavoriteLaundromat(creationDate: NSManagedObject.value(forKey: #keyPath(FavoriteLaundromatsModel.created)) as! Date, laundromatID: NSManagedObject.value(forKey: #keyPath(FavoriteLaundromatsModel.laundromatID)) as! String)
-
+        
         /** Stores a list of favorited laundromat object IDs and the date when the laundromat was favorited*/
         item.addToFavoriteLaundromats()
     }

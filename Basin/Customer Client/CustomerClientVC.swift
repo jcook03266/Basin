@@ -141,10 +141,10 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Request app tracking transparency*/
     func requestIDFA(){
-      ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-          /// Tracking authorization completed. Start loading ads here.
-          /// loadAd()
-      })
+        ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+            /// Tracking authorization completed. Start loading ads here.
+            /// loadAd()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool){
@@ -171,7 +171,10 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         movedToBackground = false
         
         /** Move to the user's current location if they've moved since reopening the application*/
-        moveToCurrentLocation()
+        if currentlySelectedMapMarker == nil{
+            /** Only move if the user isn't currently focused on a marker*/
+            moveToCurrentLocation()
+        }
     }
     
     /** Activates when the application regains focus*/
@@ -180,8 +183,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** Remove the snapshot when the app becomes focused again*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25){[self] in
-        /** Since this is delayed it's important to only execute the code when the app is in the appropriate state*/
-        clearMapViewSnapshotRT()
+            /** Since this is delayed it's important to only execute the code when the app is in the appropriate state*/
+            clearMapViewSnapshotRT()
         }
     }
     
@@ -244,14 +247,14 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             
             /** Remove the grid from memory*/
             if placeholderMapViewGrid != nil{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1){[self] in
-            placeholderMapViewGrid.removeFromSuperlayer()
-            }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1){[self] in
+                    placeholderMapViewGrid.removeFromSuperlayer()
+                }
             }
             
             /** Fade the mapview in*/
             UIView.animate(withDuration: 1, delay: 0){
-            mapView.alpha = 1
+                mapView.alpha = 1
             }
         }
     }
@@ -504,12 +507,12 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         buttonConfig.cornerStyle = .capsule
         buttonConfig.imagePadding =  5
         buttonConfig.titleTextAttributesTransformer =
-          UIConfigurationTextAttributesTransformer { incoming in
+        UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
             outgoing.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
             outgoing.foregroundColor = fontColor
             return outgoing
-          }
+        }
         editAddressButton.configuration = buttonConfig
         editAddressButton.addTarget(self, action: #selector(editAddressButtonPressed), for: .touchUpInside)
         addDynamicButtonGR(button: editAddressButton)
@@ -870,7 +873,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                         }
                     }
                 }
-             
+                
                 /** Jump to the next address*/
                 continue
             }
@@ -881,40 +884,40 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                     ///print("\(location)")
                     
                     DispatchQueue.main.async{ [self] in
-                    let mapMarker = GMSMarker(position: location.coordinate)
-                    mapMarker.title = ""
-                    mapMarker.map = mapView
-                    mapMarker.appearAnimation = .pop
-                    
-                    address.coordinates = location.coordinate
-                    updateTheCoordinatesOfThisCustomerAddress(address: address, customer: currentUser)
-                    
-                    /** Custom marker icon views*/
-                    userAddressMapMarkerIconViews[mapMarker] = AddressIconView(address: address)
-                    
-                    userAddressMapMarkerIconViews[mapMarker]!.imageView.backgroundColor = .white
-                    
-                    userAddressMapMarkers[mapMarker] = address
-                    
-                    mapMarker.iconView = userAddressMapMarkerIconViews[mapMarker]
-                    mapMarker.isTappable = true
-                    
-                    /** Animate the marker icon views appearing after a slight delay*/
-                    for pair in userAddressMapMarkerIconViews{
-                        let view = pair.value
+                        let mapMarker = GMSMarker(position: location.coordinate)
+                        mapMarker.title = ""
+                        mapMarker.map = mapView
+                        mapMarker.appearAnimation = .pop
                         
-                        view.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
+                        address.coordinates = location.coordinate
+                        updateTheCoordinatesOfThisCustomerAddress(address: address, customer: currentUser)
+                        
+                        /** Custom marker icon views*/
+                        userAddressMapMarkerIconViews[mapMarker] = AddressIconView(address: address)
+                        
+                        userAddressMapMarkerIconViews[mapMarker]!.imageView.backgroundColor = .white
+                        
+                        userAddressMapMarkers[mapMarker] = address
+                        
+                        mapMarker.iconView = userAddressMapMarkerIconViews[mapMarker]
+                        mapMarker.isTappable = true
+                        
+                        /** Animate the marker icon views appearing after a slight delay*/
                         for pair in userAddressMapMarkerIconViews{
                             let view = pair.value
                             
-                            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
-                                view.transform = CGAffineTransform(scaleX: 1, y: 1)
+                            view.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
+                            for pair in userAddressMapMarkerIconViews{
+                                let view = pair.value
+                                
+                                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+                                    view.transform = CGAffineTransform(scaleX: 1, y: 1)
+                                }
                             }
                         }
-                    }
                     }
                 case .failure(let apiError):
                     switch apiError{
@@ -1248,6 +1251,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Create a bottom sheet to display the properties of the user's current account (internet required to update them and load them up the first time)*/
     func createAccountBottomSheet(){
         let testView = UIView()
+        testView.frame = self.view.frame
         testView.backgroundColor = bgColor
         
         accountBottomSheet = DetentedBottomSheetView(detents: [0], subview: testView)
@@ -1256,10 +1260,58 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         accountBottomSheet.scrollView.isScrollEnabled = true
         
+        let logoutButton = UIButton(frame: CGRect(x: 0, y: 0, width: testView.frame.width * 0.9, height: 40))
+        logoutButton.backgroundColor = appThemeColor
+        logoutButton.setTitleColor(.white, for: .normal)
+        logoutButton.setTitle("Sign Out", for: .normal)
+        logoutButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 18, dynamicSize: true)
+        logoutButton.contentHorizontalAlignment = .center
+        logoutButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        logoutButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        logoutButton.layer.cornerRadius = logoutButton.frame.height/2
+        logoutButton.isExclusiveTouch = true
+        logoutButton.isEnabled = true
+        logoutButton.castDefaultShadow()
+        logoutButton.layer.shadowColor = UIColor.darkGray.cgColor
+        logoutButton.layer.borderColor = bgColor.lighter.cgColor
+        logoutButton.layer.borderWidth = 2
+        logoutButton.tintColor = appThemeColor
+        logoutButton.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
+        addDynamicButtonGR(button: logoutButton)
+        logoutButton.centerInsideOf(this: testView)
+        
+        testView.addSubview(logoutButton)
+        
         view.addSubview(accountBottomSheet)
         
         /** Hidden by default as this isn't the inital bottom sheet that's being displayed*/
         accountBottomSheet.hide(animated: false)
+    }
+    
+    /** Sign out the current user and dismiss this vc*/
+    @objc func logoutButtonPressed(sender: UIButton){
+        signOutCurrentUser()
+        
+        /** Get rid of the custom tabbar*/
+        hideTabbar()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){[self] in
+            customTabbar.removeFromSuperview()
+        }
+        
+        globallyTransmit(this: "Come Back Soon \(Auth.auth().currentUser?.displayName ?? "")!", with: UIImage(systemName: "heart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.white, imageBorder: .borderLessCircle, blurEffect: true, accentColor: appThemeColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
+        
+        /** Go to the sign in sign up screen in the homeVC*/
+        if let homeVC = homeVCReference{
+            /** If the sign in UI is being displayed then don't paint over it*/
+            if homeVC.signInUIBeingDisplayed == false{
+            homeVC.launchScreenTransitionAnimation()
+            homeVC.goToSignInSignUpScreen()
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+        self.dismiss(animated: true)
+        }
     }
     
     /** Create the bottom sheet to be added to the view hierachy*/
@@ -1624,10 +1676,10 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         /** Compute the distance between the two coordinates (in meters)*/
         /** If the mapview's location isn't available then use the location manager's last location*/
         if let location = mapView.myLocation{
-        distance = location.distance(from: storeLocation)
+            distance = location.distance(from: storeLocation)
         }
         else if let location = locationManager.location{
-        distance = location.distance(from: storeLocation)
+            distance = location.distance(from: storeLocation)
         }
         
         /** Convert to miles (b/c America)*/
@@ -1670,8 +1722,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 if userAddressMapMarkers[currentlySelectedMapMarker!] != nil{
                     hideEditAddressButton(animated: true)
                 }
-                /** Just in case the tabbar doesn't show the first time*/
-                showTabbar()
                 
                 currentlySelectedMapMarker = nil
             }
@@ -1720,27 +1770,27 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** Only pop up the collection view when the map marker is a laundromat location*/
         if mapMarkerIconViews[marker] != nil{
-        /** Offset the collection view's scrollview so that it is centered on the item at the given index, the collectionview's data is the laundromats array, therefore this collection's indexes are indicative of the position of the views inside of the collectionview*/
-        let selectedLaundromat = mapMarkers[marker]
-        for (index, laundromat) in laundromats.enumerated(){
-            guard selectedLaundromat != nil else {
-                break
+            /** Offset the collection view's scrollview so that it is centered on the item at the given index, the collectionview's data is the laundromats array, therefore this collection's indexes are indicative of the position of the views inside of the collectionview*/
+            let selectedLaundromat = mapMarkers[marker]
+            for (index, laundromat) in laundromats.enumerated(){
+                guard selectedLaundromat != nil else {
+                    break
+                }
+                
+                if selectedLaundromat == laundromat{
+                    laundromatLocationsCollectionView.setContentOffset(CGPoint(x: (self.view.frame.width * CGFloat(index)), y: 0), animated: true)
+                }
             }
             
-            if selectedLaundromat == laundromat{
-                laundromatLocationsCollectionView.setContentOffset(CGPoint(x: (self.view.frame.width * CGFloat(index)), y: 0), animated: true)
-            }
-        }
-    
-        hideEditAddressButton(animated: true)
-        popUpCollectionView()
+            hideEditAddressButton(animated: true)
+            popUpCollectionView()
         }
         
         /** Address marker selected*/
         if let address = userAddressMapMarkers[marker]{
-        hideCollectionView()
-        addressInformationPanel.build(with: address)
-        showEditAddressButton(animated: true)
+            hideCollectionView()
+            addressInformationPanel.build(with: address)
+            showEditAddressButton(animated: true)
         }
         
         return true
@@ -1769,7 +1819,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     func showEditAddressButton(animated: Bool){
         /** Tabbar covers the edit button*/
         hideTabbar()
- 
+        
         switch animated{
         case true:
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){[self] in
@@ -2943,7 +2993,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         guard mapView!.myLocation != nil else {
             return
         }
-    
+        
         let location = mapView.myLocation!
         
         /** Zoom in to the user's current location (if available) (Animated)*/
