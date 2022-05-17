@@ -68,7 +68,7 @@ public class iForgot: UIViewController, UITextFieldDelegate{
         backButton.isEnabled = false
         
         /** Everything else depends on this button's position so make sure this is positioned correctly*/
-        backButton.frame.origin = CGPoint(x: 10, y: view.getStatusBarHeight() + 15)
+        backButton.frame.origin = CGPoint(x: 10, y: getStatusBarHeight() + 15)
         
         /** Scale up animation*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in

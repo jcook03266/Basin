@@ -53,6 +53,8 @@ public class Cart: NSObject{
     var cartID: String
     /** The id of the user account for which this belongs to*/
     var userID: String
+    /** The name of the laundromat this cart belongs to*/
+    var laundromatName: String
     /** The laundromat associated with this cart's items*/
     var laundromatStoreID: String
     /** The items being stored inside of this cart*/
@@ -66,10 +68,11 @@ public class Cart: NSObject{
     /** The value of this cart before taxes and other fees are added*/
     var subtotal: Double = 0
     
-    init(cartID: String, userID: String, laundromatStoreID: String) {
+    init(cartID: String, userID: String, laundromatStoreID: String, laundromatName: String) {
         self.cartID = cartID
         self.userID = userID
         self.laundromatStoreID = laundromatStoreID
+        self.laundromatName = laundromatName
     }
     
     /** Return the total amount of items in the cart, items and their quantities*/
@@ -267,6 +270,7 @@ func pushThisCart(cart: Cart){
     let data: [String : Any] = [
         "User ID": cart.userID,
         "Laundromat Store ID": cart.laundromatStoreID,
+        "Laundromat Name": cart.laundromatName,
         "Items": items,
         "Created": cart.created,
         "Updated": cart.updated,
@@ -370,11 +374,16 @@ func fetchThisCart(cart: Cart, completion: @escaping (Cart?)-> ()){
         else{
             /** Document successfully retrieved*/
             let document = querySnapshot!
+            
+            guard document.data() != nil else {
+                return
+            }
+            
             let dictionary = document.data()!
             var cartItems: Set<OrderItem> = []
             
             /** Parse this cart object*/
-            let cart = Cart(cartID: document.documentID, userID: dictionary["User ID"] as! String, laundromatStoreID: dictionary["Laundromat Store ID"] as! String)
+            let cart = Cart(cartID: document.documentID, userID: dictionary["User ID"] as! String, laundromatStoreID: dictionary["Laundromat Store ID"] as! String, laundromatName: dictionary["Laundromat Name"] as! String)
             cart.created = (dictionary["Created"] as! Timestamp).dateValue()
             cart.updated = (dictionary["Updated"] as! Timestamp).dateValue()
             cart.subtotal = dictionary["Subtotal"] as! Double
@@ -444,7 +453,7 @@ func fetchCarts(){
                     var cartItems: Set<OrderItem> = []
                     
                     /** Parse each cart object*/
-                    let cart = Cart(cartID: document.documentID, userID: dictionary["User ID"] as! String, laundromatStoreID: dictionary["Laundromat Store ID"] as! String)
+                    let cart = Cart(cartID: document.documentID, userID: dictionary["User ID"] as! String, laundromatStoreID: dictionary["Laundromat Store ID"] as! String, laundromatName: dictionary["Laundromat Name"] as! String)
                     cart.created = (dictionary["Created"] as! Timestamp).dateValue()
                     cart.updated = (dictionary["Updated"] as! Timestamp).dateValue()
                     cart.subtotal = dictionary["Subtotal"] as! Double
@@ -493,7 +502,7 @@ func fetchCarts(){
 
 /** Create a unique cart for the given laundromat and user, if a cart already exists for this laundromat then delete it and replace it with this one*/
 func createACartForThis(laundromat: Laundromat, user: FirebaseAuth.User)->Cart{
-    let cart = Cart(cartID: generateCartID(with: user.uid), userID: user.uid, laundromatStoreID: laundromat.storeID)
+    let cart = Cart(cartID: generateCartID(with: user.uid), userID: user.uid, laundromatStoreID: laundromat.storeID, laundromatName: laundromat.nickName)
     
     let result = doesACartExistForThis(laundromat: laundromat)
     if result.0 == true{
