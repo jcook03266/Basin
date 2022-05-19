@@ -1,6 +1,6 @@
 //
 //  LaundromatLocationDetailVC.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/29/22.
 //
@@ -9,6 +9,8 @@ import Network
 import FirebaseAuth
 import GoogleMaps
 import Lottie
+
+//** Note if the user isn't within 3 miles of the laundromat then the view cart button should be overriden to say 'Service Unavailable \nNot In Range
 
 /** Detail view controller for the laundromat location cells that allows the user to create an order and proceed to check out*/
 public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIBarPositioningDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, CartDelegate, CLLocationManagerDelegate, QQQViewDelegate{
@@ -63,6 +65,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     private var sectionTitleLabel = UILabel()
     
     /** Search UI*/
+    /** Search tokens to display to enhance the user's search experience*/
+    var searchTokens: [UISearchToken] = []
+    /** When the user selects a search token, this enables filtering via category functionality*/
+    var filteringUsingCategory: String? = nil
     /** Data model for the quick query queue (loaded up from coredata)*/
     var searchTableQQQ: QuickQueryQueue!
     /** UI Component that allows the user to store their past queries and inject them into the search bar immediately upon tapping them*/
@@ -199,6 +205,42 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     public override func viewWillAppear(_ animated: Bool){
     }
     
+    public override func viewDidAppear(_ animated: Bool){
+        guard laundromatCart != nil else {
+            return
+        }
+        
+        /** Subscribe to updates again to avoid an issues with shared delegation with uninstantiated objects*/
+        laundromatCart.delegate = self
+    }
+    
+    /** If the cart has no items then get rid of it and create a new cart*/
+    func isCartValid()->Bool?{
+        guard laundromatCart != nil else{
+            return nil
+        }
+        
+        /** If this cart has been removed from the carts collection (after being deleted) then make a new cart*/
+        if carts.contains(laundromatCart) == false{
+            /** Reset all item data*/
+            clearMenuItems()
+            
+            if washingMenuTableView != nil{
+            washingMenuTableView.reloadData()
+            }
+            if dryCleaningMenuTableView != nil{
+            dryCleaningMenuTableView.reloadData()
+            }
+            
+            fetchCart()
+            
+            return false
+        }
+        else{
+            return true
+        }
+    }
+    
     public override func viewDidLoad(){
         /** Specify a maximum font size*/
         self.view.maximumContentSizeCategory = .large
@@ -226,6 +268,24 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         notificationCenter.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(appIsInBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    /** Create the search tokens to be displayed, a token for each category across both menus (if possible)*/
+    func createSearchTokens(){
+        let set1: Set<String> = Set(sortedWashingMenuCategories)
+        let set2: Set<String> = Set(sortedDryCleaningMenuCategories)
+        
+        let union = set1.union(set2)
+        let allCategories = union.toArray() as! [String]
+        
+        searchTokens = allCategories.map{ (category) -> UISearchToken in
+            
+            let token = UISearchToken(icon: nil, text: category)
+            
+            token.representedObject = category
+            
+            return token
+        }
     }
     
     /** Fetch the quick query queue data for this laundromat*/
@@ -258,16 +318,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     func fetchCart(){
         let result = doesACartExistForThis(laundromat: laundromatData)
         if result.0 == true{
-            if result.1!.items.isEmpty == false{
-                /** The cart has items, reuse it*/
-                laundromatCart = result.1!
-            }
-            else{
-                /** The cart has no items delete it and make a new one*/
-                if Auth.auth().currentUser != nil{
-                    laundromatCart = createACartForThis(laundromat: laundromatData, user: Auth.auth().currentUser!)
-                }
-            }
+            laundromatCart = result.1!
         }
         else{
             /** Cart doesn't exist, make a new one and push it to the remote when the user connects to internet*/
@@ -307,6 +358,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                             dryCleaningMenuCategorySections = computeTotalSectionsForDryCleaningMenuTableView() ?? [:]
                             
                             sortCategoriesInDescendingOrder()
+                            createSearchTokens()
                             
                             createWashingMenuTableView()
                             createDryCleaningMenuTableView()
@@ -321,6 +373,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                                     dryCleaningMenuCategorySections = computeTotalSectionsForDryCleaningMenuTableView() ?? [:]
                                     
                                     sortCategoriesInDescendingOrder()
+                                    createSearchTokens()
                                     
                                     createWashingMenuTableView()
                                     createDryCleaningMenuTableView()
@@ -367,12 +420,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         shimmeringTableView_1 = UITableView(frame: self.view.frame, style: .grouped)
         shimmeringTableView_1.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         shimmeringTableView_1.clipsToBounds = true
-        switch darkMode {
-        case true:
-            shimmeringTableView_1.backgroundColor = bgColor
-        case false:
-            shimmeringTableView_1.backgroundColor = bgColor
-        }
+        shimmeringTableView_1.backgroundColor = bgColor
         shimmeringTableView_1.tintColor = fontColor
         shimmeringTableView_1.isOpaque = false
         shimmeringTableView_1.showsVerticalScrollIndicator = true
@@ -401,12 +449,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         shimmeringTableView_2 = UITableView(frame: self.view.frame, style: .grouped)
         shimmeringTableView_2.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         shimmeringTableView_2.clipsToBounds = true
-        switch darkMode {
-        case true:
-            shimmeringTableView_2.backgroundColor = bgColor
-        case false:
-            shimmeringTableView_2.backgroundColor = bgColor
-        }
+        shimmeringTableView_2.backgroundColor = bgColor
         shimmeringTableView_2.tintColor = fontColor
         shimmeringTableView_2.isOpaque = false
         shimmeringTableView_2.showsVerticalScrollIndicator = true
@@ -494,7 +537,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         }
         
         /** Don't show zero in the label, it's redundant*/
-        if laundromatCart.getTotalItemQuantity() != 0{
+        if laundromatCart.getTotalItemQuantity() > 0{
             displayViewCartButton(animated: true)
             viewCartButton.setImage(UIImage(systemName: "cart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
             viewCartButton.setTitle(" View Cart (\(laundromatCart.getTotalItemQuantity())) $\(String(format: "%.2f", laundromatCart.subtotal))", for: .normal)
@@ -510,12 +553,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         washingMenuTableView = UITableView(frame: self.view.frame, style: .grouped)
         washingMenuTableView.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         washingMenuTableView.clipsToBounds = true
-        switch darkMode {
-        case true:
-            washingMenuTableView.backgroundColor = bgColor
-        case false:
-            washingMenuTableView.backgroundColor = bgColor
-        }
+        washingMenuTableView.backgroundColor = bgColor
         washingMenuTableView.tintColor = fontColor
         washingMenuTableView.isOpaque = false
         washingMenuTableView.showsVerticalScrollIndicator = true
@@ -560,12 +598,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         dryCleaningMenuTableView = UITableView(frame: self.view.frame, style: .grouped)
         dryCleaningMenuTableView.frame.size.height = self.view.frame.height - imageCarousel.frame.height
         dryCleaningMenuTableView.clipsToBounds = true
-        switch darkMode {
-        case true:
-            dryCleaningMenuTableView.backgroundColor = bgColor
-        case false:
-            dryCleaningMenuTableView.backgroundColor = bgColor
-        }
+        dryCleaningMenuTableView.backgroundColor = bgColor
         dryCleaningMenuTableView.tintColor = fontColor
         dryCleaningMenuTableView.isOpaque = false
         dryCleaningMenuTableView.showsVerticalScrollIndicator = true
@@ -610,7 +643,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     @objc func washingMenuTableViewRefreshStart(_ sender: AnyObject){
         mediumHaptic()
         
-        guard washingMenuTableView != nil else{
+        guard washingMenuTableView != nil && isCartValid() == true else{
+            washingMenuTableViewRefreshControl.endRefreshing()
             return
         }
         
@@ -631,7 +665,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     @objc func dryCleaningMenuTableViewRefreshStart(_ sender: AnyObject){
         mediumHaptic()
         
-        guard dryCleaningMenuTableView != nil else{
+        guard dryCleaningMenuTableView != nil && isCartValid() == true else{
+            dryCleaningMenuTableViewRefreshControl.endRefreshing()
             return
         }
         
@@ -853,16 +888,41 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 filterWashingMenu = true
                 filterDryCleaningMenu = false
                 
+                /** Reload the search tableview if it's visible while this switch is activated*/
+                if searchTableViewExpanded == true{
+                    
+                    /** Clear all conflicting data*/
+                    filteredItems.removeAll()
+                    
+                    /** Use whatever is in the search bar to generate new content representative of the current state*/
+                    if searchController != nil{
+                    let query = searchController!.searchBar.text ?? ""
+                    searchController!.isActive = true
+                    searchBar(searchController!.searchBar, textDidChange: query)
+                    searchBarSearchButtonClicked(searchController!.searchBar)
+                    }
+                }
+                
                 buttonBar!.moveUnderLineTo(this: buttonBar!.buttons[currentPage])
                 searchController!.searchBar.placeholder = "Search for washing options"
-                ///sectionTitleLabel.text = "Wash Dry Fold"
             case 1:
                 filterDryCleaningMenu = true
                 filterWashingMenu = false
+  
+                if searchTableViewExpanded == true{
+                    
+                    filteredItems.removeAll()
+
+                        if searchController != nil{
+                        let query = searchController!.searchBar.text ?? ""
+                        searchController!.isActive = true
+                        searchBar(searchController!.searchBar, textDidChange: query)
+                        searchBarSearchButtonClicked(searchController!.searchBar)
+                        }
+                }
                 
                 buttonBar!.moveUnderLineTo(this: buttonBar!.buttons[currentPage])
                 searchController!.searchBar.placeholder = "Search for dry cleaning options"
-                ///sectionTitleLabel.text = "Dry Cleaning"
             default:
                 break
             }
@@ -902,12 +962,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         informationPanel = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 220))
         informationPanel.clipsToBounds = true
         informationPanel.layer.masksToBounds = false
-        switch darkMode {
-        case true:
-            informationPanel.backgroundColor = bgColor.darker
-        case false:
-            informationPanel.backgroundColor = bgColor
-        }
+        informationPanel.backgroundColor = darkMode ? bgColor.darker : bgColor
         
         /**
          informationPanel.layer.shadowColor = UIColor.lightGray.cgColor
@@ -919,15 +974,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         expansionButton = UIButton(frame: CGRect(x: 0, y: 0, width: informationPanel.frame.width, height: 30))
         expansionButton.backgroundColor = appThemeColor
-        switch darkMode {
-        case true:
-            expansionButton.backgroundColor = .darkGray
-        case false:
-            expansionButton.backgroundColor = appThemeColor
-        }
+        expansionButton.backgroundColor = darkMode ? .darkGray : appThemeColor
         expansionButton.setImage(UIImage(systemName: "chevron.compact.down")?.withTintColor(.white), for: .normal)
         expansionButton.castDefaultShadow()
-        expansionButton.layer.cornerRadius =  expansionButton.frame.height/4
+        expansionButton.layer.cornerRadius =  expansionButton.frame.height/2
         expansionButton.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         expansionButton.contentMode = .center
         expansionButton.contentHorizontalAlignment = .center
@@ -1013,12 +1063,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         openingClosingHoursLabel.textAlignment = .left
         openingClosingHoursLabel.adjustsFontForContentSizeCategory = false
         openingClosingHoursLabel.adjustsFontSizeToFitWidth = true
-        switch darkMode {
-        case true:
-            openingClosingHoursLabel.textColor = .lightGray.lighter
-        case false:
-            openingClosingHoursLabel.textColor = .darkGray
-        }
+        openingClosingHoursLabel.textColor = darkMode ? .lightGray.lighter : .darkGray
         
         distanceLabel = PaddedLabel(withInsets: 0, 0, 0, 0)
         distanceLabel.frame.size = CGSize(width: informationPanel.frame.width * 0.3, height: 40)
@@ -1028,14 +1073,9 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         distanceLabel.adjustsFontSizeToFitWidth = true
         /** Placeholder text to give the label a dimension*/
         distanceLabel.text = ""
-        switch darkMode {
-        case true:
-            distanceLabel.textColor = .lightGray.lighter
-        case false:
-            distanceLabel.textColor = .darkGray
-        }
+        distanceLabel.textColor = darkMode ? .lightGray.lighter : .darkGray
         
-        pickUpDropOffSegmentedControl = UISegmentedControl(items: ["Pick-Up \n Use Delivery","Drop-off \n Go In-person"])
+        pickUpDropOffSegmentedControl = UISegmentedControl(items: ["Pick-Up • Delivery","Drop-off • In-person"])
         pickUpDropOffSegmentedControl.frame = CGRect(x: 0, y: 0, width: informationPanel.frame.width * 0.95, height: 40)
         pickUpDropOffSegmentedControl.backgroundColor = .lightGray.lighter
         pickUpDropOffSegmentedControl.setTitleTextAttributes([.font: getCustomFont(name: .Ubuntu_Regular, size: 14, dynamicSize: true), .foregroundColor: UIColor.white], for: .normal)
@@ -1301,16 +1341,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         navItem.largeTitleDisplayMode = .never
         navBar.setItems([navItem], animated: false)
         
-        var barBgColor = appThemeColor
-        var underlineColor = appThemeColor
-        switch darkMode{
-        case true:
-            barBgColor = bgColor.darker
-            underlineColor = appThemeColor
-        case false:
-            barBgColor =  appThemeColor
-            underlineColor =  UIColor.white
-        }
+        let barBgColor = darkMode ? bgColor.darker : .white
+        let underlineColor = darkMode ? appThemeColor : .white
         
         buttonBar = underlinedButtonBar(buttons: [washingButton, dryCleaningButton], width: self.view.frame.width, height: 45, underlineColor: underlineColor, underlineTrackColor: .lightGray.lighter, underlineHeight: 3, backgroundColor: barBgColor, animated: true)
         buttonBar.alpha = 0
@@ -1338,18 +1370,13 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         addDynamicButtonGR(button: viewCartButton)
         
         searchTableViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - imageCarousel.frame.height))
-        switch darkMode {
-        case true:
-            searchTableViewContainer.backgroundColor = bgColor
-        case false:
-            searchTableViewContainer.backgroundColor = bgColor
-        }
+        searchTableViewContainer.backgroundColor = bgColor
         searchTableViewContainer.isUserInteractionEnabled = true
         searchTableViewContainer.clipsToBounds = true
         searchTableViewContainer.frame.size.height = 0
         
         searchTableQQQView = QuickQueryQueueView(data: searchTableQQQ, frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
-        searchTableQQQView.frame.origin.y = 0
+        searchTableQQQView.frame.origin.y = 5
         searchTableQQQView.useShadow = true
         searchTableQQQView.delegate = self
         
@@ -1376,12 +1403,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         
         searchTableView.register(OrderItemSearchTableViewCell.self, forCellReuseIdentifier: OrderItemSearchTableViewCell.identifier)
         
-        if(darkMode == true){
-            searchTableView.indicatorStyle = .white
-        }
-        else{
-            searchTableView.indicatorStyle = .black
-        }
+        searchTableView.indicatorStyle =  darkMode ? .white : .black
         
         searchTableViewContainer.addSubview(searchTableView)
         searchTableViewContainer.addSubview(searchTableQQQView)
@@ -1658,6 +1680,9 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         /** Hide the search table if no text has been entered, and display the search table once text has been entered*/
         ///showSearchTable()
         
+        let searchTextField = searchController!.searchBar.searchTextField
+        //searchTextField.insertToken(searchTokens[0], at: 0)
+        
         /** Update the no search results label with the current search text*/
         if noSearchResultsFoundBeingDisplayed == true{
             /** Hide the no search results prompt*/
@@ -1769,7 +1794,6 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 }
             }
             searchTableView.reloadData()
-            
         }
         
         /** If no search results are available if something is actively being searched then display the no search results available prompt*/
@@ -2070,12 +2094,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchController!.searchBar.placeholder = "Search for washing options"
         
         /**Cancel button and editing carot*/
-        switch darkMode {
-        case true:
-            searchController!.searchBar.tintColor = .white
-        case false:
-            searchController!.searchBar.tintColor = .white
-        }
+        searchController!.searchBar.tintColor = .white
         searchController?.searchBar.barTintColor = fontColor
         self.navItem.searchController = searchController
         self.definesPresentationContext = true
@@ -2083,6 +2102,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         navBar.backgroundColor = bgColor
         
         searchController?.searchBar.delegate = self
+        searchController?.searchBar.searchTextField.tokenBackgroundColor = appThemeColor
+        searchController?.searchBar.searchTextField.allowsDeletingTokens = true
         searchController?.searchBar.searchTextField.textColor = fontColor
         searchController?.searchBar.searchTextField.backgroundColor = bgColor.lighter
         searchController?.searchBar.searchTextField.leftView?.tintColor = appThemeColor/**change color of searchbar icon*/
@@ -2092,14 +2113,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     }
     
     func configure(){
-        switch darkMode {
-        case true:
-            scrollView.indicatorStyle = .white
-            view.backgroundColor = bgColor
-        case false:
-            scrollView.indicatorStyle = .black
-            view.backgroundColor = bgColor
-        }
+        scrollView.indicatorStyle = darkMode ? .white : .black
+        view.backgroundColor = bgColor
         scrollView.clipsToBounds = false
         scrollView.isOpaque = false
         scrollView.delegate = self
@@ -2184,8 +2199,13 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 updateThisCart(cart: laundromatCart)
             }
             
-            let cartVC = ShoppingCartVC()
-            self.show(cartVC, sender: self)
+            let cartVC = ShoppingCartVC(cart: self.laundromatCart, displayAddMoreItemsButton: false)
+            
+            /** Popover full screen without canceling out the background content*/
+            cartVC.modalPresentationStyle = .overFullScreen
+            cartVC.modalTransitionStyle = .coverVertical
+            
+            self.present(cartVC, animated: true)
         }
         else{
             /** Internet unavailable, can't proceed, inform the user that they must have an internet connection to continue*/
@@ -2363,20 +2383,25 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     /** Cart delegate methods*/
     func cart(_ cart: Cart, didAdd item: OrderItem) {
         ///print("Item Added")
-        
         updateViewCartButtonLabel()
+        
+        /** Update remote to reflect this change*/
+        updateThisCart(cart: cart)
     }
     
     func cart(_ cart: Cart, didRemove item: OrderItem) {
         ///print("Item Removed")
-        
         updateViewCartButtonLabel()
+        
+        /** Update remote to reflect this change*/
+        updateThisCart(cart: cart)
     }
     
     /** Push any updates to this cart */
     func cart(_ cart: Cart, didUpdate item: OrderItem) {
         updateViewCartButtonLabel()
         
+        /** Update remote to reflect this change*/
         updateThisCart(cart: cart)
     }
     /** Cart delegate methods*/
@@ -2400,6 +2425,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             categoryLabel.adjustsFontSizeToFitWidth = true
             categoryLabel.textAlignment = .left
             categoryLabel.text = sortedWashingMenuCategories[section]
+            categoryLabel.shadowColor = .lightGray
             categoryLabel.sizeToFit()
             
             /** Layout subviews*/
@@ -2554,10 +2580,6 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             
             let vc = OrderItemDetailVC(itemData: tableViewCell.itemData, laundromatCart: self.laundromatCart, laundromatMenu: laundromatMenu)
             
-            if filterWashingMenu == true || filterDryCleaningMenu == true{
-                vc.presentingTableView = searchTableView
-            }
-            
             /** Prevent the user from using interactive dismissal*/
             vc.isModalInPresentation = true
             self.show(vc, sender: self)
@@ -2691,12 +2713,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         else if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             let tableViewCell = tableView.dequeueReusableCell(withIdentifier: ShimmeringTableViewCell.identifier, for: indexPath) as! ShimmeringTableViewCell
             
-            var color = UIColor.lightGray
-            if darkMode == true{
-                color = UIColor.darkGray
-            }
-            
-            tableViewCell.create(with: color, duration: 2)
+            tableViewCell.create(with: darkMode ? .darkGray : .lightGray, duration: 2)
             
             cell = tableViewCell
         }
@@ -2798,8 +2815,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 numberOfSections = 0
             }
         }
-        
-        if tableView == dryCleaningMenuTableView{
+        else if tableView == dryCleaningMenuTableView{
             if dryCleaningMenuCategorySections.isEmpty == false{
                 numberOfSections = dryCleaningMenuCategorySections.count
             }
@@ -2807,8 +2823,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 numberOfSections = 0
             }
         }
-        
-        if tableView == searchTableView{
+        else if tableView == searchTableView{
             if filteredItems.isEmpty == false{
                 numberOfSections = filteredItems.count
             }
@@ -2816,8 +2831,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 numberOfSections = 0
             }
         }
-        
-        if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
+        else if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             /** Specify a random number of sections for these table views*/
             numberOfSections = [3,4,5,6].randomElement()!
         }
@@ -2842,8 +2856,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 count = 0
             }
         }
-        
-        if tableView == dryCleaningMenuTableView{
+        else if tableView == dryCleaningMenuTableView{
             if dryCleaningMenuCategorySections.isEmpty == false{
                 for (_, pair) in dryCleaningMenuCategorySections.enumerated(){
                     if sortedDryCleaningMenuCategories[section] == pair.key{
@@ -2855,9 +2868,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 count = 0
             }
         }
-        
-        /** Display the amount of rows based on the number of matching cases in the filtered items dictionary*/
-        if tableView == searchTableView{
+        else if tableView == searchTableView{
+            /** Display the amount of rows based on the number of matching cases in the filtered items dictionary*/
             if filteredItems.isEmpty == false{
                 if filterWashingMenu == true{
                     /** Organize the sections used the presorted menu categories used for the other tableview*/
@@ -2879,8 +2891,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
                 count = 0
             }
         }
-        
-        if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
+        else if tableView == shimmeringTableView_1 || tableView == shimmeringTableView_2{
             /** Specify a random number of cells for each section*/
             count = [1,3,4,6].randomElement()!
         }
@@ -2999,10 +3010,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     
     /** Display an alert that gives the user the option to open up the available coordinates for the laundromat location in either google maps or apple maps (default)*/
     func displayMapOptionAlert(){
-        let alert = UIAlertController(title: "Choose a map", message: "Which app would you like to use to find this address?", preferredStyle: .actionSheet)
+        let alert = JCAlertController(title: "Choose a maps service", message: "Which app would you like to use to find this address?", preferredStyle: .actionSheet)
         
         /** Open the address in Apple maps (if available)*/
-        let appleMaps = UIAlertAction(title: "Apple Maps", style: .default, handler: { [weak self] (action) in
+        let appleMaps = UIAction(title: "Apple Maps", handler: { [weak self] (action) in
             /**Capture self to avoid retain cycles*/
             guard let self = self else{
                 return
@@ -3020,7 +3031,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         })
         
         /** Open the address in google maps (if available)*/
-        let googleMaps = UIAlertAction(title: "Google Maps", style: .default, handler: { [weak self] (action) in
+        let googleMaps = UIAction(title: "Google Maps", handler: { [weak self] (action) in
             /**Capture self to avoid retain cycles*/
             guard let self = self else{
                 return
@@ -3037,14 +3048,14 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
         })
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAction(title: "Cancel", handler: {_ in })
         
-        alert.addAction(appleMaps)
-        alert.addAction(googleMaps)
-        
-        alert.addAction(cancelAction)
-        alert.preferredAction = appleMaps
-        
+        alert.addAction(action: appleMaps, with: .default)
+        alert.addAction(action: googleMaps, with: .default)
+        alert.addAction(action: cancelAction, with: .cancel)
+        alert.modalPresentationStyle = .overFullScreen
+        alert.bottomButtonBackgroundColor = appThemeColor
+        alert.bottomButtonFontColor = .white
         self.present(alert, animated: true)
     }
     

@@ -365,7 +365,7 @@ public class LaundromatLocationView: UIView, UIGestureRecognizerDelegate{
         }
     }
     
-    /** Call the phone number of the Stuy Wash N Dry location associated with this data*/
+    /** Call the phone number of the laundromat location associated with this data*/
     @objc func phoneNumberButtonPressed(sender: UIButton){
         lightHaptic()
         
@@ -386,28 +386,28 @@ public class LaundromatLocationView: UIView, UIGestureRecognizerDelegate{
     
     /** Display an alert that gives the user the option to open up the available coordinates for the laundromat location in either google maps or apple maps (default)*/
     func displayMapOptionAlert(){
-        let alert = UIAlertController(title: "Choose a map", message: "Which app would you like to use to find this address?", preferredStyle: .actionSheet)
+        let alert = JCAlertController(title: "Choose a maps service", message: "Which app would you like to use to find this address?", preferredStyle: .actionSheet)
         
         /** Open the address in Apple maps (if available)*/
-        let appleMaps = UIAlertAction(title: "Apple Maps", style: .default, handler: { [weak self] (action) in
+        let appleMaps = UIAction(title: "Apple Maps", handler: { [weak self] (action) in
             /**Capture self to avoid retain cycles*/
             guard let self = self else{
                 return
             }
             
             if (UIApplication.shared.canOpenURL(URL(string:"http://maps.apple.com/")!)) {
-            guard let location = URL(string: "http://maps.apple.com/?daddr=" + "\(self.laundromatData.coordinates.latitude),\(self.laundromatData.coordinates.longitude)") else { return }
-            
+                guard let location = URL(string: "http://maps.apple.com/?daddr=" + "\(self.laundromatData.coordinates.latitude),\(self.laundromatData.coordinates.longitude)") else { return }
+                
                 UIApplication.shared.open(location)
             }
             else{
                 /** Can't open that URL, app not available*/
                 globallyTransmit(this: "Apple Maps is unavailable", with: UIImage(systemName: "globe.americas.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
             }
-            })
-     
+        })
+        
         /** Open the address in google maps (if available)*/
-        let googleMaps = UIAlertAction(title: "Google Maps", style: .default, handler: { [weak self] (action) in
+        let googleMaps = UIAction(title: "Google Maps", handler: { [weak self] (action) in
             /**Capture self to avoid retain cycles*/
             guard let self = self else{
                 return
@@ -415,23 +415,23 @@ public class LaundromatLocationView: UIView, UIGestureRecognizerDelegate{
             
             if (UIApplication.shared.canOpenURL(URL(string:"https://www.google.com/maps/")!)) {
                 guard let location = URL(string: "https://www.google.com/maps/?center=\(self.laundromatData.coordinates.latitude),\(self.laundromatData.coordinates.longitude)&zoom=15&views=traffic&q=\(self.laundromatData.address.streetAddress1.replacingOccurrences(of: " ", with: "+"))") else { return }
-        
+                
                 UIApplication.shared.open(location)
             }
             else{
                 /** Can't open that URL, app not available*/
                 globallyTransmit(this: "Google Maps is unavailable", with: UIImage(systemName: "globe.americas.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 4, selfDismiss: true)
             }
-            })
+        })
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAction(title: "Cancel", handler: {_ in })
         
-        alert.addAction(appleMaps)
-        alert.addAction(googleMaps)
-        
-        alert.addAction(cancelAction)
-        alert.preferredAction = appleMaps
-        
+        alert.addAction(action: appleMaps, with: .default)
+        alert.addAction(action: googleMaps, with: .default)
+        alert.addAction(action: cancelAction, with: .cancel)
+        alert.modalPresentationStyle = .overFullScreen
+        alert.bottomButtonBackgroundColor = appThemeColor
+        alert.bottomButtonFontColor = .white
         presentingVC.present(alert, animated: true)
     }
     

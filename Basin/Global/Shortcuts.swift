@@ -75,3 +75,20 @@ func upperCase(this array: [String])->[String]{
     return newArray
 }
 /** Array methods*/
+
+/** Add the given view to the current window scene (only 1 for iOS, maybe more for iPadOS)*/
+func addToWindow(view: UIView){
+    let scenes = UIApplication.shared.connectedScenes
+    let windowScene = scenes.first as? UIWindowScene
+    let window = windowScene!.windows.first!
+    window.addSubview(view)
+}
+
+/** Get the safe area insets top value of the current window scene*/
+func getStatusBarHeight()->CGFloat{
+    let scenes = UIApplication.shared.connectedScenes
+    let windowScene = scenes.first as? UIWindowScene
+    let window = windowScene?.windows.first
+    
+    return window?.safeAreaInsets.top ?? 0
+}

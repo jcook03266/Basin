@@ -1,6 +1,6 @@
 //
 //  SignUpVC.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 2/8/22.
 //
@@ -28,7 +28,7 @@ public class USPhoneNumberTextField: PhoneNumberTextField{
 
 public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIContextMenuInteractionDelegate, UITextFieldDelegate, CountryCodePickerDelegate, AuthUIDelegate, UITextPasteDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ASAuthorizationControllerPresentationContextProviding, LoginButtonDelegate{
     
-    lazy var statusBarHeight = view.getStatusBarHeight()
+    lazy var statusBarHeight = getStatusBarHeight()
     /** Button used to traverse backwards in the presentation sequence*/
     var backButton = UIButton()
     /** Nil if the presenting vc isn't the home vc where onboarding occurs, else the presenting vc is as mentioned*/
@@ -586,8 +586,8 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){[self] in
             topMaskPath.move(to: CGPoint(x: view.frame.maxX, y: 0))
             topMaskPath.addLine(to: CGPoint(x: view.frame.maxX, y: view.frame.height * 0.2))
-            topMaskPath.addLine(to: CGPoint(x: view.frame.width * 0.6, y: view.getStatusBarHeight()))
-            topMaskPath.addLine(to: CGPoint(x: 0, y: view.getStatusBarHeight()))
+            topMaskPath.addLine(to: CGPoint(x: view.frame.width * 0.6, y: getStatusBarHeight()))
+            topMaskPath.addLine(to: CGPoint(x: 0, y: getStatusBarHeight()))
             topMaskPath.addLine(to: CGPoint(x: 0, y: 0))
             topMaskPath.close()
             
@@ -815,7 +815,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         signUpWithThirdPartyLabel.clipsToBounds = true
         signUpWithThirdPartyLabel.frame.origin = .zero
         
-        let shadowView = UIShadowView(subview: signUpWithThirdPartyLabel, shadowColor: appThemeColor, shadowRadius: 0, shadowOpacity: 0)
+        let shadowView = ShadowView(subview: signUpWithThirdPartyLabel, shadowColor: appThemeColor, shadowRadius: 0, shadowOpacity: 0)
         shadowView.setShadowOffset(shadowOffset: CGSize(width: 0, height: 1))
         shadowView.frame.origin = CGPoint(x: view.frame.maxX - shadowView.frame.width, y: faceBookSignInButton.frame.minY - shadowView.frame.height * 1.25)
         shadowView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
@@ -3017,7 +3017,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         completionScreenInstructionLabel.numberOfLines = 3
         completionScreenInstructionLabel.lineBreakMode = .byClipping
         completionScreenInstructionLabel.backgroundColor = .clear
-        completionScreenInstructionLabel.attributedText = attribute(this: "Welcome to \nStuy Wash N' Dry \n\(firstName) 🥳🎉", font: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), subFont: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), mainColor: appThemeColor, subColor: .lightGray, subString: "\(firstName)")
+        completionScreenInstructionLabel.attributedText = attribute(this: "Welcome to \nBasin \n\(firstName) 🥳🎉", font: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), subFont: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), mainColor: appThemeColor, subColor: .lightGray, subString: "\(firstName)")
         completionScreenInstructionLabel.sizeToFit()
         
         /** Label describing the next steps for the user*/
@@ -4116,7 +4116,7 @@ public class SignUpVC: UIViewController, UICollectionViewDelegate, UICollectionV
         backButton.addInteraction(UIContextMenuInteraction(delegate: self))
         
         /** Everything else depends on this button's position so make sure this is positioned correctly*/
-        backButton.frame.origin = CGPoint(x: 10, y: view.getStatusBarHeight() + 15)
+        backButton.frame.origin = CGPoint(x: 10, y: getStatusBarHeight() + 15)
         
         /** Scale up animation*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in

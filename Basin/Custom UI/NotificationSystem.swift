@@ -24,15 +24,10 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
     
     let screenDimensions = UIScreen.main.bounds
     /** Status bar height = value else 0 via coalescence*/
-    let statusBarHeight = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets.top ?? 0
+    let statusBarHeight = getStatusBarHeight()
     
     let blurEffectView = UIVisualEffectView()
-    switch darkMode{
-    case true:
-        blurEffectView.effect = UIBlurEffect(style: .dark)
-    case false:
-        blurEffectView.effect = UIBlurEffect(style: .light)
-    }
+    blurEffectView.effect = UIBlurEffect(style: darkMode ? .dark : .light)
     
     blurEffectView.frame = CGRect(x: 0, y: 0, width: 0, height: 60)
     blurEffectView.backgroundColor = backgroundColor.withAlphaComponent(0.8)
@@ -94,7 +89,7 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
             imageView.frame.size.height = container.frame.height/2
             imageView.frame.size.width = imageView.frame.height
             
-            shadowView.frame.origin = CGPoint(x: screenDimensions.minX - shadowView.frame.width, y: shadowView.frame.height * 1.5)
+            shadowView.frame.origin = CGPoint(x: screenDimensions.minX - shadowView.frame.width, y: statusBarHeight)
             
             imageView.frame.origin = CGPoint(x: rectangle.frame.minX - (imageView.frame.width + 0), y: container.frame.height/2 - imageView.frame.height/2)
             label.frame.origin = CGPoint(x: imageView.frame.minX - label.frame.width, y: container.frame.height/2 - label.frame.height/2)
@@ -104,21 +99,21 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
             /** Animate the view appearing and then disappearing*/
             DispatchQueue.main.asyncAfter(deadline: .now()){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn, .allowUserInteraction]){
-                    shadowView.frame.origin = CGPoint(x: screenDimensions.minX - (shadowView.frame.width * 0.01), y: shadowView.frame.height * 1.5)
+                    shadowView.frame.origin = CGPoint(x: screenDimensions.minX - (shadowView.frame.width * 0.01), y: statusBarHeight)
                 }
                 
                 /** Automatically dismiss the message after the specified amount of time*/
                 if selfDismiss == true{
                 DispatchQueue.main.asyncAfter(deadline: .now() + (duration)){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn, .allowUserInteraction]){
-                    shadowView.frame.origin = CGPoint(x: screenDimensions.minX - shadowView.frame.width, y: shadowView.frame.height * 1.5)
+                    shadowView.frame.origin = CGPoint(x: screenDimensions.minX - shadowView.frame.width, y: statusBarHeight)
                 }
                 }
                 }
             }
         }
         else{
-            shadowView.frame.origin = CGPoint(x: screenDimensions.minX - (shadowView.frame.width * 0.01), y: shadowView.frame.height * 1.5)
+            shadowView.frame.origin = CGPoint(x: screenDimensions.minX - (shadowView.frame.width * 0.01), y: statusBarHeight)
         }
     case .rightStrip:
         /** Original position is set to the far right of the screen, out of any renderable context*/
@@ -144,7 +139,7 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
             imageView.frame.size.height = container.frame.height/2
             imageView.frame.size.width = imageView.frame.height
             
-            shadowView.frame.origin = CGPoint(x: screenDimensions.maxX, y: shadowView.frame.height * 1.5)
+            shadowView.frame.origin = CGPoint(x: screenDimensions.maxX, y: statusBarHeight)
             
             imageView.frame.origin = CGPoint(x: rectangle.frame.maxX + 0, y: container.frame.height/2 - imageView.frame.height/2)
             label.frame.origin = CGPoint(x: imageView.frame.maxX, y: container.frame.height/2 - label.frame.height/2)
@@ -154,21 +149,21 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
             /** Animate the view appearing and then disappearing*/
             DispatchQueue.main.asyncAfter(deadline: .now()){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn, .allowUserInteraction]){
-                    shadowView.frame.origin = CGPoint(x: screenDimensions.maxX - shadowView.frame.width * 0.99, y: shadowView.frame.height * 1.5)
+                    shadowView.frame.origin = CGPoint(x: screenDimensions.maxX - shadowView.frame.width * 0.99, y: statusBarHeight)
                 }
                 
                 /** Automatically dismiss the message after the specified amount of time*/
                 if selfDismiss == true{
                 DispatchQueue.main.asyncAfter(deadline: .now() + (duration)){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn, .allowUserInteraction]){
-                    shadowView.frame.origin = CGPoint(x: screenDimensions.maxX, y: shadowView.frame.height * 1.5)
+                    shadowView.frame.origin = CGPoint(x: screenDimensions.maxX, y: statusBarHeight)
                 }
                 }
                 }
             }
         }
         else{
-            shadowView.frame.origin = CGPoint(x: screenDimensions.maxX - shadowView.frame.width * 0.99, y: shadowView.frame.height * 1.5)
+            shadowView.frame.origin = CGPoint(x: screenDimensions.maxX - shadowView.frame.width * 0.99, y: statusBarHeight)
         }
     case .centerStrip:
         /** Original position is set to the center of the screen, above the status bar, and out of any renderable context*/
@@ -228,7 +223,7 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
             }
         }
         else{
-            shadowView.frame.origin = CGPoint(x: screenDimensions.width/2 - shadowView.frame.width/2, y: shadowView.frame.height * 1.5)
+            shadowView.frame.origin = CGPoint(x: screenDimensions.width/2 - shadowView.frame.width/2, y: statusBarHeight)
             progressView.setProgress(1, animated: false)
         }
     case .bottomCenterStrip:
@@ -478,7 +473,7 @@ func globallyTransmit(this message: String, with image: UIImage?, backgroundColo
     }
     }
     
-    UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.addSubview(shadowView)
+    addToWindow(view: shadowView)
     
     /** Automatically remove the view from memory*/
     if selfDismiss == true{
@@ -568,14 +563,14 @@ class notificationContainer: UIView, UIGestureRecognizerDelegate{
             /** Animate the view appearing and then disappearing*/
             DispatchQueue.main.asyncAfter(deadline: .now()){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn]){
-                    self.parentView.frame.origin = CGPoint(x: screenDimensions.minX - self.parentView.frame.width, y: self.parentView.frame.height * 1.5)
+                    self.parentView.frame.origin = CGPoint(x: screenDimensions.minX - self.parentView.frame.width, y: getStatusBarHeight())
                 }
             }
         case .rightStrip:
             /** Animate the view appearing and then disappearing*/
             DispatchQueue.main.asyncAfter(deadline: .now()){
                 UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseIn]){
-                    self.parentView.frame.origin = CGPoint(x: screenDimensions.maxX, y: self.parentView.frame.height * 1.5)
+                    self.parentView.frame.origin = CGPoint(x: screenDimensions.maxX, y: getStatusBarHeight())
                 }
             }
         case .centerStrip:
@@ -611,7 +606,7 @@ class notificationContainer: UIView, UIGestureRecognizerDelegate{
     }
     
     /** Dismiss the current notification*/
-    func delete(){
+    fileprivate func delete(){
         /** Remove this view hierarchy from its superview and free up memory*/
         DispatchQueue.main.asyncAfter(deadline: .now() + 3){
             for subview in self.subviews{

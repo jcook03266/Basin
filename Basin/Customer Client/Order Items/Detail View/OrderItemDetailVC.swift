@@ -89,7 +89,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     /** Label depicting the name of this item*/
     var nameLabel: UILabel!
     /** Label depicting the individual price of this item*/
-    var priceLabel: UILabel!
+    var priceLabel: PaddedLabel!
     /** Optional label that contains the description of this item*/
     var itemDescriptionLabel: UILabel!
     /** A label depicting the type of menu this item is from (washing, dry cleaning etc)*/
@@ -301,34 +301,38 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         nameLabel = UILabel()
         nameLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.9, height: 40)
-        nameLabel.font = getCustomFont(name: .Ubuntu_bold, size: 20, dynamicSize: true)
+        nameLabel.font = getCustomFont(name: .Ubuntu_bold, size: 26, dynamicSize: true)
         nameLabel.backgroundColor = .clear
         nameLabel.textColor = fontColor
-        nameLabel.textAlignment = .left
+        nameLabel.textAlignment = .center
         nameLabel.adjustsFontForContentSizeCategory = true
-        nameLabel.adjustsFontSizeToFitWidth = false
+        nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.text = itemData.name
+        nameLabel.attributedText = attribute(this: nameLabel.text!, font: getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true), mainColor: fontColor, subColor: .lightGray, subString: "")
         nameLabel.sizeToFit()
         
-        priceLabel = UILabel()
+        priceLabel = PaddedLabel(withInsets: 2, 2, 5, 5)
         priceLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.7, height: 50)
-        priceLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true)
+        priceLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 22, dynamicSize: true)
         priceLabel.text = "$\(String(format: "%.2f", itemData.price)) /Item"
-        priceLabel.backgroundColor = .clear
-        priceLabel.textColor = fontColor
-        priceLabel.textAlignment = .left
+        priceLabel.backgroundColor = darkMode ? .darkGray : .darkGray.lighter
+        priceLabel.layer.borderColor = UIColor.darkGray.cgColor
+        priceLabel.layer.borderWidth = 1
+        priceLabel.textColor = .white
+        priceLabel.textAlignment = .center
         priceLabel.adjustsFontForContentSizeCategory = true
         priceLabel.adjustsFontSizeToFitWidth = true
         priceLabel.layer.masksToBounds = true
-        priceLabel.attributedText = attribute(this: priceLabel.text!, font: getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true), mainColor: fontColor, subColor: .lightGray, subString: "/Item")
+        priceLabel.attributedText = attribute(this: priceLabel.text!, font: getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true), mainColor: .white, subColor: .lightGray, subString: "/Item")
         priceLabel.sizeToFit()
+        priceLabel.layer.cornerRadius = priceLabel.frame.height/2
         
         menuTypeLabel = UILabel()
         menuTypeLabel.frame.size = CGSize(width: self.stackView.frame.width * 0.9, height: 40)
-        menuTypeLabel.font = getCustomFont(name: .Bungee_Regular, size: 23, dynamicSize: true)
+        menuTypeLabel.font = getCustomFont(name: .Bungee_Regular, size: 20, dynamicSize: true)
         menuTypeLabel.backgroundColor = .clear
         menuTypeLabel.textColor = appThemeColor
-        menuTypeLabel.textAlignment = .left
+        menuTypeLabel.textAlignment = .center
         menuTypeLabel.adjustsFontForContentSizeCategory = true
         menuTypeLabel.adjustsFontSizeToFitWidth = true
         menuTypeLabel.text = "\(laundromatMenu.category) Serivce"
@@ -561,7 +565,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemChoicesTableView.contentInsetAdjustmentBehavior = .never
         itemChoicesTableView.dataSource = self
         itemChoicesTableView.delegate = self
-        itemChoicesTableView.separatorStyle = .none
+        itemChoicesTableView.separatorStyle = .singleLine
         itemChoicesTableView.isScrollEnabled = false
         itemChoicesTableView.layer.borderColor = UIColor.white.darker.cgColor
         itemChoicesTableView.layer.borderWidth = 0
@@ -619,9 +623,9 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         menuTypeLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - menuTypeLabel.frame.width/2, y: 0)
         
-        nameLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - nameLabel.frame.width/2, y: menuTypeLabel.frame.maxY)
+        nameLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - nameLabel.frame.width/2, y: menuTypeLabel.frame.maxY + 10)
         
-        priceLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - priceLabel.frame.width/2, y: nameLabel.frame.maxY + 0)
+        priceLabel.frame.origin = CGPoint(x: self.view.frame.width/2 - priceLabel.frame.width/2, y: nameLabel.frame.maxY + 5)
         
         subtractButton.frame.origin = CGPoint(x: imageView.frame.minX - (addButton.frame.width * 2), y: 0)
         subtractButton.center.y = imageView.center.y
@@ -632,7 +636,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         itemCountDisplay.frame.origin = CGPoint(x: 0, y: imageView.frame.maxY - itemCountDisplay.frame.height/3)
         itemCountDisplay.center.x = imageView.center.x
         
-        bannerAdContainer.frame.origin = CGPoint(x: self.stackView.frame.width/2 - bannerAdContainer.frame.width/2, y: priceLabel.frame.maxY + bannerAdContainer.frame.height)
+        bannerAdContainer.frame.origin = CGPoint(x: self.stackView.frame.width/2 - bannerAdContainer.frame.width/2, y: priceLabel.frame.maxY + (bannerAdContainer.frame.height * 0.5))
         
         itemChoicesTableView.frame.origin = CGPoint(x: 0, y: bannerAdContainer.frame.maxY + 10)
         
@@ -678,6 +682,8 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         /** Don't resize these views*/
         menuTypeLabel.translatesAutoresizingMaskIntoConstraints = true
+        nameLabel.translatesAutoresizingMaskIntoConstraints = true
+        priceLabel.translatesAutoresizingMaskIntoConstraints = true
         bannerAdContainer.translatesAutoresizingMaskIntoConstraints = true
         itemChoicesTableView.translatesAutoresizingMaskIntoConstraints = true
         specialInstructionsLabelContainer.translatesAutoresizingMaskIntoConstraints = true
@@ -999,11 +1005,13 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     /** Button press methods*/
     /** Present the cart associated with this session*/
     @objc func shoppingCartButtonPressed(sender: UIButton){
-        let vc = ShoppingCartVC()
+        let cartVC = ShoppingCartVC(cart: self.laundromatCart, displayAddMoreItemsButton: true)
         
-        vc.modalPresentationStyle = .formSheet
-        vc.modalTransitionStyle = .coverVertical
-        self.present(vc, animated: true)
+        /** Popover full screen without canceling out the background content*/
+        cartVC.modalPresentationStyle = .overFullScreen
+        cartVC.modalTransitionStyle = .coverVertical
+        
+        self.present(cartVC, animated: true)
     }
     
     /** Add the item to the cart, if the item is already in the cart (with the same item choice) then simply increase that cart item's count by the given count of this item data*/
@@ -1018,36 +1026,8 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         forwardTraversalShake()
         
-        /** Check to see if this item already exists in the cart, if so then simply update the count of the item*/
-        for item in laundromatCart.items{
-            if item.name == itemData.name && item.category == itemData.category && compareItemChoiceSets(set1: item.itemChoices, set2: itemData.itemChoices) == true && item.id == itemData.id && item.price == itemData.price && item.menu.id == itemData.menu.id{
-                item.count += itemCount
-                
-                /** Update the cart with the mutated item*/
-                laundromatCart.updateThis(item: item)
-                updateThisCart(cart: laundromatCart)
-                
-                /** Reload the presenting table view using the updated cart data*/
-                if presentingTableView != nil{
-                presentingTableView!.reloadData()
-                }
-                
-                /** Dismiss the keyboard if any*/
-                view.endEditing(true)
-                
-                /** Dismiss this view controller*/
-                self.dismiss(animated: true)
-                
-                return
-            }
-        }
-        /** Item doesn't already exist in the cart so add it*/
-        
-        /** Add this mutated item to the cart and push these new changes to the remote*/
+        /** Add this mutated item to the cart and push these new changes to the remote in the delegate receiver*/
         laundromatCart.addThis(item: itemData)
-        laundromatCart.updateThis(item: itemData)
-        
-        updateThisCart(cart: laundromatCart)
         
         /** Reload the presenting table view using the updated cart data*/
         if presentingTableView != nil{

@@ -1,6 +1,6 @@
 //
 //  ShoppingCartVC.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/28/22.
 //
@@ -59,6 +59,8 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     var addItemsButton: UIButton!
     /** Pushes the user to the checkout VC*/
     var goToCheckOutButton: UIButton!
+    /** Undo animation layer*/
+    var goToCheckOutButtonLayer = CALayer()
     /** Allows the user to share an ordered list of text depicting the user's current order*/
     var shareButton: UIButton!
     /** Clear the cart's current items but don't dismiss*/
@@ -99,7 +101,9 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     }
     
     public override func viewDidLoad() {
-        configure()
+        /** Specify a maximum font size*/
+        self.view.maximumContentSizeCategory = .large
+        
         constructUI()
     }
     
@@ -367,11 +371,6 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
             animateProgressBar(duration: 3)
             resize()
-            
-            /** Scroll to the bottom to show the user their subtotal*/
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
-            //scrollToBottom()
-            }
         }
     }
     
@@ -411,6 +410,11 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         let removeAction = UIContextualAction(style: .destructive, title: "Remove Item"){[weak self] (action, view, completionHandler) in
             
+            /**Capture self to avoid retain cycles*/
+            guard let self = self else{
+                return
+            }
+            
             /** If internet is available then allow the user to delete the item*/
             if internetAvailable == true{
                 lightHaptic()
@@ -418,33 +422,33 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
                 let tableViewCell = tableView.cellForRow(at: indexPath) as! ShoppingCartItemsTableViewCell
                 let item = tableViewCell.itemData!
                 
-                self!.cart.removeThis(item: item)
-                updateThisCart(cart: self!.cart)
+                self.cart.removeThis(item: item)
+                updateThisCart(cart: self.cart)
                 
-                self!.updateSubtotal()
+                self.updateSubtotal()
                 
                 /** Reload the tableview to reflect the new updates*/
                 let indexSet = IndexSet(integer: 0)
                 tableView.reloadSections(indexSet, with: .fade)
                 
                 /** Resize the view to reflect the new changes*/
-                self!.resize()
+                self.resize()
                 
                 /** If this is the last item in the cart then remove the entire cart and dismiss this view*/
-                if self!.cart.items.count == 0{
+                if self.cart.items.count == 0{
                     forwardTraversalShake()
                     
-                    globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+                    globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
                     
-                deleteThisCart(cart: self!.cart)
+                deleteThisCart(cart: self.cart)
                     
                     /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
-                    if let vc = self?.presentingViewController as? LaundromatLocationDetailVC{
+                    if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
                         
                         let _ = vc.isCartValid()
                     }
                     
-                self!.dismiss(animated: true)
+                self.dismiss(animated: true)
                 }
             }
             else{
@@ -587,6 +591,9 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         let scrollViewPadding: CGFloat = 0
         let totalScrollViewHeight: CGFloat = scrollViewPadding + totalItemSize + subtotalContainer.frame.height
         
+        /** Disable the scrollview of the tableview if the tableview hasn't yet reached its maximum size*/
+        shoppingCartItemsTableView.isScrollEnabled = totalScrollViewHeight <= maximumScrollViewContentHeightThreshold ? false : true
+        
         /** Animate the container growing*/
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
             /** Resize and layout all of these subviews*/
@@ -648,10 +655,6 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     /** Recognizer for tap gesture recognizer that dismisses the VC*/
     @objc func tapGestureRecognizerTriggered(sender: UITapGestureRecognizer){
         self.dismiss(animated: true)
-    }
-    
-    func configure(){
-        
     }
     
     /** Animate the progress bar for the given duration*/
@@ -726,27 +729,82 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         sender.tintColor = originalColor
         }
         
-        globallyTransmit(this: "Cart cleared successfully\nYou can still undo this action", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+        /** Get confirmation from the user to clear the cart*/
+        let alert = JCAlertController(title: "Clear cart?", message: "This will remove all of your current items", preferredStyle: .alert)
+        alert.accentColor = appThemeColor
+        alert.headerViewFontColor = .white
+        alert.headerViewBackgroundColor = appThemeColor
         
-        itemCache.removeAll()
-        for item in cart.items{
-        itemCache.insert(item)
-        }
-        
-        cart.items.removeAll()
-        
-        /** Reload the tableview to reflect the new updates*/
-        let indexSet = IndexSet(integer: 0)
-        shoppingCartItemsTableView.reloadSections(indexSet, with: .right)
-        
-        /** Resize the view to reflect the new changes*/
-        resize()
-        
-        updateSubtotal()
-        
+        alert.addAction(action: UIAction(title: "Cancel", handler: {_ in }), with: .cancel)
+        alert.addAction(action: UIAction(title: "Clear", handler: { [self] _ in
+            /** No need for weak as no strong reference exists inside of this closure*/
+            
+            guard internetAvailable == true else {
+                errorShake()
+                
+                globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+    
+                return
+            }
+            
+            globallyTransmit(this: "Cart cleared successfully\nYou can still undo this action", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+            
+            itemCache.removeAll()
+            for item in cart.items{
+            itemCache.insert(item)
+            }
+            
+            cart.items.removeAll()
+            
+            /** Reload the tableview to reflect the new updates*/
+            let indexSet = IndexSet(integer: 0)
+            shoppingCartItemsTableView.reloadSections(indexSet, with: .right)
+            
+            /** Resize the view to reflect the new changes*/
+            resize()
+            
+            updateSubtotal()
+            
+            disableHeaderButtons()
+            
+            undoClearCartActivated()
+     
+        }), with: .destructive)
+        alert.modalPresentationStyle = .overFullScreen
+        self.present(alert, animated: true)
+    }
+    
+    /** Change the button's label to reflect its new Undo functionality, and also add the moving sublayer that will act as a progress bar for the user to know how much time they have left in order to undo their action before the cart is fully erased*/
+    func undoClearCartActivated(){
         undoInProgress = true
         
-        disableHeaderButtons()
+        goToCheckOutButtonLayer.bounds = CGRect(x: 0, y: 0, width: 0, height: goToCheckOutButton.bounds.height)
+        goToCheckOutButtonLayer.anchorPoint = .zero
+        goToCheckOutButtonLayer.position = .zero
+        goToCheckOutButtonLayer.backgroundColor = bgColor.cgColor
+        goToCheckOutButtonLayer.masksToBounds = true
+        goToCheckOutButtonLayer.cornerRadius = goToCheckOutButton.layer.cornerRadius
+        
+        /** Insert this layer behind all other layers*/
+        goToCheckOutButton.layer.insertSublayer(goToCheckOutButtonLayer, at: 0)
+        
+        goToCheckOutButton.setTitleColor(appThemeColor, for: .normal)
+        goToCheckOutButton.setImage(nil, for: .normal)
+        goToCheckOutButton.setTitle("Undo", for: .normal)
+        
+        let progressAnimation = CABasicAnimation(keyPath: "bounds.size.width")
+        progressAnimation.duration = 2
+        progressAnimation.fromValue = 0
+        progressAnimation.toValue = goToCheckOutButton.bounds.width
+        progressAnimation.fillMode = .forwards
+        progressAnimation.isRemovedOnCompletion = false
+        goToCheckOutButtonLayer.add(progressAnimation, forKey: "progressAnimation")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){[self] in
+            if undoInProgress == true{
+                clearCart()
+            }
+        }
     }
     
     /** Clear the cart and dismiss this vc*/
@@ -763,7 +821,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         forwardTraversalShake()
         
-        globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+        globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
         
         deleteThisCart(cart: self.cart)
         
@@ -777,22 +835,38 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     
     /** Undo the clear action*/
     func undoClear(){
-        successfulActionShake()
-        
+        backwardTraversalShake()
+        enableHeaderButtons()
+
         cart.items = itemCache
-        
         itemCache.removeAll()
-        
         undoInProgress = false
         
-        /** Reload the tableview to reflect the new updates*/
-        let indexSet = IndexSet(integer: 0)
-        shoppingCartItemsTableView.reloadSections(indexSet, with: .left)
+        /** Remove the progress layer from the button*/
+        let progressAnimation = CABasicAnimation(keyPath: "bounds.size.width")
+        progressAnimation.speed = 2
+        progressAnimation.duration = 1
+        progressAnimation.toValue = 0
+        progressAnimation.fillMode = .both
+        progressAnimation.isRemovedOnCompletion = false
+        goToCheckOutButtonLayer.add(progressAnimation, forKey: "reverseProgressAnimation")
         
-        /** Resize the view to reflect the new changes*/
-        resize()
-        
-        updateSubtotal()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
+            globallyTransmit(this: "Cart restored", with: UIImage(systemName: "cart.fill.badge.plus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .green, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+            
+            goToCheckOutButton.setTitleColor(.white, for: .normal)
+            goToCheckOutButton.setTitle(" Continue to Checkout", for: .normal)
+            goToCheckOutButton.setImage(UIImage(systemName: "creditcard.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
+            
+            /** Reload the tableview to reflect the new updates*/
+            let indexSet = IndexSet(integer: 0)
+            shoppingCartItemsTableView.reloadSections(indexSet, with: .left)
+            
+            /** Resize the view to reflect the new changes*/
+            resize()
+            
+            updateSubtotal()
+        }
     }
     /** Clear cart functionality*/
     

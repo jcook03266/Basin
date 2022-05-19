@@ -65,16 +65,10 @@ class OrderItemTableViewCell: UITableViewCell{
         self.itemData = data
         self.cart = cart
         
-        /** If this item exists in the cart then replace the item data with the item from the cart, both items must have the same id, category and menu id*/
-        for item in cart.items{
-            if item.id == itemData.id && item.category == itemData.category && item.menu.id == itemData.menu.id{
-                let menu = itemData.menu
-                itemData = item
-                
-                /** The cart item's menu doesn't contain items in order to save memory so the passed item's menu is referenced*/
-                itemData.menu = menu
-                
-                break
+        /** For items that don't require further selections they can be edited from this cell directly, but they must use the item data directly from the cart in order to not mutate the reference item data passed to it*/
+        for storedItem in cart.items{
+            if areTheseItemsIdentical(item1: data, item2: storedItem){
+                self.itemData = storedItem
             }
         }
         
@@ -92,7 +86,7 @@ class OrderItemTableViewCell: UITableViewCell{
         container.layer.cornerRadius = container.frame.height/5
         container.clipsToBounds = true
         
-        shadowView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.95, height: self.frame.height * 0.95))
+        shadowView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.935, height: self.frame.height * 0.935))
         shadowView.backgroundColor = .clear
         shadowView.clipsToBounds = false
         shadowView.layer.masksToBounds = true
@@ -205,7 +199,7 @@ class OrderItemTableViewCell: UITableViewCell{
         addButton.castDefaultShadow()
         addButton.layer.shadowColor = UIColor.darkGray.cgColor
         addButton.tintColor = .white
-        if itemData.count < 1{
+        if cart.getTotalCountFor(this: itemData) < 1{
             addButton.setTitle(nil, for: .normal)
             addButton.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         }else{
@@ -424,7 +418,6 @@ class OrderItemTableViewCell: UITableViewCell{
             
             /** Remove the item from the given cart*/
             cart.removeThis(item: self.itemData)
-            cart.updateThis(item: self.itemData)
             
             updateBorder()
         }
@@ -476,7 +469,12 @@ class OrderItemTableViewCell: UITableViewCell{
         addButton.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         addButton.setTitle(nil, for: .normal)
         
-        if editingItemCount == false{
+        if editingItemCount == false && itemData.count != 0{
+            /** User must press the button again to add an item if they've already added items*/
+            displayItemCountEditingUI(animated: true)
+            return
+        }
+        else if editingItemCount == false && itemData.count == 0{
             displayItemCountEditingUI(animated: true)
         }
         
@@ -487,7 +485,6 @@ class OrderItemTableViewCell: UITableViewCell{
             /** Add the item to the given cart*/
             if itemData.count == 1{
                 cart.addThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
                 
                 updateBorder()
             }
@@ -663,37 +660,37 @@ class OrderItemTableViewCell: UITableViewCell{
             lightHaptic()
             
             itemData.count = 0
-            updateDisplayForCountButton()
             
             hideItemCountEditingUI(animated: true)
             cart.clearAllInstancesOf(this: itemData)
-            cart.updateThis(item: self.itemData)
             animateShapeLayerPathRemoving()
             
             updateBorder()
+            updateDisplayForCountButton()
         }
         let by20 = UIAction(title: "+20", image: nil){ [self] action in
             lightHaptic()
             
             /** If this item's quantity was 0 prior then add it to the cart now*/
             if itemData.count == minItems{
+                itemData.count += 20
+                
                 displayItemCountEditingUI(animated: true)
                 cart.addThis(item: itemData)
-                cart.updateThis(item: self.itemData)
                 animateShapeLayerPathFilling()
                 
                 updateBorder()
+                updateDisplayForCountButton()
             }
-            
-            /** Don't go over the max quantity*/
-            if (itemData.count + 20) <= maxItems{
+            else if (itemData.count + 20) < maxItems{
+                /** Don't go over the max quantity*/
                 itemData.count += 20
                 cart.updateThis(item: self.itemData)
                 
                 updateDisplayForCountButton()
             }
-            /** Max num of items reached, inform the user*/
-            if itemData.count == maxItems{
+            else if itemData.count == maxItems{
+                /** Max num of items reached, inform the user*/
                 itemData.count = maxItems
                 errorShake()
                 globallyTransmit(this: "Maximum number of items reached for this item", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -705,21 +702,23 @@ class OrderItemTableViewCell: UITableViewCell{
             lightHaptic()
             
             if itemData.count == minItems{
+                itemData.count += 10
+                
                 displayItemCountEditingUI(animated: true)
                 cart.addThis(item: itemData)
-                cart.updateThis(item: self.itemData)
                 animateShapeLayerPathFilling()
                 
                 updateBorder()
+                updateDisplayForCountButton()
             }
-            
-            if (itemData.count + 10) <= maxItems{
+            else if (itemData.count + 10) < maxItems{
                 itemData.count += 10
                 cart.updateThis(item: self.itemData)
                 
                 updateDisplayForCountButton()
+                updateDisplayForCountButton()
             }
-            if itemData.count == maxItems{
+            else if itemData.count == maxItems{
                 itemData.count = maxItems
                 errorShake()
                 globallyTransmit(this: "Maximum number of items reached for this item", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -731,21 +730,22 @@ class OrderItemTableViewCell: UITableViewCell{
             lightHaptic()
             
             if itemData.count == minItems{
+                itemData.count += 5
+                
                 displayItemCountEditingUI(animated: true)
                 cart.addThis(item: itemData)
-                cart.updateThis(item: self.itemData)
                 animateShapeLayerPathFilling()
                 
                 updateBorder()
+                updateDisplayForCountButton()
             }
-            
-            if (itemData.count + 5) <= maxItems{
+            else if (itemData.count + 5) < maxItems{
                 itemData.count += 5
                 cart.updateThis(item: self.itemData)
                 
                 updateDisplayForCountButton()
             }
-            if itemData.count == maxItems{
+            else if itemData.count == maxItems{
                 itemData.count = maxItems
                 errorShake()
                 globallyTransmit(this: "Maximum number of items reached for this item", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -757,21 +757,22 @@ class OrderItemTableViewCell: UITableViewCell{
             lightHaptic()
             
             if itemData.count == minItems{
+                itemData.count += 2
+                
                 displayItemCountEditingUI(animated: true)
                 cart.addThis(item: itemData)
-                cart.updateThis(item: self.itemData)
                 animateShapeLayerPathFilling()
                 
                 updateBorder()
+                updateDisplayForCountButton()
             }
-            
-            if (itemData.count + 2) <= maxItems{
+            else if (itemData.count + 2) < maxItems{
                 itemData.count += 2
                 cart.updateThis(item: self.itemData)
                 
                 updateDisplayForCountButton()
             }
-            if itemData.count == maxItems{
+            else if itemData.count == maxItems{
                 itemData.count = maxItems
                 errorShake()
                 globallyTransmit(this: "Maximum number of items reached for this item", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -783,21 +784,22 @@ class OrderItemTableViewCell: UITableViewCell{
             lightHaptic()
             
             if itemData.count == minItems{
+                itemData.count += 1
+                
                 displayItemCountEditingUI(animated: true)
                 cart.addThis(item: itemData)
-                cart.updateThis(item: self.itemData)
                 animateShapeLayerPathFilling()
                 
                 updateBorder()
+                updateDisplayForCountButton()
             }
-            
-            if (itemData.count + 1) <= maxItems{
+            else if (itemData.count + 1) < maxItems{
                 itemData.count += 1
                 cart.updateThis(item: self.itemData)
                 
                 updateDisplayForCountButton()
             }
-            if itemData.count == maxItems{
+            else if itemData.count == maxItems{
                 itemData.count = maxItems
                 errorShake()
                 globallyTransmit(this: "Maximum number of items reached for this item", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -848,7 +850,6 @@ class OrderItemTableViewCell: UITableViewCell{
             
             hideItemCountEditingUI(animated: true)
             cart.clearAllInstancesOf(this: itemData)
-            cart.updateThis(item: self.itemData)
             animateShapeLayerPathRemoving()
             
             updateBorder()
@@ -872,7 +873,7 @@ class OrderItemTableViewCell: UITableViewCell{
             if itemData.count == minItems{
                 hideItemCountEditingUI(animated: true)
                 cart.removeThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
+   
                 animateShapeLayerPathRemoving()
                 
                 updateBorder()
@@ -894,7 +895,7 @@ class OrderItemTableViewCell: UITableViewCell{
             if itemData.count == minItems{
                 hideItemCountEditingUI(animated: true)
                 cart.removeThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
+          
                 animateShapeLayerPathRemoving()
                 
                 updateBorder()
@@ -916,7 +917,7 @@ class OrderItemTableViewCell: UITableViewCell{
             if itemData.count == minItems{
                 hideItemCountEditingUI(animated: true)
                 cart.removeThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
+
                 animateShapeLayerPathRemoving()
                 
                 updateBorder()
@@ -938,7 +939,7 @@ class OrderItemTableViewCell: UITableViewCell{
             if itemData.count == minItems{
                 hideItemCountEditingUI(animated: true)
                 cart.removeThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
+     
                 animateShapeLayerPathRemoving()
                 
                 updateBorder()
@@ -960,7 +961,7 @@ class OrderItemTableViewCell: UITableViewCell{
             if itemData.count == minItems{
                 hideItemCountEditingUI(animated: true)
                 cart.removeThis(item: self.itemData)
-                cart.updateThis(item: self.itemData)
+      
                 animateShapeLayerPathRemoving()
                 
                 updateBorder()
@@ -981,14 +982,7 @@ class OrderItemTableViewCell: UITableViewCell{
     
     /** Update the item count button's label*/
     func updateDisplayForCountButton(){
-        if itemData.count > 0{
-            UIView.transition(with: itemCountButton, duration: 0.1, options: .transitionCrossDissolve, animations:{ [self] in
-                itemCountButton.setTitle("\(cart.getTotalCountFor(this: itemData))", for: .normal)
-            })
-        }
-        else{
-            itemCountButton.setTitle(nil, for: .normal)
-        }
+        itemCountButton.setTitle("\(cart.getTotalCountFor(this: itemData))", for: .normal)
     }
     
     /** Update the label for the add button when the user isn't fully editing the item count*/

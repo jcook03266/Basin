@@ -597,7 +597,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_1.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_1.sizeToFit()
         
-        let shadowView_1 = UIShadowView(subview: missionStatementTextView_1, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_1 = ShadowView(subview: missionStatementTextView_1, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_1.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         shadowView_1.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_1.frame.width/2
         missionStatementTextView_1.frame.origin = .zero
@@ -658,7 +658,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_2.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_2.sizeToFit()
         
-        let shadowView_2 = UIShadowView(subview: missionStatementTextView_2, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_2 = ShadowView(subview: missionStatementTextView_2, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_2.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         shadowView_2.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_2.frame.width/2
         missionStatementTextView_2.frame.origin = .zero
@@ -719,7 +719,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_3.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_3.sizeToFit()
         
-        let shadowView_3 = UIShadowView(subview: missionStatementTextView_3, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_3 = ShadowView(subview: missionStatementTextView_3, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_3.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         shadowView_3.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_3.frame.width/2
         missionStatementTextView_3.frame.origin = .zero
@@ -780,7 +780,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_4.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_4.sizeToFit()
         
-        let shadowView_4 = UIShadowView(subview: missionStatementTextView_4, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_4 = ShadowView(subview: missionStatementTextView_4, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_4.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_4.frame.width/2
         shadowView_4.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         missionStatementTextView_4.frame.origin = .zero
@@ -842,7 +842,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_5.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_5.sizeToFit()
         
-        let shadowView_5 = UIShadowView(subview: missionStatementTextView_5, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_5 = ShadowView(subview: missionStatementTextView_5, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_5.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_5.frame.width/2
         shadowView_5.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         missionStatementTextView_5.frame.origin = .zero
@@ -947,7 +947,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         missionStatementTextView_6.textContainerInset = UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
         missionStatementTextView_6.sizeToFit()
         
-        let shadowView_6 = UIShadowView(subview: missionStatementTextView_6, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
+        let shadowView_6 = ShadowView(subview: missionStatementTextView_6, shadowColor: appThemeColor, shadowRadius: 1, shadowOpacity: 1)
         shadowView_6.frame.origin.x = onboardingTransitionView.frame.width/2 - shadowView_6.frame.width/2
         shadowView_6.setShadowOffset(shadowOffset: CGSize(width: 0, height: 2))
         missionStatementTextView_6.frame.origin = .zero
@@ -1102,7 +1102,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         signInButton.titleLabel?.adjustsFontSizeToFitWidth = true
         signInButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true)
         signInButton.layer.shadowColor = appThemeColor.darker.cgColor
-        signInButton.layer.shadowRadius = 3
+        signInButton.layer.shadowRadius = 1
         signInButton.frame.origin = CGPoint(x: onboardingTransitionView.frame.width/2 - signInButton.frame.width/2, y: welcomeLottieAnimation.frame.maxY)
         signInButton.addTarget(self, action: #selector(signInButtonPressed), for: .touchUpInside)
         addDynamicButtonGR(button: signInButton)
@@ -1126,7 +1126,7 @@ class HomeVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSo
         signUpButton.titleLabel?.adjustsFontSizeToFitWidth = true
         signUpButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 20, dynamicSize: true)
         signUpButton.layer.shadowColor = appThemeColor.darker.cgColor
-        signUpButton.layer.shadowRadius = 3
+        signUpButton.layer.shadowRadius = 1
         signUpButton.frame.origin = CGPoint(x: onboardingTransitionView.frame.width/2 - signUpButton.frame.width/2, y: signInButton.frame.maxY + signUpButton.frame.height/2)
         signUpButton.addTarget(self, action: #selector(signUpButtonPressed), for: .touchUpInside)
         addDynamicButtonGR(button: signUpButton)

@@ -88,9 +88,9 @@ public class Cart: NSObject{
     func getTotalCountFor(this item: OrderItem)->Int{
         var quantity: Int = 0
         
-        for thisItem in items{
-            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription && thisItem.menu.id == item.menu.id{
-                quantity += thisItem.count
+        for storedItem in self.items{
+            if areTheseItemsSimilar(item1: item, item2: storedItem){
+                quantity += storedItem.count
             }
         }
         
@@ -99,44 +99,45 @@ public class Cart: NSObject{
     
     /** Clear out the cart of all similar instances of this item*/
     func clearAllInstancesOf(this item: OrderItem){
-        for thisItem in items{
-            if thisItem.name == item.name && thisItem.id == item.id && thisItem.category == item.category && thisItem.price == item.price && thisItem.itemDescription == item.itemDescription && thisItem.menu.id == item.menu.id{
-                self.removeThis(item: thisItem)
+        for storedItem in self.items{
+            if areTheseItemsSimilar(item1: item, item2: storedItem){
+                self.removeThis(item: storedItem)
+   
             }
         }
     }
     
     /** Add the given order item to the cart (must be unique)*/
     func addThis(item: OrderItem){
-        if self.items.contains(item) == false{
-            self.items.update(with: item)
-            cart(self, didAdd: item)
-            
-            /** Update the quantity of this item stored*/
-            for element in items{
-                if element == item{
-                    element.count = item.count
+            /** If the item passed already exists in the cart then update the count of that item instead of adding another item*/
+            for storedItem in self.items{
+                if areTheseItemsIdentical(item1: item, item2: storedItem){
+                    
+                    /** Item count updated so inform the delegate that an update was made instead of an add*/
+                    storedItem.count += item.count
+                    updateSubtotal()
+                    cart(self, didUpdate: storedItem)
+                    return
                 }
             }
-            
+        
+            /** If the item isn't already in the cart then insert it and update the subtotal of this cart*/
+            self.items.insert(item)
             updateSubtotal()
-        }
-        else{
-            ///print("Error: this item already exists in the cart, so it can't be added.")
-        }
+            cart(self, didAdd: item)
     }
     
     /** Called when a specific item stored in the cart has been updated (count has been updated)*/
     func updateThis(item: OrderItem){
+        
         /** Update the quantity of this item stored*/
-        for element in items{
-            if element == item{
-                element.count = item.count
+        for storedItem in self.items{
+            if areTheseItemsIdentical(item1: item, item2: storedItem){
+                storedItem.count = item.count
+                updateSubtotal()
+                cart(self, didUpdate: storedItem)
             }
         }
-        
-        updateSubtotal()
-        cart(self, didUpdate: item)
     }
     
     /** Update the value of the subtotal by looping over the total value of all of the items and their counts*/
@@ -151,17 +152,16 @@ public class Cart: NSObject{
     
     /** Remove the given order item from the cart*/
     func removeThis(item: OrderItem){
-        if self.items.contains(item) == false{
+        guard self.items.contains(item) else{
             ///print("Error: this item doesn't exist in the cart, so it can't be deleted.")
+            return
         }
-        else{
-            for element in self.items{
-                if item == element{
-                    self.items.remove(element)
-                    cart(self, didRemove: item)
-                    
-                    updateSubtotal()
-                }
+        
+        for storedItem in self.items{
+            if areTheseItemsIdentical(item1: item, item2: storedItem){
+                self.items.remove(storedItem)
+                updateSubtotal()
+                cart(self, didRemove: storedItem)
             }
         }
     }

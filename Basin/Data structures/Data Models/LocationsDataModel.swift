@@ -8,6 +8,10 @@
 import Foundation
 import Firebase
 import PhoneNumberKit
+import CoreLocation
+
+/** Fetched laundromat locations from the database*/
+var laundromats: [Laundromat] = []
 
 /** Simple file that contains a data model that can store fetched information for the laundromat locations*/
 public class Location{
@@ -61,6 +65,54 @@ public class Laundromat: Location, Hashable{
 
 /** Methods for fetching the laundromat locations from the database*/
 /** Only getter methods are allowed, no updating is to be done from the client side on the laundromat location data*/
+
+/** Fetch a specific laundromat with the given ID*/
+func fetchThisLaundromat(with id: String, completion: @escaping (Laundromat?)-> ()){
+    let db = Firestore.firestore()
+    
+    db.collection("Laundromats").document(id).getDocument{ (querySnapshot, err) in
+        if let err = err{
+            print("Error getting document: \(err)")
+        }
+        else{
+            var laundromat: Laundromat? = nil
+            
+            guard querySnapshot?.exists == true else{
+                return
+            }
+            
+            let dictionary = querySnapshot!.data()!
+            let document = querySnapshot!
+            
+            /** Parse the CSV phone number string*/
+            let phoneNumber = convertFromCSVtoPhoneNumber(number: dictionary["Phone Number"] as! String)
+            
+            guard phoneNumber != nil else {
+                completion(nil)
+                return
+            }
+            
+            /** Parse the address map into an address object*/
+            let addressMap = dictionary["Address"] as! [String : Any]
+            let address = Address(borough: getBoroughFor(this: (addressMap["Zip Code"] as! Int)) ?? .Brookyln, zipCode: UInt(addressMap["Zip Code"] as! Int), alias: addressMap["Alias"] as! String, streetAddress1: addressMap["Address 1"] as! String, streetAddress2: addressMap["Address 2"] as! String, specialInstructions: addressMap["Instructions"] as! String, addressType: .retail)
+            
+            /** Parse the two menu IDs from the menu map*/
+            let menuMap = dictionary["Menus"] as! [String : Any]
+            let dryCleaningMenuID = menuMap["Dry Cleaning"] as! String
+            let washingMenuID = menuMap["Washing"] as! String
+            
+            laundromat = Laundromat(address: address, coordinates: dictionary["Coordinates"] as! GeoPoint, storeID: document.documentID, nickName: dictionary["Nickname"] as! String, operatingHours: dictionary["Operating Hours"] as! [String : String], phoneNumber: phoneNumber!, photos: dictionary["Photos"] as! [String], dryCleaningMenuDocumentID: dryCleaningMenuID, washingMenuDocumentID: washingMenuID)
+            
+            completion(laundromat)
+        }
+    }
+}
+
+/** Fetch all the laundromats within the given radius of the given coordinate point, doing this minimizes the amount of data needed to be fetched, instead of loading up 200 irrelevant locations, you can load up 5 and save both time, energy, and money by doing so, if the set is blank this means no laundromats are within the specified radius of the reference coordinate*/
+func fetchLaundromatsInThisRadius(radius: CGSize, coordinatePoint: CLLocation, completion: @escaping (Set<Laundromat>)-> ()){
+    
+    /** Idea: Add the laundromats to the existing laundromat array only if their IDs don't match already existing laundromats (to keep things unique), these are added because these will be reflected in the UI (maybe if a search area button is established kind of like airbnb)*/
+}
 
 /** Fetch all the laundromat locations and return them in a completion method*/
 func fetchAllLaundromats(completion: @escaping (Set<Laundromat>)-> ()){

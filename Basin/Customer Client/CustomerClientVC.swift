@@ -55,7 +55,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     var shoppingCartButton = UIButton()
     var mapView: GMSMapView!
     var camera: GMSCameraPosition = GMSCameraPosition()
-    /** Array of map markers that represent the locations of Stuy Wash N Dry laundromats*/
+    /** Array of map markers that represent the locations of the laundromats*/
     var mapMarkers: [GMSMarker : Laundromat] = [:]
     /** Map containing a marker icon view and an marker that acts a key for that view*/
     var mapMarkerIconViews: [GMSMarker : LaundromatIconView] = [:]
@@ -89,6 +89,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Bottom Sheet UI*/
     var bottomSheet: DetentedBottomSheetView!
+    var bottomSheetTopBorder: UIView!
     var laundromatLocationsTableView: UITableView!
     var laundromatLocationsCollectionView: UICollectionView!
     var locationSortingButton: UIButton!
@@ -106,6 +107,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Orders tab UI*/
     var ordersTableView: UITableView!
     var ordersBottomSheet: DetentedBottomSheetView!
+    var ordersBottomSheetTopBorder: UIView!
     /** UI Label displaying styled text above the orders bottom sheet*/
     var ordersTitleLabel: UILabel!
     /** Refresh control object for the bottom sheet table view*/
@@ -117,9 +119,6 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     
     /** Account tab UI*/
     var accountBottomSheet: DetentedBottomSheetView!
-    
-    /** Fetched laundromat locations from the database*/
-    var laundromats: [Laundromat] = []
     
     /** Custom tabbar UI*/
     var customTabbar: JCTabbar!
@@ -146,6 +145,17 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             /// loadAd()
         })
     }
+    
+    /** Life Cycle control*/
+    override func viewDidDisappear(_ animated: Bool) {
+        /** Tabbar glitches out when the view reappears after another VC is presented*/
+        hideTabbar()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        showTabbar()
+    }
+    /** Life Cycle control*/
     
     override func viewWillAppear(_ animated: Bool){
     }
@@ -485,7 +495,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         accountButton.frame.origin = CGPoint(x: 200, y: 200)
         
         /** Move the tabbar to the absolute front of all the views in the hierarchy*/
-        UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.addSubview(customTabbar)
+        addToWindow(view: customTabbar)
     }
     
     /** Create the discrete user interface for this view controller*/
@@ -1001,9 +1011,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Fetch the data for the laundromats and display them on the screen for the user to see, if internet isn't available then this function will use the listener to trigger itself again in a recursive manner when internet is available*/
     func getLaundromatData(){
         /** Fetch all the laundromats*/
-        fetchAllLaundromats{ [self] laundromats in
+        fetchAllLaundromats{ [self] fetchedLaundromats in
             /** Cast the fetched set of laundromats to an array to make accessing their indexes easier*/
-            self.laundromats = Array(laundromats)
+            laundromats = Array(fetchedLaundromats)
             
             /** The laundromats are cached by the local firestore listener so the only way to refresh the data is to detect if the internet is available or not*/
             if internetAvailable == false{
@@ -1066,7 +1076,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
                 /** Display skeleton view until the image is loaded*/
                 searchBarRightViewButton.isSkeletonable = true
                 let animation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .bottomRightTopLeft)
-                let gradient = SkeletonGradient(baseColor: darkMode ? .lightGray : .darkGray)
+                let gradient = SkeletonGradient(baseColor: darkMode ? .darkGray : .lightGray)
                 searchBarRightViewButton.showAnimatedGradientSkeleton(usingGradient: gradient, animation: animation)
                 
                 if let user = Auth.auth().currentUser{
@@ -1137,15 +1147,14 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         laundromatLocationsCollectionView.frame.origin = CGPoint(x: 0, y: self.view.frame.maxY - laundromatLocationsCollectionView.frame.height * 1.1)
         
         /** Transform this collectionview below the screen and show it when needed*/
-        laundromatLocationsCollectionView.transform = CGAffineTransform(translationX: 0, y: laundromatLocationsCollectionView.frame.height)
+        laundromatLocationsCollectionView.transform = CGAffineTransform(translationX: 0, y: self.laundromatLocationsCollectionView.frame.height * 1.5)
         
         self.view.addSubview(laundromatLocationsCollectionView)
     }
     
     /** Create a bottom sheet to display the user's past and current orders (internet required to update them and load them up the first time)*/
     func createOrdersBottomSheet(){
-        ordersTitleLabel = UILabel()
-        ordersTitleLabel.frame.size = CGSize(width: self.view.frame.width * 0.9, height: ((self.view.frame.height/3) * 0.9))
+        ordersTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.9, height: ((self.view.frame.height/3) * 0.9)))
         ordersTitleLabel.adjustsFontSizeToFitWidth = true
         ordersTitleLabel.adjustsFontForContentSizeCategory = false
         ordersTitleLabel.textAlignment = .left
@@ -1153,6 +1162,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         ordersTitleLabel.lineBreakMode = .byClipping
         ordersTitleLabel.backgroundColor = .clear
         ordersTitleLabel.attributedText = attribute(this: "My Orders", font: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), subFont: getCustomFont(name: .Bungee_Regular, size: 35, dynamicSize: false), mainColor: appThemeColor, subColor: .lightGray, subString: "")
+        ordersTitleLabel.shadowColor = .lightGray
         ordersTitleLabel.sizeToFit()
         
         ordersTableView = UITableView(frame: self.view.frame, style: .insetGrouped)
@@ -1200,18 +1210,12 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         let topLayoutConstraint = NSLayoutConstraint(item: ordersTableView!, attribute: .top, relatedBy: .equal, toItem: ordersBottomSheet, attribute: .top, multiplier: 1.0, constant: 50)
         topLayoutConstraint.isActive = true
         
-        let topBorder = CALayer()
-        topBorder.frame = CGRect(x: 0, y: ordersTableView.frame.minY, width: ordersTableView.frame.width, height: 1)
-        switch darkMode{
-        case true:
-            topBorder.backgroundColor = UIColor.black.cgColor
-        case false:
-            topBorder.backgroundColor = bgColor.darker.cgColor
-        }
-        ordersBottomSheet.layer.addSublayer(topBorder)
+        ordersBottomSheetTopBorder = UIView(frame: CGRect(x: 0, y: ordersTableView.frame.minY, width: ordersTableView.frame.width, height: 1))
+        ordersBottomSheetTopBorder.backgroundColor = darkMode ? .black : bgColor.darker
+        ordersBottomSheet.addSubview(ordersBottomSheetTopBorder)
         
         /** Layout these subviews*/
-        ordersTitleLabel.frame.origin = CGPoint(x: 10, y: ordersBottomSheet.frame.minY - (ordersTitleLabel.frame.height * 2))
+        ordersTitleLabel.frame.origin = CGPoint(x: 10, y: ordersBottomSheet.frame.minY - (ordersTitleLabel.frame.height * 1.5))
         
         /** Add these views to the view hierarchy*/
         view.addSubview(ordersTitleLabel)
@@ -1294,7 +1298,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         
         /** Get rid of the custom tabbar*/
         hideTabbar()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1){[self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
             customTabbar.removeFromSuperview()
         }
         
@@ -1304,13 +1308,13 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         if let homeVC = homeVCReference{
             /** If the sign in UI is being displayed then don't paint over it*/
             if homeVC.signInUIBeingDisplayed == false{
-            homeVC.launchScreenTransitionAnimation()
-            homeVC.goToSignInSignUpScreen()
+                homeVC.launchScreenTransitionAnimation()
+                homeVC.goToSignInSignUpScreen()
             }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-        self.dismiss(animated: true)
+            self.dismiss(animated: true)
         }
     }
     
@@ -1363,15 +1367,9 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         let topLayoutConstraint = NSLayoutConstraint(item: laundromatLocationsTableView!, attribute: .top, relatedBy: .equal, toItem: bottomSheet, attribute: .top, multiplier: 1.0, constant: 50)
         topLayoutConstraint.isActive = true
         
-        let topBorder = CALayer()
-        topBorder.frame = CGRect(x: 0, y: laundromatLocationsTableView.frame.minY, width: laundromatLocationsTableView.frame.width, height: 1)
-        switch darkMode{
-        case true:
-            topBorder.backgroundColor = UIColor.black.cgColor
-        case false:
-            topBorder.backgroundColor = bgColor.darker.cgColor
-        }
-        bottomSheet.layer.addSublayer(topBorder)
+        bottomSheetTopBorder = UIView(frame: CGRect(x: 0, y: laundromatLocationsTableView.frame.minY, width: laundromatLocationsTableView.frame.width, height: 1))
+        bottomSheetTopBorder.backgroundColor = darkMode ? .black : bgColor.darker
+        bottomSheet.addSubview(bottomSheetTopBorder)
         
         /** Sort button in order for the user to sort through the various laundromat locations*/
         locationSortingButton = UIButton()
@@ -1410,6 +1408,58 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         }
     }
     
+    /** Animate a progress bar oscillating inside of the given container*/
+    func animateThisProgressBar(container: UIView, duration: CGFloat){
+        let bottomSheetProgressbar = UIView(frame: container.frame)
+        bottomSheetProgressbar.clipsToBounds = true
+        bottomSheetProgressbar.layer.cornerRadius = bottomSheetProgressbar.frame.height/2
+        bottomSheetProgressbar.frame.origin = .zero
+        
+        /** Initial Conditions bar starts off at the top left off the screen*/
+        bottomSheetProgressbar.frame.origin.x = -bottomSheetProgressbar.frame.width
+        container.addSubview(bottomSheetProgressbar)
+        bottomSheetProgressbar.backgroundColor = appThemeColor
+        
+        /** Oscillating animation where the view goes back and forth in and out of the view port*/
+        UIView.animate(withDuration: duration/4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+            bottomSheetProgressbar.frame.origin.x = container.frame.width + bottomSheetProgressbar.frame.width
+        }
+        
+        /** Moves backwards*/
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration/4){[self] in
+            bottomSheetProgressbar.frame.origin.x = container.frame.width + bottomSheetProgressbar.frame.width
+            
+            UIView.animate(withDuration: duration/4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+                bottomSheetProgressbar.frame.origin.x = -bottomSheetProgressbar.frame.width
+            }
+        }
+        
+        /** Moves forwards again*/
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration/4 * 2){[self] in
+            bottomSheetProgressbar.frame.origin.x = -bottomSheetProgressbar.frame.width
+            
+            UIView.animate(withDuration: duration/4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+                bottomSheetProgressbar.frame.origin.x = container.frame.width + bottomSheetProgressbar.frame.width
+            }
+        }
+        
+        /** And back again finally*/
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration/4 * 3){[self] in
+            bottomSheetProgressbar.frame.origin.x = container.frame.width + bottomSheetProgressbar.frame.width
+            
+            UIView.animate(withDuration: duration/4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){
+                bottomSheetProgressbar.frame.origin.x = -bottomSheetProgressbar.frame.width
+            }
+        }
+        
+        /** Remove from the screen*/
+        DispatchQueue.main.asyncAfter(deadline: .now() + (duration + duration/4 + 0.5)){
+            bottomSheetProgressbar.frame.origin.x = -bottomSheetProgressbar.frame.width
+            bottomSheetProgressbar.backgroundColor = .clear
+            bottomSheetProgressbar.removeFromSuperview()
+        }
+    }
+    
     /** Refresh all data sensitive UI Objects with new data (if any)*/
     @objc func ordersBottomSheetRefreshStart(_ sender: AnyObject){
         mediumHaptic()
@@ -1417,6 +1467,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         guard ordersTableView != nil else{
             return
         }
+        
+        animateThisProgressBar(container: ordersBottomSheetTopBorder, duration: 3)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload the table view*/
@@ -1433,6 +1485,8 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
         guard laundromatLocationsTableView != nil else{
             return
         }
+        
+        animateThisProgressBar(container: bottomSheetTopBorder, duration: 3)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){ [self] in
             /** Reload both the table view and collection view*/
@@ -1896,7 +1950,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
             /** Skeleton view to hide the blank view*/
             weatherView.isSkeletonable = true
             let animation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
-            let gradient = SkeletonGradient(baseColor: darkMode ? .lightGray : .darkGray)
+            let gradient = SkeletonGradient(baseColor: darkMode ? .darkGray : .lightGray)
             weatherView.showAnimatedGradientSkeleton(usingGradient: gradient, animation: animation)
             
             /** Get the current weather initially and then wait 20 minutes in the timer*/
@@ -2968,7 +3022,7 @@ class CustomerClientVC: UIViewController, CLLocationManagerDelegate, UITextField
     /** Button pressed methods*/
     /** Navigate to the shopping cart view controller*/
     @objc func shoppingCartButtonPressed(sender: UIButton){
-        let vc = ShoppingCartVC()
+        let vc = ShoppingCartsListVC()
         
         vc.modalPresentationStyle = .formSheet
         vc.modalTransitionStyle = .coverVertical

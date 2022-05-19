@@ -18,7 +18,7 @@ var homeVCReference: HomeVC? = nil
 /** QuickQueryQueue Settings*/
 var useQuickQueryQueues: Bool = true
 /**Google AdMob variables*/
-let bannerViewAdUnitID = "ca-app-pub-5858678841144806/5957808574"//TEST ID REPLACE
+let bannerViewAdUnitID = "ca-app-pub-3940256099942544/2934735716"//TEST ID REPLACE
 /**Network Monitoring and UI*/
 var monitor: NWPathMonitor = NWPathMonitor()
 var internetAvailable = true
@@ -260,7 +260,7 @@ class PaddedLabel: UILabel {
 }
 
 /** Embed a UIView inside of another UIView that acts as a dynamic shadow for that subview*/
-public class UIShadowView: UIView{
+public class ShadowView: UIView{
     
     init(subview: UIView, shadowColor: UIColor, shadowRadius: CGFloat, shadowOpacity: Float){
         super.init(frame: subview.frame)
@@ -443,16 +443,16 @@ extension UIViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate{
                 /** Only display this prompt after the internet connection was disrupted and then reconnected*/
                 if internetAvailable == false{
                     /** Update the UI only from the main thread*/
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [self] in
                         internetAvailablePrompt()
                     }
                 }
             case .unsatisfied:
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     internetUnavailablePrompt()
                 }
             case .requiresConnection:
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     internetUnavailablePrompt()
                 }
             @unknown default:
@@ -638,18 +638,6 @@ extension UIView{
         case none = 1
         /**Specifies generic attribution for any type of view*/
         case generic = 2
-    }
-    
-    /** Function used to compute the height of the status bar by using the safe area inset of the view*/
-    func getStatusBarHeight()->CGFloat{
-        var topInset = self.safeAreaInsets.top
-        
-        /** If the top inset isn't available then just assume a height close to the actual height of the top inset*/
-        if topInset == 0{
-            topInset = 40
-        }
-        
-        return topInset
     }
     
     /**Dashed Border Methods*/

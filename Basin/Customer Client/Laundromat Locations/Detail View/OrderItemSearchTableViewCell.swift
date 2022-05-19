@@ -47,16 +47,10 @@ class OrderItemSearchTableViewCell: UITableViewCell{
         self.itemData = data
         self.cart = cart
         
-        /** If this item exists in the cart then replace the item data with the item from the cart, both items must have the same id, category and menu id*/
-        for item in cart.items{
-            if item.id == itemData.id && item.category == itemData.category && item.menu.id == itemData.menu.id{
-                let menu = itemData.menu
-                itemData = item
-                
-                /** The cart item's menu doesn't contain items in order to save memory so the passed item's menu is referenced*/
-                itemData.menu = menu
-                
-                break
+        /** For items that don't require further selections they can be edited from this cell directly, but they must use the item data directly from the cart in order to not mutate the reference item data passed to it*/
+        for storedItem in cart.items{
+            if areTheseItemsIdentical(item1: data, item2: storedItem){
+                self.itemData = storedItem
             }
         }
         

@@ -1,12 +1,26 @@
 //
 //  OrdersDataModel.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/30/22.
 //
 /** File with objects that allow laundromat orders and their data to be created, stored, and persisted*/
 import UIKit
 import Firebase
+
+/** Determine if the two items given are very similar so much so that they're probably the same item*/
+func areTheseItemsIdentical(item1: OrderItem, item2: OrderItem)->Bool{
+    let condition = item1.name == item2.name && item1.id == item2.id && item1.category == item2.category && item1.price == item2.price && item1.itemDescription == item2.itemDescription && item1.menu.id == item2.menu.id && item1.getCurrentlySelectedChoices() == item2.getCurrentlySelectedChoices()
+    
+    return condition
+}
+
+/** Used to determine if the item is the same from the surface, but not 1:1, can be used to compute the total quantity of all items in a cart that share the same characteristics*/
+func areTheseItemsSimilar(item1: OrderItem, item2: OrderItem)->Bool{
+    let condition = item1.name == item2.name && item1.id == item2.id && item1.category == item2.category && item1.price == item2.price && item1.itemDescription == item2.itemDescription && item1.menu.id == item2.menu.id
+    
+    return condition
+}
 
 /** An item object that stores general parameters that allow it to be identified amongst other item objects*/
 public class Item: NSObject, NSCopying{
@@ -79,6 +93,63 @@ public class Item: NSObject, NSCopying{
         copy.itemChoices = itemChoicesCopy
         
         return copy
+    }
+    
+    /** Determine if this item has at least one item choice selected*/
+    func hasSelections()->Bool{
+        if self.itemChoices.isEmpty == false{
+        for choice in self.itemChoices{
+            if choice.selected == true{
+                return true
+            }
+        }
+        }
+        else{
+            return false
+        }
+        return false
+    }
+    
+    /** Return a string of text containing all selected choices separated by the given separator character*/
+    func getTextualRepresentationOfSelectedChoices(from choices: [itemChoice], using separator: String)->String{
+        var text = ""
+        guard choices.isEmpty == false else {
+            return text
+        }
+        
+        for (index,choice) in choices.enumerated(){
+            if index == 0{
+            /** Starting element, no space at the end*/
+            text += "\(choice.name) \(separator)"
+            }
+            else if index != 0 && index != (choices.count - 1){
+            /** Middle most elements need space at the start*/
+            text += " \(choice.name) \(separator)"
+            }
+            else if index == (choices.count - 1){
+            /** Last element, no separator at the end, space at the start*/
+            text += " \(choice.name)"
+            }
+        }
+        
+        return text
+    }
+    
+    /** Return an array of the currently selected item choices for this item*/
+    func getCurrentlySelectedChoices()->[itemChoice]{
+        var selectedChoices: [itemChoice] = []
+        
+        guard self.itemChoices.isEmpty == false else {
+            return []
+        }
+        
+        for choice in self.itemChoices{
+            if choice.selected == true{
+                selectedChoices.append(choice)
+            }
+        }
+        
+        return selectedChoices
     }
     
     /** Set all of the choices to not selected*/
