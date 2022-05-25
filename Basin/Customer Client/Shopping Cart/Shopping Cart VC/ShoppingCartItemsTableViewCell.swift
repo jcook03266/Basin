@@ -40,10 +40,9 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
     var panGestureThreshold: CGFloat{
         return (0 - self.frame.width/4)
     }
-    /** Long press gesture recognizer allows the pan gesture recognizer to not conflict with the pan gesture recognizer of the scrollview, this pan gesture recognizer kicks in after a delay triggered by the user keeping their finger on the view*/
-    var longPressGestureRecognizer: UILongPressGestureRecognizer!
     /** Button behind the container that allows the user to remove this item from the cart and the subsequent table view*/
     var removeSwipeActionButton: UIButton!
+    /** Closure to execute when the button is pressed*/
     var removeSwipeActionButtonAction: UIAction!
     /** Use this to hide the swipe action when the user scrolls the tableview*/
     var swipeActionExposed: Bool = false
@@ -215,13 +214,7 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerTriggered))
         panGestureRecognizer.maximumNumberOfTouches = 1
         panGestureRecognizer.delegate = self
-        panGestureRecognizer.isEnabled = false
         container.addGestureRecognizer(panGestureRecognizer)
-        
-        longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognizerTriggered))
-        longPressGestureRecognizer.delegate = self
-        longPressGestureRecognizer.minimumPressDuration = 0.15
-        self.addGestureRecognizer(longPressGestureRecognizer)
         
         container.addSubview(nameLabel)
         container.addSubview(priceLabel)
@@ -235,8 +228,15 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         self.contentView.addSubview(container)
     }
     
-    @objc func longPressGestureRecognizerTriggered(sender: UILongPressGestureRecognizer){
-        panGestureRecognizer.isEnabled = true
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
+            let translation = panGestureRecognizer.translation(in: self)
+            /** Only allow horizontal movement*/
+            if abs(translation.x) > abs(translation.y){
+                return true
+            }
+        }
+        return false
     }
     
     /** Move the cell's content up to a specified threshold value to reveal and hide a swipe action beneath the visible content*/
@@ -262,7 +262,7 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
                 
                 /** Disable scrolling if the pan gesture is currently functioning*/
                 if presentingTableView != nil{
-                presentingTableView!.isScrollEnabled = false
+                    presentingTableView!.isScrollEnabled = false
                 }
                 
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
@@ -273,10 +273,10 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
                     let containerShiftFromOriginalPosition = (originalXPosition - container.frame.origin.x)
                     let buttonSize = (self.frame.maxX - container.frame.maxX) * 0.9
                     if containerShiftFromOriginalPosition >= 1{
-                    removeSwipeActionButton.frame.size.width = buttonSize
+                        removeSwipeActionButton.frame.size.width = buttonSize
                     }
                     else{
-                    removeSwipeActionButton.frame.size.width = 0
+                        removeSwipeActionButton.frame.size.width = 0
                     }
                     removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
                 }
@@ -287,10 +287,8 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         if sender.state == .ended || sender.state == .cancelled || sender.state == .failed{
             /** Enable scrolling when the pan gesture ends*/
             if presentingTableView != nil{
-            presentingTableView!.isScrollEnabled = true
+                presentingTableView!.isScrollEnabled = true
             }
-            
-            panGestureRecognizer.isEnabled = false
             
             if containerEdge <= panGestureThreshold/2{
                 /** View is now resting, save this new position*/
@@ -327,7 +325,7 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
             }
         }
     }
-
+    
     /** Allow for simultaneous gesture recognition for the scrollview*/
     override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
