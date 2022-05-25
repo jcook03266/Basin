@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06FFB877B4897C49E7404EC7 /* Pods_Basin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B7A2A321562BED27B68B92 /* Pods_Basin.framework */; };
+		49345F4B283DB20F00DB805A /* OrderItemUpdateDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49345F4A283DB20F00DB805A /* OrderItemUpdateDetailVC.swift */; };
 		493B7B482834E8A80060587E /* CustomAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B7B472834E8A80060587E /* CustomAlertVC.swift */; };
 		497A1A52281774B600D9D653 /* OrderItemSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497A1A51281774B600D9D653 /* OrderItemSearchTableViewCell.swift */; };
 		497A1A542817DB1900D9D653 /* noSearchResults.json in Resources */ = {isa = PBXBuildFile; fileRef = 497A1A532817DB1900D9D653 /* noSearchResults.json */; };
@@ -137,6 +138,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		49345F4A283DB20F00DB805A /* OrderItemUpdateDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemUpdateDetailVC.swift; sourceTree = "<group>"; };
 		493B7B472834E8A80060587E /* CustomAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertVC.swift; sourceTree = "<group>"; };
 		49426E6427ADF03E004274F4 /* Basin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		497A1A51281774B600D9D653 /* OrderItemSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -565,6 +567,7 @@
 			isa = PBXGroup;
 			children = (
 				49C1FA4928148B3B0020EB4A /* OrderItemDetailVC.swift */,
+				49345F4A283DB20F00DB805A /* OrderItemUpdateDetailVC.swift */,
 			);
 			path = "Detail View";
 			sourceTree = "<group>";
@@ -924,6 +927,7 @@
 			files = (
 				49A352FE283046BC00691F1B /* QueryCollectionViewCell.swift in Sources */,
 				49C1FAB928148B3B0020EB4A /* LaundromatLocationCollectionViewCell.swift in Sources */,
+				49345F4B283DB20F00DB805A /* OrderItemUpdateDetailVC.swift in Sources */,
 				49C1FAF628148B3C0020EB4A /* iForgotVC.swift in Sources */,
 				49A353072831C34F00691F1B /* CheckoutVC.swift in Sources */,
 				49C1FA9E28148B3B0020EB4A /* Basin.xcdatamodeld in Sources */,

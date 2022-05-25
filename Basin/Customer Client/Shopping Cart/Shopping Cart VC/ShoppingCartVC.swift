@@ -300,7 +300,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         /** If the cart is empty then disable these buttons*/
         if cart.items.count == 0{
-           disableHeaderButtons()
+            disableHeaderButtons()
         }
         
         /** Layout these subviews*/
@@ -347,7 +347,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         scrollView.addSubview(shoppingCartItemsTableView)
         scrollView.addSubview(subtotalContainer)
-         
+        
         subtotalContainer.addSubview(subtotalHeadingLabel)
         subtotalContainer.addSubview(subtotalPriceLabel)
         
@@ -367,7 +367,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         container.addSubview(scrollView)
         container.addSubview(headerContainer)
         container.addSubview(footerContainer)
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){[self] in
             animateProgressBar(duration: 3)
             resize()
@@ -404,69 +404,6 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     /** Cart delegate methods*/
     
     /** Tableview delegate methods*/
-    /** Swipe Actions*/
-    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?{
-        var actions: [UIContextualAction] = []
-        
-        let removeAction = UIContextualAction(style: .destructive, title: "Remove Item"){[weak self] (action, view, completionHandler) in
-            
-            /**Capture self to avoid retain cycles*/
-            guard let self = self else{
-                return
-            }
-            
-            /** If internet is available then allow the user to delete the item*/
-            if internetAvailable == true{
-                lightHaptic()
-                
-                let tableViewCell = tableView.cellForRow(at: indexPath) as! ShoppingCartItemsTableViewCell
-                let item = tableViewCell.itemData!
-                
-                self.cart.removeThis(item: item)
-                updateThisCart(cart: self.cart)
-                
-                self.updateSubtotal()
-                
-                /** Reload the tableview to reflect the new updates*/
-                let indexSet = IndexSet(integer: 0)
-                tableView.reloadSections(indexSet, with: .fade)
-                
-                /** Resize the view to reflect the new changes*/
-                self.resize()
-                
-                /** If this is the last item in the cart then remove the entire cart and dismiss this view*/
-                if self.cart.items.count == 0{
-                    forwardTraversalShake()
-                    
-                    globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
-                    
-                deleteThisCart(cart: self.cart)
-                    
-                    /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
-                    if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
-                        
-                        let _ = vc.isCartValid()
-                    }
-                    
-                self.dismiss(animated: true)
-                }
-            }
-            else{
-                errorShake()
-                
-                globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
-            }
-        }
-        removeAction.backgroundColor = .red
-        
-        actions.append(removeAction)
-        
-        let config = UISwipeActionsConfiguration(actions: actions)
-        config.performsFirstActionWithFullSwipe = false
-        
-        return config
-    }
-    
     /** Detect when a user selects a row in the tableview*/
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         if tableView == shoppingCartItemsTableView{
@@ -475,7 +412,8 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             /** Fetch the cell at the given index path without dequeuing it and destroying its stored data*/
             let tableViewCell = tableView.cellForRow(at: indexPath) as! ShoppingCartItemsTableViewCell
             
-            let vc = OrderItemDetailVC(itemData: tableViewCell.itemData, laundromatCart: cart, laundromatMenu: tableViewCell.itemData.menu)
+            let vc = OrderItemUpdateDetailVC(itemData: tableViewCell.itemData, laundromatCart: cart, laundromatMenu: tableViewCell.itemData.menu)
+            vc.presentingTableView = shoppingCartItemsTableView
             
             /** Prevent the user from using interactive dismissal*/
             vc.isModalInPresentation = true
@@ -492,6 +430,58 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             
             let items = cart.items.toArray() as! [OrderItem]
             
+            let removeAction = UIAction(handler: {[weak self] _ in
+                /**Capture self to avoid retain cycles*/
+                guard let self = self else{
+                    return
+                }
+                
+                /** If internet is available then allow the user to delete the item*/
+                if internetAvailable == true{
+                    lightHaptic()
+                    
+                    let tableViewCell = tableView.cellForRow(at: indexPath) as! ShoppingCartItemsTableViewCell
+                    let item = tableViewCell.itemData!
+                    
+                    self.cart.removeThis(item: item)
+                    updateThisCart(cart: self.cart)
+                    
+                    self.updateSubtotal()
+                    
+                    /** Reload the tableview to reflect the new updates*/
+                    let indexSet = IndexSet(integer: 0)
+                    tableView.reloadSections(indexSet, with: .fade)
+                    
+                    /** Resize the view to reflect the new changes*/
+                    self.resize()
+                    
+                    /** If this is the last item in the cart then remove the entire cart and dismiss this view*/
+                    if self.cart.items.count == 0{
+                        forwardTraversalShake()
+                        
+                        globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
+                        
+                        deleteThisCart(cart: self.cart)
+                        
+                        /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
+                        if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
+                            let _ = vc.isCartValid()
+                        }
+                        else if let vc = self.presentingViewController as? OrderItemDetailVC{
+                            /** Update the referenced collection view and any other tableview tied to this view controller to reflect the changes in data*/
+                            let _ = vc.updatePresentingViews()
+                        }
+                        
+                        self.dismiss(animated: true)
+                    }
+                }
+                else{
+                    errorShake()
+                    
+                    globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+                }})
+            
+            tableViewCell.removeSwipeActionButtonAction = removeAction
             tableViewCell.create(with: items[indexPath.row], cart: cart)
             tableViewCell.presentingVC = self
             tableViewCell.presentingTableView = shoppingCartItemsTableView
@@ -536,16 +526,16 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             var hasSelections: Bool = false
             
             if itemData.itemChoices.isEmpty == false{
-            for choice in itemData.itemChoices{
-                if choice.selected == true{
-                    hasSelections = true
-                    height = orderItemsHeight + 10
-                    break
+                for choice in itemData.itemChoices{
+                    if choice.selected == true{
+                        hasSelections = true
+                        height = orderItemsHeight + 10
+                        break
+                    }
                 }
             }
-            }
             else{
-            height = orderItemsHeight
+                height = orderItemsHeight
             }
             
             /** The increased height is used to show the selections below the main text*/
@@ -567,18 +557,18 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             hasSelections = false
             
             if item.itemChoices.isEmpty == false{
-            for choice in item.itemChoices{
-                if choice.selected == true{
-                    totalSize += orderItemsHeight + 10
-                    hasSelections = true
-                    break
+                for choice in item.itemChoices{
+                    if choice.selected == true{
+                        totalSize += orderItemsHeight + 10
+                        hasSelections = true
+                        break
+                    }
                 }
-            }
             }
             
             /** If an item doesn't have item choices or does have item choices but they aren't selected (optional) then use the default height*/
             if hasSelections == false{
-            totalSize += orderItemsHeight
+                totalSize += orderItemsHeight
             }
         }
         
@@ -723,17 +713,17 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         /** Briefly change the color to red to reflect the destructive nature of this action*/
         UIView.animate(withDuration: 0.5, delay: 0){
-        sender.tintColor = .red
+            sender.tintColor = .red
         }
         UIView.animate(withDuration: 0.5, delay: 0.5){
-        sender.tintColor = originalColor
+            sender.tintColor = originalColor
         }
         
         /** Get confirmation from the user to clear the cart*/
         let alert = JCAlertController(title: "Clear cart?", message: "This will remove all of your current items", preferredStyle: .alert)
         alert.accentColor = appThemeColor
-        alert.headerViewFontColor = .white
-        alert.headerViewBackgroundColor = appThemeColor
+        alert.imageViewTintColor =  .red
+        alert.image = UIImage(systemName: "trash.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
         
         alert.addAction(action: UIAction(title: "Cancel", handler: {_ in }), with: .cancel)
         alert.addAction(action: UIAction(title: "Clear", handler: { [self] _ in
@@ -743,7 +733,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
                 errorShake()
                 
                 globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
-    
+                
                 return
             }
             
@@ -751,7 +741,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             
             itemCache.removeAll()
             for item in cart.items{
-            itemCache.insert(item)
+                itemCache.insert(item)
             }
             
             cart.items.removeAll()
@@ -768,7 +758,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             disableHeaderButtons()
             
             undoClearCartActivated()
-     
+            
         }), with: .destructive)
         alert.modalPresentationStyle = .overFullScreen
         self.present(alert, animated: true)
@@ -829,15 +819,19 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
             let _ = vc.isCartValid()
         }
+        else if let vc = self.presentingViewController as? OrderItemDetailVC{
+            /** Update the referenced collection view and any other tableview tied to this view controller to reflect the changes in data*/
+            let _ = vc.updatePresentingViews()
+        }
         
-    self.dismiss(animated: true)
+        self.dismiss(animated: true)
     }
     
     /** Undo the clear action*/
     func undoClear(){
         backwardTraversalShake()
         enableHeaderButtons()
-
+        
         cart.items = itemCache
         itemCache.removeAll()
         undoInProgress = false
@@ -1013,6 +1007,22 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         }
     }
     /** Button press methods*/
+    
+    /** ScrollView Delegate method*/
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        /** Hide any open swipe actions when scrolling*/
+        if scrollView == shoppingCartItemsTableView{
+            
+            
+            for cell in shoppingCartItemsTableView.visibleCells{
+                if let tableViewCell = cell as? ShoppingCartItemsTableViewCell{
+                    if tableViewCell.swipeActionExposed == true{
+                        tableViewCell.hideSwipeAction(animated: true)
+                    }
+                }
+            }
+        }
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

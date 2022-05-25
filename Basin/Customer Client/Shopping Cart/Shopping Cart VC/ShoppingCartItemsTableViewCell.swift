@@ -1,5 +1,5 @@
 //
-//  shoppingCartItemsTableViewCell.swift
+//  ShoppingCartItemsTableViewCell.swift
 //  Basin
 //
 //  Created by Justin Cook on 5/15/22.
@@ -34,6 +34,21 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
     var presentingVC: UIViewController? = nil
     /** The tableview from which this detail view originated from, can be used as a reference for refreshing when the cart data has been updated*/
     var presentingTableView: UITableView? = nil
+    /** Pan gesture recognizer for scrolling the view to reveal the swipe actions beneath it*/
+    var panGestureRecognizer: UIPanGestureRecognizer!
+    /** The point up to which the user can swipe in order to reveal the button beneath it, the user can't swipe past this point*/
+    var panGestureThreshold: CGFloat{
+        return (0 - self.frame.width/4)
+    }
+    /** Long press gesture recognizer allows the pan gesture recognizer to not conflict with the pan gesture recognizer of the scrollview, this pan gesture recognizer kicks in after a delay triggered by the user keeping their finger on the view*/
+    var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    /** Button behind the container that allows the user to remove this item from the cart and the subsequent table view*/
+    var removeSwipeActionButton: UIButton!
+    var removeSwipeActionButtonAction: UIAction!
+    /** Use this to hide the swipe action when the user scrolls the tableview*/
+    var swipeActionExposed: Bool = false
+    /** Maintain a global copy of the current horizontal position of the button in order to remember the last resting position of the button*/
+    var currentXPosition: CGFloat! = .zero
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: ShoppingCartItemsTableViewCell.identifier)
@@ -133,6 +148,24 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         itemCountButton.titleLabel?.adjustsFontSizeToFitWidth = true
         itemCountButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
+        /** Button will have a width equal to the threshold value plus the padding (10 pts)*/
+        removeSwipeActionButton = UIButton(frame: CGRect(x: 0, y: 0, width: (panGestureThreshold + 10), height: container.frame.height))
+        removeSwipeActionButton.backgroundColor = .red
+        removeSwipeActionButton.contentHorizontalAlignment = .center
+        removeSwipeActionButton.layer.cornerRadius = removeSwipeActionButton.frame.height/5
+        removeSwipeActionButton.isExclusiveTouch = true
+        removeSwipeActionButton.isEnabled = true
+        removeSwipeActionButton.tintColor = .white
+        removeSwipeActionButton.setImage(UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
+        removeSwipeActionButton.setTitleColor(.white, for: .normal)
+        removeSwipeActionButton.setTitle(" Remove", for: .normal)
+        removeSwipeActionButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 15, dynamicSize: true)
+        removeSwipeActionButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        removeSwipeActionButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        removeSwipeActionButton.clipsToBounds = true
+        removeSwipeActionButton.addAction(removeSwipeActionButtonAction, for: .touchUpInside)
+        addDynamicButtonGR(button: removeSwipeActionButton)
+        
         totalItemPriceLabel = PaddedLabel(withInsets: 1, 1, 3, 3)
         totalItemPriceLabel.frame.size = CGSize(width: itemImageView.frame.width/2, height: itemImageView.frame.width/3)
         totalItemPriceLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
@@ -159,6 +192,8 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         
         /** Layout subviews*/
         container.frame.origin = CGPoint(x: self.frame.width/2 - container.frame.width/2, y: self.frame.height/2 - container.frame.height/2)
+        /** Setting the initial position of the container's x position*/
+        currentXPosition = container.frame.minX
         
         itemCountButton.frame.origin = CGPoint(x: 0, y: 5)
         
@@ -172,15 +207,190 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         
         currentlySelectedChoicesLabel.frame.origin = CGPoint(x: nameLabel.frame.minX, y: priceLabel.frame.maxY + 5)
         
+        removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX, y: 0)
+        removeSwipeActionButton.center.y = container.center.y
+        removeSwipeActionButton.frame.size.width = 0
+        
+        /** Configure pan gesture recognizer*/
+        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerTriggered))
+        panGestureRecognizer.maximumNumberOfTouches = 1
+        panGestureRecognizer.delegate = self
+        panGestureRecognizer.isEnabled = false
+        container.addGestureRecognizer(panGestureRecognizer)
+        
+        longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognizerTriggered))
+        longPressGestureRecognizer.delegate = self
+        longPressGestureRecognizer.minimumPressDuration = 0.15
+        self.addGestureRecognizer(longPressGestureRecognizer)
+        
         container.addSubview(nameLabel)
         container.addSubview(priceLabel)
         container.addSubview(itemImageView)
         container.addSubview(itemCountButton)
         container.addSubview(totalItemPriceLabel)
         if itemData.hasSelections() == true{
-        container.addSubview(currentlySelectedChoicesLabel)
+            container.addSubview(currentlySelectedChoicesLabel)
         }
+        self.contentView.addSubview(removeSwipeActionButton)
         self.contentView.addSubview(container)
+    }
+    
+    @objc func longPressGestureRecognizerTriggered(sender: UILongPressGestureRecognizer){
+        panGestureRecognizer.isEnabled = true
+    }
+    
+    /** Move the cell's content up to a specified threshold value to reveal and hide a swipe action beneath the visible content*/
+    @objc func panGestureRecognizerTriggered(sender: UIPanGestureRecognizer){
+        guard container != nil else {
+            return
+        }
+        
+        /** Current movement of the user's finger in the following view*/
+        let translation = sender.translation(in: container)
+        let horizontalOffset = translation.x
+        
+        /** The far left edge of the container that's being translated*/
+        let containerEdge = container.frame.minX
+        /** The absolute starting position of the container*/
+        let originalXPosition: CGFloat = self.frame.width/2 - container.frame.width/2
+        
+        /** Move*/
+        if sender.state == .changed || sender.state == .began || sender.state == .possible{
+            /** First term -> Lowerbound, it can't move lower than this value - 10pts*/
+            /** && Second term -> Upperbound, it can't move higher than this value + 10pts*/
+            if (currentXPosition + horizontalOffset) > (panGestureThreshold - 10) && (currentXPosition + horizontalOffset) < (originalXPosition + 10){
+                
+                /** Disable scrolling if the pan gesture is currently functioning*/
+                if presentingTableView != nil{
+                presentingTableView!.isScrollEnabled = false
+                }
+                
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                    container.frame.origin.x = currentXPosition + horizontalOffset
+                    
+                    /** Resize and reposition the button*/
+                    let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+                    let containerShiftFromOriginalPosition = (originalXPosition - container.frame.origin.x)
+                    let buttonSize = (self.frame.maxX - container.frame.maxX) * 0.9
+                    if containerShiftFromOriginalPosition >= 1{
+                    removeSwipeActionButton.frame.size.width = buttonSize
+                    }
+                    else{
+                    removeSwipeActionButton.frame.size.width = 0
+                    }
+                    removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+                }
+            }
+        }
+        
+        /** Rest*/
+        if sender.state == .ended || sender.state == .cancelled || sender.state == .failed{
+            /** Enable scrolling when the pan gesture ends*/
+            if presentingTableView != nil{
+            presentingTableView!.isScrollEnabled = true
+            }
+            
+            panGestureRecognizer.isEnabled = false
+            
+            if containerEdge <= panGestureThreshold/2{
+                /** View is now resting, save this new position*/
+                currentXPosition = panGestureThreshold
+                
+                swipeActionExposed = true
+                
+                /** Go to the threshold value*/
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                    container.frame.origin.x = panGestureThreshold
+                    
+                    /** Resize and reposition the button*/
+                    let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+                    let buttonSize = (self.frame.maxX - container.frame.maxX) * 0.9
+                    removeSwipeActionButton.frame.size.width = buttonSize
+                    removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+                }
+            }
+            else{
+                currentXPosition = originalXPosition
+                
+                swipeActionExposed = false
+                
+                /** Go back to the starting point*/
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                    container.frame.origin.x = originalXPosition
+                    
+                    /** Resize and reposition the button*/
+                    let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+                    let buttonSize: CGFloat = 0
+                    removeSwipeActionButton.frame.size.width = 0
+                    removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+                }
+            }
+        }
+    }
+
+    /** Allow for simultaneous gesture recognition for the scrollview*/
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    /** Show the swipe action if it's exposed in a static or animated fashion*/
+    func showSwipeAction(animated: Bool){
+        /** View is now resting, save this new position*/
+        currentXPosition = panGestureThreshold
+        
+        swipeActionExposed = true
+        
+        switch animated{
+        case true:
+            /** Go to the threshold value*/
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                container.frame.origin.x = panGestureThreshold
+                
+                /** Resize and reposition the button*/
+                let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+                let buttonSize = (self.frame.maxX - container.frame.maxX) * 0.9
+                removeSwipeActionButton.frame.size.width = buttonSize
+                removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+            }
+        case false:
+            container.frame.origin.x = panGestureThreshold
+            
+            /** Resize and reposition the button*/
+            let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+            let buttonSize = (self.frame.maxX - container.frame.maxX) * 0.9
+            removeSwipeActionButton.frame.size.width = buttonSize
+            removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+        }
+    }
+    
+    /** Hide the swipe action if it's exposed in a static or animated fashion*/
+    func hideSwipeAction(animated: Bool){
+        /** The absolute starting position of the container*/
+        let originalXPosition: CGFloat = self.frame.width/2 - container.frame.width/2
+        currentXPosition = originalXPosition
+        swipeActionExposed = false
+        
+        switch animated{
+        case true:
+            /** Go back to the starting point*/
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseIn, .beginFromCurrentState]){[self] in
+                container.frame.origin.x = originalXPosition
+                
+                /** Resize and reposition the button*/
+                let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+                let buttonSize: CGFloat = 0
+                removeSwipeActionButton.frame.size.width = 0
+                removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+            }
+        case false:
+            container.frame.origin.x = originalXPosition
+            
+            /** Resize and reposition the button*/
+            let containerDisplacement = (self.frame.maxX - container.frame.maxX)
+            let buttonSize: CGFloat = 0
+            removeSwipeActionButton.frame.size.width = 0
+            removeSwipeActionButton.frame.origin = CGPoint(x: self.frame.maxX - (buttonSize + (containerDisplacement - buttonSize)/2), y: removeSwipeActionButton.frame.minY)
+        }
     }
     
     /** Change the border to reflect whether or not this item is in the user's cart currently*/
@@ -197,6 +407,55 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
             itemImageView.layer.borderColor = appThemeColor.withAlphaComponent(0.2).cgColor
         }
     }
+    
+    /** Adds standard gesture recognizers to button that scale the button when the user's finger enters or leaves the surface of the button*/
+    func addDynamicButtonGR(button: UIButton){
+        button.addTarget(self, action: #selector(buttonTI), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonTD), for: .touchDown)
+        button.addTarget(self, action: #selector(buttonDE), for: .touchDragExit)
+        button.addTarget(self, action: #selector(buttonDEN), for: .touchDragEnter)
+    }
+    
+    /** Fired when user touches inside the button, this is used to reset the scale of the button when the touch down event ends*/
+    @objc func buttonTI(sender: UIButton){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+            lightHaptic()
+        }
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            sender.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+    }
+    
+    /** Generic recognizer that scales the button down when the user touches their finger down on it*/
+    @objc func buttonTD(sender: UIButton){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+            lightHaptic()
+        }
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }
+    }
+    
+    /** Generic recognizer that scales the button up when the user drags their finger into it*/
+    @objc func buttonDEN(sender: UIButton){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }
+    }
+    
+    /** Generic recognizer that scales the button up when the user drags their finger out inside of it*/
+    @objc func buttonDE(sender: UIButton){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+            lightHaptic()
+        }
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn){
+            sender.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+    }
+    /** Button press methods*/
     
     /** Show where the user taps on the screen*/
     @objc func viewSingleTapped(sender: UITapGestureRecognizer){
@@ -241,6 +500,12 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         itemCountButton = nil
         currentlySelectedChoicesLabel = nil
         totalItemPriceLabel = nil
+        removeSwipeActionButton = nil
+        removeSwipeActionButtonAction = nil
+        panGestureRecognizer = nil
+        currentXPosition = nil
+        presentingTableView = nil
+        presentingVC = nil
         
         for subview in contentView.subviews{
             subview.removeFromSuperview()

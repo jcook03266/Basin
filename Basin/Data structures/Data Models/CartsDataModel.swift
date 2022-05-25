@@ -127,6 +127,29 @@ public class Cart: NSObject{
             cart(self, didAdd: item)
     }
     
+    /** Do a hard update of this item by reassigning fields other than its count, Warning: This should only be used when updating these parts of the item, if an item is being overwritten by an empty item then the item in the cart will have its properties cleared
+     - Parameter updatedItem: The updated version of the item that will mutate the original item
+     - Parameter originalItem: The original data that will be used to access itself from the cart and allow the updated item to mutate it
+     */
+    func hardUpdateThis(updatedItem: OrderItem, originalItem: OrderItem){
+        /** Update the quantity of this item stored*/
+        for storedItem in self.items{
+            if areTheseItemsIdentical(item1: originalItem, item2: storedItem){
+                storedItem.count = updatedItem.count
+                storedItem.specialInstructions = updatedItem.specialInstructions
+                storedItem.itemChoices = updatedItem.itemChoices
+                
+                /** If the item's count is 0 then remove it from the cart*/
+                if storedItem.count == 0{
+                removeThis(item: storedItem)
+                }
+                
+                updateSubtotal()
+                cart(self, didUpdate: storedItem)
+            }
+        }
+    }
+    
     /** Called when a specific item stored in the cart has been updated (count has been updated)*/
     func updateThis(item: OrderItem){
         
@@ -134,6 +157,12 @@ public class Cart: NSObject{
         for storedItem in self.items{
             if areTheseItemsIdentical(item1: item, item2: storedItem){
                 storedItem.count = item.count
+                
+                /** If the item's count is 0 then remove it from the cart*/
+                if storedItem.count == 0{
+                removeThis(item: storedItem)
+                }
+                
                 updateSubtotal()
                 cart(self, didUpdate: storedItem)
             }

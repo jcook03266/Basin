@@ -437,32 +437,19 @@ class OrderItemTableViewCell: UITableViewCell{
         }
         
         /** If this item requires a selection to be made in order to add the item then push the detail view controller for this item where the user can then make their selection and also add any additional duplicates to the overall count for this item*/
-        if itemData.itemChoices.isEmpty == false{
-            var isSelectionRequired = false
-            for choice in itemData.itemChoices{
-                if choice.required == true{
-                    isSelectionRequired = true
-                    break
-                }
+        if itemData.isSelectionRequired() == true{
+            lightHaptic()
+            
+            let vc = OrderItemDetailVC(itemData: self.itemData, laundromatCart: self.cart, laundromatMenu: self.itemData.menu)
+            vc.presentingTableView = self.presentingTableView
+            
+            if presentingVC != nil{
+                /** Prevent the user from using interactive dismissal*/
+                vc.isModalInPresentation = true
+                presentingVC!.show(vc, sender: presentingVC)
             }
-            if isSelectionRequired == true{
-                lightHaptic()
-                
-                let vc = OrderItemDetailVC(itemData: self.itemData, laundromatCart: self.cart, laundromatMenu: self.itemData.menu)
-                
-                if presentingTableView != nil{
-                    vc.presentingTableView = self.presentingTableView
-                    vc.laundromatMenu = itemData.menu
-                }
-                
-                if presentingVC != nil{
-                    /** Prevent the user from using interactive dismissal*/
-                    vc.isModalInPresentation = true
-                    presentingVC!.show(vc, sender: presentingVC)
-                }
-                
-                return
-            }
+            
+            return
         }
         
         /** Reset the image for this button when the user taps it*/
@@ -640,17 +627,8 @@ class OrderItemTableViewCell: UITableViewCell{
         }
         
         /** If this item requires a selection to be made in order to add the item then don't allow this menu to be displayed*/
-        if itemData.itemChoices.isEmpty == false{
-            var isSelectionRequired = false
-            for choice in itemData.itemChoices{
-                if choice.required == true{
-                    isSelectionRequired = true
-                    break
-                }
-            }
-            if isSelectionRequired == true{
-                return nil
-            }
+        if itemData.isSelectionRequired() == true{
+            return nil
         }
         
         var children: [UIMenuElement] = []
@@ -715,7 +693,6 @@ class OrderItemTableViewCell: UITableViewCell{
                 itemData.count += 10
                 cart.updateThis(item: self.itemData)
                 
-                updateDisplayForCountButton()
                 updateDisplayForCountButton()
             }
             else if itemData.count == maxItems{
@@ -826,17 +803,8 @@ class OrderItemTableViewCell: UITableViewCell{
         }
         
         /** If this item requires a selection to be made in order to add the item then don't allow this menu to be displayed*/
-        if itemData.itemChoices.isEmpty == false{
-            var isSelectionRequired = false
-            for choice in itemData.itemChoices{
-                if choice.required == true{
-                    isSelectionRequired = true
-                    break
-                }
-            }
-            if isSelectionRequired == true{
-                return nil
-            }
+        if itemData.isSelectionRequired() == true{
+            return nil
         }
         
         var children: [UIMenuElement] = []

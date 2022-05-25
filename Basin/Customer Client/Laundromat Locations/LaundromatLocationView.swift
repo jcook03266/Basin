@@ -286,7 +286,7 @@ public class LaundromatLocationView: UIView, UIGestureRecognizerDelegate{
         
         nicknameLabel.frame.origin = CGPoint(x: self.frame.width * 0.05, y: imageCarousel.frame.maxY + 10)
         
-        addressLabel.frame.origin = CGPoint(x: self.frame.width * 0.05, y: nicknameLabel.frame.maxY + 10)
+        addressLabel.frame.origin = CGPoint(x: self.frame.width * 0.05, y: nicknameLabel.frame.maxY + 5)
         
         favoriteButton.frame.origin = CGPoint(x: self.frame.maxX - (favoriteButton.frame.width * 1.25), y: self.frame.minY + favoriteButton.frame.height/3.5)
         

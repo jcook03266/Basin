@@ -95,6 +95,14 @@ public class Item: NSObject, NSCopying{
         return copy
     }
     
+    /** Determine if an item choice selection is required in order to add this item*/
+    func isSelectionRequired()->Bool{
+        guard self.itemChoices.isEmpty == false else {return false}
+        
+        /** When empty = true, this means no selection required which is false so return the inverse*/
+        return !self.itemChoices.filter{$0.required == true}.isEmpty
+    }
+    
     /** Determine if this item has at least one item choice selected*/
     func hasSelections()->Bool{
         if self.itemChoices.isEmpty == false{
@@ -118,9 +126,13 @@ public class Item: NSObject, NSCopying{
         }
         
         for (index,choice) in choices.enumerated(){
-            if index == 0{
+            if index == 0 && choices.count > 1{
             /** Starting element, no space at the end*/
             text += "\(choice.name) \(separator)"
+            }
+            else if index == 0 && choices.count == 1{
+            /** Only one choice so no separator is used*/
+            text += "\(choice.name)"
             }
             else if index != 0 && index != (choices.count - 1){
             /** Middle most elements need space at the start*/
@@ -223,7 +235,7 @@ public class itemChoice: NSObject, NSCopying{
     var name: String
     /** The price of this choice*/
     var price: Double
-    /** If true then this choice overrides the total price for the item, if false then it's simply added to the total price*/
+    /** If true then this choice overrides the total price for the item, if false then it's simply added to the total price (defunct)*/
     var overridesTotalPrice: Bool
     /** A description of this item choice*/
     var choiceDescription: String

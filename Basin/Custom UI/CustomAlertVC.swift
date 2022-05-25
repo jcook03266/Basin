@@ -9,6 +9,7 @@ import UIKit
 
 /** Various classes depicting custom alert view controllers made to fit the feel of this application*/
 
+/** Custom Alert View Controller*/
 public class JCAlertController: UIViewController{
     /** Customizable properties*/
     /** The background color to display behind all content*/
@@ -34,9 +35,9 @@ public class JCAlertController: UIViewController{
     /** Font color for the header view's subviews*/
     var headerViewFontColor: UIColor = fontColor
     /** The font to use for the title*/
-    var titleFont: UIFont = getCustomFont(name: .Ubuntu_Regular, size: 18, dynamicSize: true)
+    var titleFont: UIFont = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
     /** The font to use for the message below the title*/
-    var messageFont: UIFont = getCustomFont(name: .Ubuntu_Light, size: 16, dynamicSize: true)
+    var messageFont: UIFont = getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true)
     var messageTextAlignment: NSTextAlignment = .center
     var titleTextAlignment: NSTextAlignment = .center
     /** Customize the bottom button's appearance*/
@@ -86,7 +87,7 @@ public class JCAlertController: UIViewController{
     /** The default height for the buttons displayed by the alert*/
     private var buttonHeight: CGFloat = 60
     private var headerViewDefaultHeight: CGFloat{
-        return preferredStyle == .alert ? 90 : 75
+        return preferredStyle == .alert ? 95 : 75
     }
     private var defaultActionSheetContainerHeight: CGFloat {
         return self.view.frame.height * 0.4
@@ -163,6 +164,20 @@ public class JCAlertController: UIViewController{
         construct()
     }
     
+    /** Change the background color of the dismissable area in an animated fashion*/
+    func dimContext(){
+        UIView.animate(withDuration: 0.5, delay: 0.5, options: [.curveEaseIn]){[self] in
+            dismissableArea.backgroundColor = contextBackgroundColor
+        }
+    }
+    
+    /** Reverse the dimming effect*/
+    func undimContext(){
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]){[self] in
+            dismissableArea.backgroundColor = .clear
+        }
+    }
+    
     /** Piece together all of the provided data to construct the UI for this VC*/
     func construct(){
         self.view.backgroundColor = .clear
@@ -170,7 +185,7 @@ public class JCAlertController: UIViewController{
         /** Tap to dismiss area*/
         dismissableArea = UIVisualEffectView(frame: self.view.frame)
         dismissableArea.effect = useBlurEffect ? UIBlurEffect(style: darkMode ? .dark : .light) : nil
-        dismissableArea.backgroundColor = contextBackgroundColor
+        dismissableArea.backgroundColor = .clear
         dismissableArea.clipsToBounds = true
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizerTriggered))
@@ -208,7 +223,7 @@ public class JCAlertController: UIViewController{
         headerView.clipsToBounds = true
         
         /** Title*/
-        titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.frame.width * 0.95, height: headerViewDefaultHeight/3 - (preferredStyle == .alert ? 15 : 10)))
+        titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.frame.width * 0.9, height: headerViewDefaultHeight/3 - (preferredStyle == .alert ? 15 : 10)))
         titleLabel.font = titleFont
         titleLabel.textColor = headerViewFontColor
         titleLabel.tintColor = accentColor
@@ -224,7 +239,7 @@ public class JCAlertController: UIViewController{
         
         /** ImageView*/
         if image != nil{
-            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: (headerViewDefaultHeight/3 - (preferredStyle == .alert ? 5 : 5))))
+            imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: (headerViewDefaultHeight/3 - (preferredStyle == .alert ? 5 : 5)), height: (headerViewDefaultHeight/3 - (preferredStyle == .alert ? 5 : 5))))
             imageView!.image = image
             imageView!.tintColor = imageViewTintColor
             imageView!.contentMode = .scaleAspectFit
@@ -237,7 +252,7 @@ public class JCAlertController: UIViewController{
         /** ImageView*/
         
         /** Message*/
-        messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.frame.width * 0.95, height: (headerViewDefaultHeight/3 - (preferredStyle == .alert ? 5 : 10))))
+        messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: headerView.frame.width * 0.9, height: (headerViewDefaultHeight/3 - (preferredStyle == .alert ? 5 : 10))))
         messageLabel.font = messageFont
         messageLabel.textColor = headerViewFontColor
         messageLabel.tintColor = accentColor
@@ -307,20 +322,22 @@ public class JCAlertController: UIViewController{
                 titleLabel.centerInsideOf(this: headerView)
             }
         }
-        if let imgView = imageView{
-            headerView.addSubview(imgView)
+        if imageView != nil{
+            headerView.addSubview(imageView!)
             
             /** Increase height if only two elements are in the header*/
             if alertTitle != nil && message == nil || alertTitle == nil && message != nil{
                 imageView!.frame.size.height = headerViewDefaultHeight * 0.4
+                imageView!.frame.size.width = imageView!.frame.height
             }
             
-            imgView.frame.origin = CGPoint(x: headerView.frame.width/2 - imgView.frame.width/2, y: (alertTitle != "" ? titleLabel.frame.maxY : 0) + (preferredStyle == .alert ? 5 : 5))
+            imageView!.frame.origin = CGPoint(x: headerView.frame.width/2 - imageView!.frame.width/2, y: (alertTitle != "" ? titleLabel.frame.maxY : 0) + (preferredStyle == .alert ? 5 : 5))
             
             /** Center if its the only element in the header*/
             if alertTitle == nil && message == nil{
                 /** Increase height if its the only view in the headerview*/
                 imageView!.frame.size.height = headerViewDefaultHeight * 0.9
+                imageView!.frame.size.width = imageView!.frame.height
                 
                 imageView!.centerInsideOf(this: headerView)
             }
@@ -423,6 +440,7 @@ public class JCAlertController: UIViewController{
         
         DispatchQueue.main.asyncAfter(deadline: .now()){ [self] in
         appearAnimation()
+        dimContext()
         }
     }
     
@@ -683,6 +701,8 @@ public class JCAlertController: UIViewController{
     
     /** Trigger the custom dismiss animation for the current alert controller style*/
     func dismissAnimation(){
+        undimContext()
+        
         guard useDismissAnimation == true else {
             self.dismiss(animated: true)
             return
@@ -737,7 +757,7 @@ public class JCAlertController: UIViewController{
         self.dismissAnimation()
         
         UIView.animate(withDuration: 0.5, delay: 0){ [self] in
-            sender.backgroundColor = sender != bottomButton ? bodyColor.lighter.withAlphaComponent(alpha) : bottomButtonBackgroundColor.withAlphaComponent(alpha)
+            sender.backgroundColor = sender != bottomButton ? bodyColor.withAlphaComponent(alpha) : bottomButtonBackgroundColor.withAlphaComponent(alpha)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
@@ -748,7 +768,7 @@ public class JCAlertController: UIViewController{
     /** Generic recognizer that scales the button down when the user touches their finger down on it*/
     @objc func buttonTD(sender: UIButton){
         UIView.animate(withDuration: 0.5, delay: 0){ [self] in
-            sender.backgroundColor = sender != bottomButton ? bodyColor.lighter.withAlphaComponent(alpha) : bottomButtonBackgroundColor.lighter.withAlphaComponent(alpha)
+            sender.backgroundColor = sender != bottomButton ? bodyColor.darker.withAlphaComponent(alpha) : bottomButtonBackgroundColor.darker.withAlphaComponent(alpha)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
@@ -759,14 +779,14 @@ public class JCAlertController: UIViewController{
     /** Generic recognizer that scales the button up when the user drags their finger into it*/
     @objc func buttonDEN(sender: UIButton){
         UIView.animate(withDuration: 0.5, delay: 0){ [self] in
-            sender.backgroundColor = sender != bottomButton ? bodyColor.lighter.withAlphaComponent(alpha) : bottomButtonBackgroundColor.lighter.withAlphaComponent(alpha)
+            sender.backgroundColor = sender != bottomButton ? bodyColor.darker.withAlphaComponent(alpha) : bottomButtonBackgroundColor.darker.withAlphaComponent(alpha)
         }
     }
     
     /** Generic recognizer that scales the button up when the user drags their finger out inside of it*/
     @objc func buttonDE(sender: UIButton){
         UIView.animate(withDuration: 0.5, delay: 0){ [self] in
-            sender.backgroundColor = sender != bottomButton ? bodyColor.lighter.withAlphaComponent(alpha) : bottomButtonBackgroundColor.withAlphaComponent(alpha)
+            sender.backgroundColor = sender != bottomButton ? bodyColor.withAlphaComponent(alpha) : bottomButtonBackgroundColor.withAlphaComponent(alpha)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){

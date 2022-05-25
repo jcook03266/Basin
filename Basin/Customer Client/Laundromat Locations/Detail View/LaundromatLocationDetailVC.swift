@@ -973,10 +973,8 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
          */
         
         expansionButton = UIButton(frame: CGRect(x: 0, y: 0, width: informationPanel.frame.width, height: 30))
-        expansionButton.backgroundColor = appThemeColor
-        expansionButton.backgroundColor = darkMode ? .darkGray : appThemeColor
+        expansionButton.backgroundColor = informationPanel.backgroundColor!
         expansionButton.setImage(UIImage(systemName: "chevron.compact.down")?.withTintColor(.white), for: .normal)
-        expansionButton.castDefaultShadow()
         expansionButton.layer.cornerRadius =  expansionButton.frame.height/2
         expansionButton.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         expansionButton.contentMode = .center
@@ -984,12 +982,13 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         expansionButton.contentVerticalAlignment = .center
         expansionButton.isExclusiveTouch = true
         expansionButton.tintColor = .white
-        expansionButton.clipsToBounds = true
+        expansionButton.castDefaultShadow()
+        expansionButton.layer.shadowColor = UIColor.darkGray.cgColor
         expansionButton.addTarget(self, action: #selector(expansionButtonPressed), for: .touchDown)
         
         nicknameLabel = UILabel()
         nicknameLabel.frame.size = CGSize(width: informationPanel.frame.width * 0.9, height: 40)
-        nicknameLabel.font = getCustomFont(name: .Ubuntu_Medium, size: 20, dynamicSize: true)
+        nicknameLabel.font = getCustomFont(name: .Ubuntu_Medium, size: 18, dynamicSize: true)
         nicknameLabel.backgroundColor = .clear
         nicknameLabel.textColor = fontColor
         nicknameLabel.textAlignment = .left
@@ -1320,7 +1319,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
          mapView.animate(to: camera)
          }*/
         
-        imageCarousel = Basin.imageCarousel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height * 0.2), images: nil, urls: stringToURL(stringArray: laundromatData.photos), useURLs: true, contentBackgroundColor: UIColor.clear, animatedTransition: true, transitionDuration: 0.25, infiniteScroll: true, showDetailViewOnTap: false, showContextMenu: false, presentingVC: self, showPageControl: false, pageControlActiveDotColor: appThemeColor, pageControlInactiveDotColor: UIColor.lightGray.lighter, pageControlPosition: .bottom, loadOnce: true, showImageTrackerLabel: false, imageTrackerLabelPosition: .lowerRight, imageViewContentMode: .scaleAspectFill)
+        imageCarousel = Basin.imageCarousel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height * 0.2 ), images: nil, urls: stringToURL(stringArray: laundromatData.photos), useURLs: true, contentBackgroundColor: UIColor.clear, animatedTransition: true, transitionDuration: 0.25, infiniteScroll: true, showDetailViewOnTap: false, showContextMenu: false, presentingVC: self, showPageControl: false, pageControlActiveDotColor: appThemeColor, pageControlInactiveDotColor: UIColor.lightGray.lighter, pageControlPosition: .bottom, loadOnce: true, showImageTrackerLabel: false, imageTrackerLabelPosition: .lowerRight, imageViewContentMode: .scaleAspectFill)
         imageCarousel.autoMove(timeInterval: 5, animationDuration: 1, animated: true, repeating: true)
         /** Prevent the user from scrolling and interacting with the view*/
         imageCarousel.isUserInteractionEnabled = false
@@ -1344,7 +1343,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         let barBgColor = darkMode ? bgColor.darker : .white
         let underlineColor = darkMode ? appThemeColor : .white
         
-        buttonBar = underlinedButtonBar(buttons: [washingButton, dryCleaningButton], width: self.view.frame.width, height: 45, underlineColor: underlineColor, underlineTrackColor: .lightGray.lighter, underlineHeight: 3, backgroundColor: barBgColor, animated: true)
+        buttonBar = underlinedButtonBar(buttons: [washingButton, dryCleaningButton], width: self.view.frame.width, height: 40, underlineColor: underlineColor, underlineTrackColor: .lightGray.lighter, underlineHeight: 1, backgroundColor: barBgColor, animated: true)
         buttonBar.alpha = 0
         buttonBar.isUserInteractionEnabled = false
         
@@ -1414,16 +1413,6 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             buttonBar.frame.origin = CGPoint(x: 0, y: navBar.frame.maxY)
             
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: dividingLine.frame.maxY)
-            
-            /**
-             sectionTitleLabel.frame = CGRect(x: 0, y: buttonBar!.frame.maxY + 20, width:  view.frame.width, height: 40)
-             sectionTitleLabel.text = "Wash Dry Fold"
-             sectionTitleLabel.font = getCustomFont(name: .Bungee_Regular, size: 25, dynamicSize: true)
-             sectionTitleLabel.textColor = appThemeColor
-             sectionTitleLabel.adjustsFontSizeToFitWidth = true
-             sectionTitleLabel.textAlignment = .left
-             sectionTitleLabel.layer.zPosition = -1
-             */
             
             informationPanel.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
             
@@ -2009,10 +1998,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         searchTableViewExpanded = true
         
         /** If the information panel is not hidden then set the container's minY to the bottom of the image carousel's dividing line*/
-        if scrollView.frame.origin.y != buttonBar.frame.maxY{
+        if buttonBar.alpha < 1{
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: dividingLine.frame.maxY)
         }
-        else{
+        else if buttonBar.alpha == 1{
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
         }
         
@@ -2033,10 +2022,10 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
         }
         
         /** If the information panel is not hidden then set the container's minY to the bottom of the image carousel's dividing line*/
-        if scrollView.frame.origin.y != buttonBar.frame.maxY{
+        if buttonBar.alpha < 1{
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: dividingLine.frame.maxY)
         }
-        else{
+        else if buttonBar.alpha == 1{
             searchTableViewContainer.frame.origin = CGPoint(x: 0, y: buttonBar.frame.maxY)
         }
         
@@ -2380,7 +2369,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
     }
     /** Button press methods*/
     
-    /** Cart delegate methods*/
+    /** Cart delegate methods, this is the cart API layer for all other view controllers presented from this VC*/
     func cart(_ cart: Cart, didAdd item: OrderItem) {
         ///print("Item Added")
         updateViewCartButtonLabel()
@@ -2579,6 +2568,7 @@ public class LaundromatLocationDetailVC: UIViewController, UISearchBarDelegate, 
             }
             
             let vc = OrderItemDetailVC(itemData: tableViewCell.itemData, laundromatCart: self.laundromatCart, laundromatMenu: laundromatMenu)
+            vc.presentingTableView = searchTableView
             
             /** Prevent the user from using interactive dismissal*/
             vc.isModalInPresentation = true

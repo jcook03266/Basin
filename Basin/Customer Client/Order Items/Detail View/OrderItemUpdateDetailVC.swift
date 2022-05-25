@@ -1,8 +1,8 @@
 //
-//  OrderItemDetailVC.swift
+//  OrderItemUpdateDetailVC.swift
 //  Basin
 //
-//  Created by Justin Cook on 4/8/22.
+//  Created by Justin Cook on 5/24/22.
 //
 
 import UIKit
@@ -10,8 +10,8 @@ import Nuke
 import SkeletonView
 import GoogleMobileAds
 
-/** View the order item in true detail and add it to a designated cart via a delegate protocol*/
-public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, GADBannerViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate{
+/** Detail View that allows the user to update the item in the cart, or remove it, akin to the regular order items VC but is focused around updating an already added item*/
+public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, GADBannerViewDelegate{
     /** External Data*/
     /** The item to reflect in this detail view controller*/
     var itemData: OrderItem
@@ -44,15 +44,13 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     /** Stack view that permits dynamic content in the scrollview*/
     var stackView: UIStackView!
     /** Add the item to the passed cart object*/
-    var addToCartButton: UIButton!
-    /** Allow user to add to the item's quantity*/
+    var updateCartButton: UIButton!
+    /** Allow user to upate to the item's quantity*/
     var addButton: UIButton!
     /** Allow user to subtract from the item's quantity*/
     var subtractButton: UIButton!
     /** A textview that allows the user to write any special instructions for this item, (char limit is 100)*/
     var specialInstructionsTextView: UITextView!
-    /** Button that allows the user to view the shopping cart, this is only visible in this view controller if the user already has this item inside of the shopping cart*/
-    var shoppingCartButton: UIButton!
     /** Functional UI*/
     
     /** Control elements for the text view's char limit*/
@@ -65,8 +63,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     /** Control elements for the text view's char limit*/
     
     /** Properties*/
-    /** Decide whether or not to display the recommendations collection view at the bottom of the screen*/
-    var displayRecommendations: Bool = true
     /** Properties*/
     
     /** Navigation UI*/
@@ -81,6 +77,10 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     var helpButton: UIButton = UIButton()
     /** Bar button item that hosts the help button*/
     var helpButtonItem = UIBarButtonItem()
+    /** Allow the user to remove the item from the cart completely*/
+    var removeItemButton: UIButton = UIButton()
+    /** Bar button item that hosts the removeItemButton button*/
+    var removeItemButtonItem = UIBarButtonItem()
     /** Navigation UI*/
     
     /** Display UI*/
@@ -104,8 +104,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     var specialInstructionsLabel: UILabel!
     /** Instructions to display below the main title*/
     var specialInstructionsLabelSubtitle: UILabel!
-    /** Label describing the collection view below it*/
-    var recommendedForYouCollectionViewLabel: UILabel!
     /** Display UI*/
     
     /** Decoration*/
@@ -126,12 +124,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     var itemChoicesCategorySections: [String : [itemChoice]] = [:]
     /** Item Choices table view (display the choices for this item (if any))*/
     
-    /** Recommendation Collection view (display a list of other items from the given laundromat menu)*/
-    var recommendedForYouCollectionViewContainer: UIView!
-    var recommendedForYouCollectionView: UICollectionView!
-    var collectionViewHeight: CGFloat = 200
-    /** Recommendation Collection view (display a list of other items from the given laundromat menu)*/
-    
     /** Banner advertisement (display a banner advertisement directly below the optional description*/
     var bannerAdContainer: UIView!
     var bannerViewAd: GADBannerView!
@@ -151,14 +143,10 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         /** Create a copy of the passed item in a new memory address in order to mutate the item without affecting the other object*/
         self.itemData = itemData.copy() as! OrderItem
-        self.itemData.clearSelectedChoices()
-        
-        /** Clear any and all mutated data from this object*/
-        self.itemData.count = 0
-        self.itemData.specialInstructions = ""
         
         /** Keep an original reference to the given item*/
         self.originalItemData = itemData
+        self.itemCount = itemData.count
         
         self.laundromatCart = laundromatCart
         self.laundromatMenu = laundromatMenu
@@ -168,8 +156,14 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         self.numberOfItemChoices = itemData.itemChoices.count
         
         /** Specify all of the item choice categories for the item selection dictionary*/
-        for choice in itemData.itemChoices{
+        for choice in originalItemData.itemChoices{
             selectedItemChoices[choice.category] = []
+        }
+        
+        /** Fill up the selected item choices with the currently selected item choices*/
+        for choice in originalItemData.getCurrentlySelectedChoices(){
+            selectedItemChoices[choice.category] = Set<itemChoice>()
+            selectedItemChoices[choice.category]?.update(with: choice)
         }
         
         itemChoicesCategorySections = computeTotalSectionsForItemChoicesTableView() ?? [:]
@@ -192,11 +186,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         /** If no items then there's nothing to satisfy*/
         guard itemData.itemChoices.isEmpty == false else {
             return satisfied
-        }
-        
-        /** The user has to specify a quantity higher than 0*/
-        guard itemCount > 0 else {
-            return false
         }
         
         /** If all required categories are not selected then return false*/
@@ -340,29 +329,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         menuTypeLabel.text = "\(laundromatMenu.category) Serivce"
         menuTypeLabel.sizeToFit()
         
-        shoppingCartButton = UIButton()
-        shoppingCartButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        shoppingCartButton.frame.size.height = 50
-        shoppingCartButton.frame.size.width = shoppingCartButton.frame.size.height
-        shoppingCartButton.backgroundColor = bgColor
-        shoppingCartButton.tintColor = appThemeColor
-        shoppingCartButton.setImage(UIImage(systemName: "cart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
-        shoppingCartButton.imageView?.contentMode = .scaleAspectFit
-        shoppingCartButton.layer.cornerRadius = shoppingCartButton.frame.height/2
-        shoppingCartButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-        shoppingCartButton.isEnabled = true
-        shoppingCartButton.isExclusiveTouch = true
-        shoppingCartButton.layer.borderColor = UIColor.lightGray.cgColor
-        shoppingCartButton.layer.borderWidth = 0.5
-        shoppingCartButton.addTarget(self, action: #selector(shoppingCartButtonPressed), for: .touchUpInside)
-        addDynamicButtonGR(button: shoppingCartButton)
-        
-        if laundromatCart.getTotalCountFor(this: itemData) <= 0{
-            shoppingCartButton.isEnabled = false
-            shoppingCartButton.alpha = 0
-            shoppingCartButton.isHidden = true
-        }
-        
         addButton = UIButton()
         addButton.frame.size = CGSize(width: 40, height: 40)
         addButton.backgroundColor = bgColor
@@ -398,26 +364,26 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         addDynamicButtonGR(button: subtractButton)
         subtractButton.menu = getMenuForSubtractButton()
         
-        addToCartButton = UIButton()
-        addToCartButton.frame.size = CGSize(width: self.view.frame.width * 0.9, height: 60)
-        addToCartButton.backgroundColor = appThemeColor
-        addToCartButton.setTitleColor(.white, for: .normal)
-        addToCartButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
-        addToCartButton.contentHorizontalAlignment = .center
-        addToCartButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        addToCartButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        addToCartButton.layer.cornerRadius = addToCartButton.frame.height/2
-        addToCartButton.isExclusiveTouch = true
+        updateCartButton = UIButton()
+        updateCartButton.frame.size = CGSize(width: self.view.frame.width * 0.9, height: 60)
+        updateCartButton.backgroundColor = appThemeColor
+        updateCartButton.setTitleColor(.white, for: .normal)
+        updateCartButton.titleLabel?.font = getCustomFont(name: .Ubuntu_Regular, size: 16, dynamicSize: true)
+        updateCartButton.contentHorizontalAlignment = .center
+        updateCartButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        updateCartButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        updateCartButton.layer.cornerRadius = updateCartButton.frame.height/2
+        updateCartButton.isExclusiveTouch = true
         /** Disabled until the user increments the item count*/
-        addToCartButton.isEnabled = false
-        addToCartButton.alpha = 0.5
-        addToCartButton.castDefaultShadow()
-        addToCartButton.layer.shadowColor = UIColor.darkGray.cgColor
-        addToCartButton.tintColor = .white
-        addToCartButton.setImage(UIImage(systemName: "cart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
-        addToCartButton.setTitle(" Add to Cart", for: .normal)
-        addToCartButton.addTarget(self, action: #selector(addToCartButtonPressed), for: .touchUpInside)
-        addDynamicButtonGR(button: addToCartButton)
+        updateCartButton.isEnabled = false
+        updateCartButton.alpha = 0.5
+        updateCartButton.castDefaultShadow()
+        updateCartButton.layer.shadowColor = UIColor.darkGray.cgColor
+        updateCartButton.tintColor = .white
+        updateCartButton.setImage(UIImage(systemName: "cart.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
+        updateCartButton.setTitle(" Update Cart", for: .normal)
+        updateCartButton.addTarget(self, action: #selector(updateCartButtonPressed), for: .touchUpInside)
+        addDynamicButtonGR(button: updateCartButton)
         
         itemCountDisplay = PaddedLabel(withInsets: 5, 5, 5, 5)
         itemCountDisplay.frame.size = CGSize(width: 40, height: 40)
@@ -459,9 +425,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         specialInstructionsTextViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: stackView.frame.width, height: 160))
         specialInstructionsTextViewContainer.clipsToBounds = true
         
-        if displayRecommendations == false{
-            specialInstructionsTextViewContainer.frame.size.height = 250
-        }
+        specialInstructionsTextViewContainer.frame.size.height = 250
         
         specialInstructionsTextView = AccessibleTextView(frame: CGRect(x: 0, y: 0, width: stackView.frame.width * 0.95, height: 150), presentingViewController: self, useContextMenu: true)
         specialInstructionsTextView.contentInset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
@@ -481,7 +445,11 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         specialInstructionsTextView.enablesReturnKeyAutomatically =  true
         specialInstructionsTextView.showsHorizontalScrollIndicator = false
         specialInstructionsTextView.showsVerticalScrollIndicator = true
+        specialInstructionsTextView.text = itemData.specialInstructions
         specialInstructionsTextView.delegate = self
+        
+        /** Update the character counter*/
+        currentTextViewCharCount = specialInstructionsTextView.text.count
         
         switch darkMode{
         case true:
@@ -523,39 +491,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         specialInstructionsTextViewContainer.addSubview(specialInstructionsTextView)
         specialInstructionsTextViewContainer.addSubview(textViewCharLimitDisplay)
         
-        recommendedForYouCollectionViewLabel = UILabel(frame: CGRect(x: 0, y: 0, width: stackView.frame.width * 0.95, height: itemChoicesTableViewSectionHeaderHeight))
-        recommendedForYouCollectionViewLabel.font = getCustomFont(name: .Ubuntu_Regular, size: 18, dynamicSize: true)
-        recommendedForYouCollectionViewLabel.textColor = fontColor
-        recommendedForYouCollectionViewLabel.adjustsFontForContentSizeCategory = true
-        recommendedForYouCollectionViewLabel.adjustsFontSizeToFitWidth = true
-        recommendedForYouCollectionViewLabel.textAlignment = .left
-        recommendedForYouCollectionViewLabel.text = "Recommended For You"
-        recommendedForYouCollectionViewLabel.sizeToFit()
-        
-        recommendedForYouCollectionViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: stackView.frame.width, height: collectionViewHeight + 60))
-        recommendedForYouCollectionViewContainer.clipsToBounds = true
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        /** Specify item size in order to allow the collectionview to encompass all of them*/
-        layout.itemSize = CGSize(width: stackView.frame.width/3, height: collectionViewHeight)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        recommendedForYouCollectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: stackView.frame.width, height: collectionViewHeight), collectionViewLayout: layout)
-        recommendedForYouCollectionView.register(OrderItemCollectionViewCell.self, forCellWithReuseIdentifier: OrderItemCollectionViewCell.identifier)
-        recommendedForYouCollectionView.delegate = self
-        recommendedForYouCollectionView.backgroundColor = UIColor.clear
-        recommendedForYouCollectionView.isPagingEnabled = true
-        recommendedForYouCollectionView.dataSource = self
-        recommendedForYouCollectionView.showsVerticalScrollIndicator = false
-        recommendedForYouCollectionView.showsHorizontalScrollIndicator = false
-        recommendedForYouCollectionView.isExclusiveTouch = true
-        recommendedForYouCollectionView.contentSize = CGSize(width: ((stackView.frame.width)/3 * CGFloat(laundromatMenu.items.count)), height: collectionViewHeight)
-        
         /** Layout subviews*/
-        recommendedForYouCollectionView.frame.origin = CGPoint(x: 0, y: 0)
-        recommendedForYouCollectionViewContainer.addSubview(recommendedForYouCollectionView)
-        
         itemChoicesTableView = UITableView(frame: .zero, style: .grouped)
         itemChoicesTableView.clipsToBounds = true
         itemChoicesTableView.backgroundColor = .clear
@@ -642,32 +578,23 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         itemChoicesTableView.frame.origin = CGPoint(x: 0, y: bannerAdContainer.frame.maxY + 10)
         
-        addToCartButton.frame.origin = CGPoint(x: view.frame.width/2 - addToCartButton.frame.width/2, y: view.frame.maxY - (addToCartButton.frame.height * 2.5))
+        updateCartButton.frame.origin = CGPoint(x: view.frame.width/2 - updateCartButton.frame.width/2, y: view.frame.maxY - (updateCartButton.frame.height * 2.5))
         
         specialInstructionsLabelContainer.frame.origin = CGPoint(x: 0, y: itemChoicesTableView.frame.maxY + 0)
         
         specialInstructionsTextViewContainer.frame.origin = CGPoint(x: 0, y: specialInstructionsLabelContainer.frame.maxY + 10)
         
-        if displayRecommendations == true{
-            recommendedForYouCollectionViewLabel.frame.origin = CGPoint(x: stackView.frame.width * 0.05, y: specialInstructionsTextViewContainer.frame.maxY + recommendedForYouCollectionViewLabel.frame.height * 2)
-            
-            recommendedForYouCollectionViewContainer.frame.origin = CGPoint(x: stackView.frame.width/2 - recommendedForYouCollectionViewContainer.frame.width/2, y: recommendedForYouCollectionViewLabel.frame.maxY + 10)
-        }
-        
         scrollView.frame.origin = CGPoint(x: self.view.frame.width/2 - scrollView.frame.width/2, y: maskedHeaderView.frame.height * 0.725)
         
         stackView.frame.origin = CGPoint(x: self.scrollView.frame.width/2 - stackView.frame.width/2, y: maskedHeaderView.frame.height * 0.3)
-        
-        shoppingCartButton.frame.origin = CGPoint(x: self.view.frame.maxX - (shoppingCartButton.frame.width * 0.95), y: self.view.frame.height/2 - shoppingCartButton.frame.height/2)
         
         self.view.addSubview(scrollView)
         self.view.addSubview(maskedHeaderView)
         self.view.addSubview(imageView)
         self.view.addSubview(addButton)
         self.view.addSubview(subtractButton)
-        self.view.addSubview(addToCartButton)
+        self.view.addSubview(updateCartButton)
         self.view.addSubview(itemCountDisplay)
-        self.view.addSubview(shoppingCartButton)
         
         scrollView.addSubview(stackView)
         stackView.addArrangedSubview(menuTypeLabel)
@@ -677,10 +604,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         stackView.addArrangedSubview(itemChoicesTableView)
         stackView.addArrangedSubview(specialInstructionsLabelContainer)
         stackView.addArrangedSubview(specialInstructionsTextViewContainer)
-        if displayRecommendations == true{
-            stackView.addArrangedSubview(recommendedForYouCollectionViewLabel)
-            stackView.addArrangedSubview(recommendedForYouCollectionViewContainer)
-        }
         
         /** Don't resize these views*/
         menuTypeLabel.translatesAutoresizingMaskIntoConstraints = true
@@ -692,9 +615,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         specialInstructionsTextView.translatesAutoresizingMaskIntoConstraints = true
         specialInstructionsTextViewContainer.translatesAutoresizingMaskIntoConstraints = true
         textViewCharLimitDisplay.translatesAutoresizingMaskIntoConstraints = true
-        recommendedForYouCollectionViewLabel.translatesAutoresizingMaskIntoConstraints = true
-        recommendedForYouCollectionViewContainer.translatesAutoresizingMaskIntoConstraints = true
-        recommendedForYouCollectionView.translatesAutoresizingMaskIntoConstraints = true
         
         scrollView.translatesAutoresizingMaskIntoConstraints = true
         scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -713,6 +633,9 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         /** Specify the content size of the scrollview in order to allow scrolling*/
         scrollView.contentSize = stackView.frame.size
+        
+        /** Display all appropriate UI elements*/
+        updateUpdateCartButton()
     }
     
     /** Provide a menu for this button*/
@@ -725,7 +648,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             
             itemCount = 0
             
-            updateAddToCartButton()
+            updateUpdateCartButton()
         }
         let by20 = UIAction(title: "-20", image: nil){ [self] action in
             lightHaptic()
@@ -733,7 +656,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             /** Don't go below the min quantity*/
             if (itemCount - 20) >= minItems{
                 itemCount -= 20
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             else{
                 /** Inform the user that they can't go below zero*/
@@ -745,7 +668,8 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             
             if (itemCount - 10) >= minItems{
                 itemCount -= 10
-                updateAddToCartButton()
+                
+                updateUpdateCartButton()
             }
             else{
                 globallyTransmit(this: "You can't have negative clothes!", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -757,7 +681,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount - 5) >= minItems{
                 itemCount -= 5
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             else{
                 globallyTransmit(this: "You can't have negative clothes!", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -769,7 +693,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount - 2) >= minItems{
                 itemCount -= 2
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             else{
                 globallyTransmit(this: "You can't have negative clothes!", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -781,7 +705,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount - 1) >= minItems{
                 itemCount -= 1
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             else{
                 globallyTransmit(this: "You can't have negative clothes!", with: UIImage(systemName: "tshirt.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: true)
@@ -809,7 +733,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             lightHaptic()
             
             itemCount = 0
-            updateAddToCartButton()
+            updateUpdateCartButton()
         }
         let by20 = UIAction(title: "+20", image: nil){ [self] action in
             lightHaptic()
@@ -818,7 +742,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount + 20) <= maxItems{
                 itemCount += 20
                 
-                updateAddToCartButton()
+            updateUpdateCartButton()
             }
             /** Max num of items reached, inform the user*/
             if itemCount == maxItems{
@@ -833,7 +757,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount + 10) <= maxItems{
                 itemCount += 10
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             if itemCount == maxItems{
                 itemCount = maxItems
@@ -847,7 +771,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount + 5) <= maxItems{
                 itemCount += 5
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             if itemCount == maxItems{
                 itemCount = maxItems
@@ -861,7 +785,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount + 2) <= maxItems{
                 itemCount += 2
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             if itemCount == maxItems{
                 itemCount = maxItems
@@ -875,7 +799,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             if (itemCount + 1) <= maxItems{
                 itemCount += 1
                 
-                updateAddToCartButton()
+                updateUpdateCartButton()
             }
             if itemCount == maxItems{
                 itemCount = maxItems
@@ -927,9 +851,26 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         helpButton.layer.shadowColor = UIColor.darkGray.cgColor
         helpButton.addTarget(self, action: #selector(helpButtonPressed), for: .touchUpInside)
         addDynamicButtonGR(button: helpButton)
-        backButton.alpha = 1
+        helpButton.alpha = 1
         helpButton.isEnabled = true
         helpButtonItem.customView = helpButton
+        
+        imageConfiguration = UIImage.SymbolConfiguration(weight: .regular)
+        image = UIImage(systemName: "trash.fill", withConfiguration: imageConfiguration)
+        removeItemButton.frame.size.height = 35
+        removeItemButton.frame.size.width = removeItemButton.frame.size.height
+        removeItemButton.backgroundColor = bgColor
+        removeItemButton.tintColor = .red
+        removeItemButton.setImage(image, for: .normal)
+        removeItemButton.layer.cornerRadius = removeItemButton.frame.height/2
+        removeItemButton.isExclusiveTouch = true
+        removeItemButton.castDefaultShadow()
+        removeItemButton.layer.shadowColor = UIColor.darkGray.cgColor
+        removeItemButton.addTarget(self, action: #selector(removeItemButtonPressed), for: .touchUpInside)
+        addDynamicButtonGR(button: removeItemButton)
+        removeItemButton.alpha = 1
+        removeItemButton.isEnabled = true
+        removeItemButtonItem.customView = removeItemButton
         
         navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 90))
         navBar.delegate = self
@@ -937,7 +878,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         /** Specify the title of this view controller*/
         navItem.title = itemData.name
         navItem.leftBarButtonItem = backButtonItem
-        navItem.rightBarButtonItems = [helpButtonItem]
+        navItem.rightBarButtonItems = [removeItemButtonItem,helpButtonItem]
         navItem.largeTitleDisplayMode = .never
         navBar.setItems([navItem], animated: false)
         
@@ -1005,19 +946,8 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     }
     
     /** Button press methods*/
-    /** Present the cart associated with this session*/
-    @objc func shoppingCartButtonPressed(sender: UIButton){
-        let cartVC = ShoppingCartVC(cart: self.laundromatCart, displayAddMoreItemsButton: true)
-        
-        /** Popover full screen without canceling out the background content*/
-        cartVC.modalPresentationStyle = .overFullScreen
-        cartVC.modalTransitionStyle = .coverVertical
-        
-        self.present(cartVC, animated: true)
-    }
-    
     /** Add the item to the cart, if the item is already in the cart (with the same item choice) then simply increase that cart item's count by the given count of this item data*/
-    @objc func addToCartButtonPressed(sender: UIButton){
+    @objc func updateCartButtonPressed(sender: UIButton){
         guard internetAvailable == true else {
             errorShake()
             
@@ -1028,10 +958,15 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         forwardTraversalShake()
         
-        /** Add this mutated item to the cart and push these new changes to the remote in the delegate receiver*/
-        laundromatCart.addThis(item: itemData)
+        /** Update this mutated item in the cart and push these new changes to the remote in the delegate receiver*/
+        laundromatCart.hardUpdateThis(updatedItem: itemData, originalItem: originalItemData)
         
         updatePresentingViews()
+        
+        /** Resize the cart if necessary to reflect new selections and deleted items*/
+        if let vc = self.presentingViewController as? ShoppingCartVC{
+            vc.resize()
+        }
         
         /** Dismiss the keyboard if any*/
         view.endEditing(true)
@@ -1052,13 +987,59 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         }
     }
     
+    /** Remove this item from the cart*/
+    @objc func removeItemButtonPressed(sender: UIButton){
+        
+        /** Get confirmation from the user to remove this item*/
+        let alert = JCAlertController(title: "Remove Item?", message: "This will remove the following item from your cart", preferredStyle: .alert)
+        alert.accentColor = appThemeColor
+        alert.imageViewTintColor =  .red
+        alert.image = UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
+        alert.addAction(action: UIAction(title: "Cancel", handler: {_ in }), with: .cancel)
+        alert.addAction(action: UIAction(title: "Remove", handler: {[self] _ in
+            
+            /** If internet is available then allow the user to delete the item*/
+            if internetAvailable == true{
+                lightHaptic()
+         
+                self.laundromatCart.removeThis(item: originalItemData)
+                updateThisCart(cart: self.laundromatCart)
+                
+                /** If this is the last item in the cart then remove the entire cart and dismiss this view*/
+                if self.laundromatCart.items.count == 0{
+                    /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
+                    if let vc = self.presentingViewController as? ShoppingCartVC{
+                        let _ = vc.clearCart()
+                    }
+                    else{
+                        /** If no familiar view controller is presenting this detail view then just go forward with the operation*/
+                        forwardTraversalShake()
+                        
+                        globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
+                        
+                    deleteThisCart(cart: self.laundromatCart)
+                    }
+
+                self.dismiss(animated: true)
+                }
+            }
+            else{
+                errorShake()
+                
+                globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
+            }}), with: .destructive)
+        
+        alert.modalPresentationStyle = .overFullScreen
+        self.present(alert, animated: true)
+    }
+    
     /** Display help menu*/
     @objc func helpButtonPressed(sender: UIButton){
         mediumHaptic()
         
         sender.isEnabled = false
         
-        globallyTransmit(this: "In this section you can customize this service to best fit your needs, and even tell us specifically what you want done to your laundry.", with: UIImage(systemName: "lightbulb.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: fontColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: false)
+        globallyTransmit(this: "Here you can update your laundry items to reflect any changes you desire to be made to your original addition.", with: UIImage(systemName: "lightbulb.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: UIColor.clear, imageBorder: .borderlessSquircle, blurEffect: true, accentColor: fontColor, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .rightStrip, animated: true, duration: 3, selfDismiss: false)
     }
     
     @objc func backButtonPressed(sender: UIButton){
@@ -1076,7 +1057,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             self.itemCount += 1
             lightHaptic()
             
-            updateAddToCartButton()
+            updateUpdateCartButton()
         }
         else{
             itemCount = maxItems
@@ -1091,7 +1072,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             self.itemCount -= 1
             lightHaptic()
             
-            updateAddToCartButton()
+            updateUpdateCartButton()
         }
         else{
             itemData.count = 0
@@ -1198,8 +1179,8 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
                 /** Reload all the rows in this section except the one that was selected*/
                 tableView.reloadRows(at: rowIndexPaths, with: .none)
                 
-                /**Update the price of the cart, and the subtotal and the add to cart button's display*/
-                updateAddToCartButton()
+                /**Update the price of the cart, and the subtotal and the update cart button's display*/
+                updateUpdateCartButton()
             }
             else{
                 /** Only add the item choice to the selected dictionary if the set doesn't exceed the limit of the amount of item choices for that category*/
@@ -1246,15 +1227,15 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
                 /** Reload all the rows in this section except the one that was selected*/
                 tableView.reloadRows(at: rowIndexPaths, with: .none)
                 
-                /**Update the price of the cart, and the subtotal and the add to cart button's display*/
-                updateAddToCartButton()
+                /**Update the price of the cart, and the subtotal and the update cart button's display*/
+                updateUpdateCartButton()
             }
             
         }
     }
     
-    /** Update the add to cart button with the updated subtotal given a change to the quantity and or item choices*/
-    func updateAddToCartButton(){
+    /** Update the update cart button with the updated subtotal given a change to the quantity and or item choices*/
+    func updateUpdateCartButton(){
         itemData.count = itemCount
         subtotal = itemData.getSubtotal()
         
@@ -1263,21 +1244,21 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         if areRequirementsSatisfied() == true && isSpecialInstructionsUnderCharLimit() == true{
             UIView.animate(withDuration: 0.5, delay: 0){[self] in
-                addToCartButton.alpha = 1
+                updateCartButton.alpha = 1
             }
-            addToCartButton.isEnabled = true
+            updateCartButton.isEnabled = true
         }
         else{
             UIView.animate(withDuration: 0.5, delay: 0){[self] in
-                addToCartButton.alpha = 0.5
+                updateCartButton.alpha = 0.5
             }
-            addToCartButton.isEnabled = false
+            updateCartButton.isEnabled = false
         }
+        
+        updateCartButton.setTitle(" Update Cart (\(itemCount)) $\(String(format: "%.2f", itemData.getSubtotal()))", for: .normal)
         
         /** Display price and quantity info if the item has a count greater than 0*/
         if itemCount > 0{
-            addToCartButton.setTitle(" Add to Cart (\(itemCount)) $\(String(format: "%.2f", itemData.getSubtotal()))", for: .normal)
-            
             /** Enable subtract button*/
             UIView.animate(withDuration: 0.5, delay: 0){[self] in
                 itemCountDisplay.alpha = 1
@@ -1287,8 +1268,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
             }
         }
         else{
-            addToCartButton.setTitle(" Add to Cart", for: .normal)
-            
             /** Disable subtract button*/
             UIView.animate(withDuration: 0.5, delay: 0){[self] in
                 itemCountDisplay.alpha = 0
@@ -1449,7 +1428,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         
         itemsChoicesPerCatergory = [:]
         
-        for choice in itemData.itemChoices{
+        for choice in originalItemData.itemChoices{
             /** Initialize the array for the given category string and append each item to the array for that key*/
             if itemsChoicesPerCatergory![choice.category] == nil{
                 itemsChoicesPerCatergory![choice.category] = []
@@ -1540,93 +1519,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     }
     /** Tableview delegate methods*/
     
-    /** Collectionview delegate methods*/
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var count = 0
-        
-        if collectionView == recommendedForYouCollectionView{
-            count = laundromatMenu.items.count
-        }
-        
-        return count
-    }
-    
-    /** Supplement data to the collection view*/
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var cell = UICollectionViewCell()
-        
-        /** Identify the collectionview in question*/
-        if collectionView == recommendedForYouCollectionView{
-            let orderItemCell = collectionView.dequeueReusableCell(withReuseIdentifier: OrderItemCollectionViewCell.identifier, for: indexPath) as! OrderItemCollectionViewCell
-            
-            guard laundromatMenu.items.isEmpty == false else {
-                return cell
-            }
-            
-            var itemsArray: [OrderItem] = []
-            for item in laundromatMenu.items{
-                itemsArray.append(item)
-            }
-            
-            orderItemCell.create(with: itemsArray[indexPath.row], cart: laundromatCart)
-            orderItemCell.presentingVC = self
-            orderItemCell.presentingTableView = presentingTableView
-            
-            /** The presenting collection view must be in memory*/
-            if displayRecommendations == true{
-                orderItemCell.presentingCollectionView = recommendedForYouCollectionView
-            }
-            
-            /** If this item is already in the user's cart then highlight the cell*/
-            orderItemCell.updateBorder()
-            
-            cell = orderItemCell
-        }
-        
-        return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width/3, height: collectionViewHeight)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        mediumHaptic()
-        
-        let cell = collectionView.cellForItem(at: indexPath) as! OrderItemCollectionViewCell
-        
-        /** Present the detail views for the following cells*/
-        if collectionView == recommendedForYouCollectionView{
-            let vc = OrderItemDetailVC(itemData: cell.itemData, laundromatCart: laundromatCart, laundromatMenu: laundromatMenu)
-            vc.presentingTableView = presentingTableView
-            
-            /** The presenting collection view must be in memory*/
-            if displayRecommendations == true{
-                vc.presentingCollectionView = recommendedForYouCollectionView
-            }
-            
-            /** Don't display another recommendations collectionview*/
-            vc.displayRecommendations = false
-            
-            /** Prevent the user from using interactive dismissal*/
-            vc.isModalInPresentation = true
-            self.show(vc, sender: self)
-        }
-    }
-    /** Collectionview delegate methods*/
-    
     /** Textview delegate methods*/
     public func textViewDidChange(_ textView: UITextView){
         currentTextViewCharCount = textView.text.count
@@ -1706,16 +1598,6 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
                     
                     navBar.standardAppearance = standardAppearance
                     navBar.scrollEdgeAppearance = standardAppearance
-                }
-            }
-        }
-        else if UIScrollView == recommendedForYouCollectionView{
-            /** Hide the editing UI when the collectionview scrolls*/
-            for cell in recommendedForYouCollectionView.visibleCells{
-                if let tableViewCell = cell as? OrderItemCollectionViewCell{
-                    if tableViewCell.editingItemCount == true{
-                        tableViewCell.hideEditingUI(animated: true)
-                    }
                 }
             }
         }
