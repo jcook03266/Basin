@@ -23,17 +23,17 @@ Welcome to the only laundromat and dry cleaning service platform that can satisf
 - Enhanced security through secured backend communication as a result of firebase's user Authentication rules that prevent unauthorized parties from accessing sensitive data.
 
 ### Notable Libraries and Frameworks:
-- Firebase (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
-- Google Maps | (Front-end) -> User Navigation
-- Stripe | (Front-end / Backend) -> Payment Processing
-- Nuke | (Front-end) -> Image loading and caching
-- Lottie iOS | (Front-end) -> After Effects JSON Animations
-- Google Places | (Backend) -> Geocoding and Reverse Geocoding
-- PhoneNumberKit | (Front-end) -> Parse phone numbers into objects on the fly
-- IQKeyboardManager | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
-- FBSDKLoginKit & Google Sign In | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
+- **Firebase** (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
+- **Google Maps** | (Front-end) -> User Navigation
+- **Stripe** | (Front-end / Backend) -> Payment Processing
+- **Nuke** | (Front-end) -> Image loading and caching
+- **Lottie iOS** | (Front-end) -> After Effects JSON Animations
+- **Google Places** | (Backend) -> Geocoding and Reverse Geocoding
+- **PhoneNumberKit** | (Front-end) -> Parse phone numbers into objects on the fly
+- **IQKeyboardManager** | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
+- **FBSDKLoginKit & Google Sign In** | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
 
-Note: All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
+**Note:** All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
 
 ### How is this App Structured?
 - #### Basin is structured around 3 authorized user bases:
