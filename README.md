@@ -53,4 +53,4 @@ Open source contributions are not allowed at this time, this application contain
 ## License:
 MIT License
 
-Copyright (c) 2022 Justin Cook
+Copyright © 2022 Justin Cook
