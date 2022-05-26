@@ -51,4 +51,6 @@ These two extraneous user types are only permissible on the website [Basin.io](h
 Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
 
 ## License:
+MIT License
 
+Copyright (c) 2022 Justin Cook
