@@ -5,6 +5,6 @@
 
 ![gif](Hero.jpg)
 
-##Meet Brookyln's Premiere Laundry Service
+## Meet Brookyln's Premiere Laundry Service
 
 Welcome to the only laundromat and dry cleaning service platform that can satisfy Brooklyn's constant hustle and bustle. Whether picking up laundry, dropping it off, or getting it delivered, Basin is here every step of the way
