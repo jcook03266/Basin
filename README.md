@@ -33,13 +33,13 @@ Welcome to the only laundromat and dry cleaning service platform that can satisf
 - IQKeyboardManager | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
 - FBSDKLoginKit & Google Sign In | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
 
-Note: All libraries and frameworks are made possible through CocoaPods(https://cocoapods.org/)
+Note: All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
 
 ### How is this App Structured?
-Basin is structured around 3 authorized user bases:
-- Customers (Remote / Transient Clients)
-- Delivery Drivers (Transient Clients)
-- Business Employees (Point of Sale Clients) 
+- #### Basin is structured around 3 authorized user bases:
+..- Customers (Remote / Transient Clients)
+..- Delivery Drivers (Transient Clients)
+..- Business Employees (Point of Sale Clients) 
 
 Customers and Delivery driver users are considered transients meaning they operate in one location for short periods of time, they're on the move and should be treated as such. The Business clients are considered fixed, their data propagation and UI reflect this fixed nature, their UI doesn't operate around movement, rather confirming orders, updating received orders to provide customers with real-time data, and marking orders for delivery.
 
