@@ -10,7 +10,7 @@
 Welcome to the only laundromat and dry cleaning service platform that can satisfy Brooklyn's constant hustle and bustle. Whether picking up laundry, dropping it off, or getting it delivered, Basin is here every step of the way 💪
 
 ## Proudly Partnered With:
-- [Stuy Wash N' Dry]([https://www.google.com](https://www.stuywashndryny.com/)) 
+### [Stuy Wash N' Dry](https://www.stuywashndryny.com/)
 
 ## Q&A:
 ### What Does Basin Offer?
