@@ -47,5 +47,8 @@ The app supports 3 of the enumerated user types, but outside of this the platfor
 
 These two extraneous user types are only permissible on the website [Basin.io](https://www.basin.io). The web app allows for all data-sensitive operations to be carried out in a clean, high fidelity, professional, and secure environment. The employees of said business can also use the website, with the only exception being delivery drivers and customers who are locked to the mobile application for now due to the complexity of implementation.
 
+## Contributions:
+Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
+
 ## License:
 
