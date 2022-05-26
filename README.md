@@ -37,9 +37,9 @@ Note: All libraries and frameworks are made possible through [CocoaPods](https:/
 
 ### How is this App Structured?
 - #### Basin is structured around 3 authorized user bases:
-..- Customers (Remote / Transient Clients)
-..- Delivery Drivers (Transient Clients)
-..- Business Employees (Point of Sale Clients) 
+  - Customers (Remote / Transient Clients)
+  - Delivery Drivers (Transient Clients)
+  - Business Employees (Point of Sale Clients) 
 
 Customers and Delivery driver users are considered transients meaning they operate in one location for short periods of time, they're on the move and should be treated as such. The Business clients are considered fixed, their data propagation and UI reflect this fixed nature, their UI doesn't operate around movement, rather confirming orders, updating received orders to provide customers with real-time data, and marking orders for delivery.
 
