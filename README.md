@@ -15,7 +15,25 @@ Welcome to the only laundromat and dry cleaning service platform that can satisf
 ## Q&A:
 ### What Does Basin Offer?
 - Residental & Commercial laundry pick-up/delivery services so that you never have to even look at your dirty clothes.
+- Fast & reliable service with a direct communication layer to drivers and laundromats at the press of a button.
+- Multiple affordable pricing model for businesses.
+- Fair pricing for customers as a result of third-party advertising and revenue from business pricing models.
+- Livable wages for delivery personnel regardless of tipping.
+- Clean, modern, professional, responsive, and tactile UI that promotes readability and usability for all ages through dynamic content size support.
+- Enhanced security through secured backend communication as a result of firebase's user Authentication rules that prevent unauthorized parties from accessing sensitive data.
 
+### Notable Libraries and Frameworks:
+- Firebase (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
+- Google Maps | (Front-end) -> User Navigation
+- Stripe | (Front-end / Backend) -> Payment Processing
+- Nuke | (Front-end) -> Image loading and caching
+- Lottie iOS | (Front-end) -> After Effects JSON Animations
+- Google Places | (Backend) -> Geocoding and Reverse Geocoding
+- PhoneNumberKit | (Front-end) -> Parse phone numbers into objects on the fly
+- IQKeyboardManager | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
+- FBSDKLoginKit & Google Sign In | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
+
+Note: All libraries and frameworks are made possible through CocoaPods(https://cocoapods.org/)
 
 ### How is this App Structured?
 Basin is structured around 3 authorized user bases:
