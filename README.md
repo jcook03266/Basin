@@ -21,7 +21,6 @@ Personally I don't use laundromats to wash my clothes, so my mission is to make 
 
 ## Q&A:
 ### What Does Basin Offer?
-  <details>
 - Residental & Commercial laundry pick-up/delivery services so that you never have to even look at your dirty clothes.
 - Fast & reliable service with a direct communication layer to drivers and laundromats at the press of a button.
 - Multiple affordable pricing model for businesses.
