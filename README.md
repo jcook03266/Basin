@@ -1,7 +1,8 @@
 # Basin - Washing and Drying Made Simple
-[![Generic badge](https://img.shields.io/badge/Swift-5.1-orange.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/Platforms-iOS|Web|Android-blue.svg)](https://shields.io/)
+[![Swift Version badge](https://img.shields.io/badge/Swift-5.1-orange.svg)](https://shields.io/)
+[![Platforms description badge](https://img.shields.io/badge/Platforms-iOS|Web|Android-blue.svg)](https://shields.io/)
 [![GitHub version](https://badge.fury.io/gh/jcook03266%2FBasin.svg)](https://badge.fury.io/gh/jcook03266%2FBasin)
+[![License Badge](https://img.shields.io/github/license/<jcook03266>/<Basin>)
 
 ![Hero Image](Hero.jpg)
 
