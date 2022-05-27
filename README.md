@@ -18,7 +18,7 @@ Beyond helping local businesses cater to their modern userbase in order to boost
 Personally, I don't use laundromats to wash my clothes, so my mission is to make this platform so worth it that even I will consider using it to wash my own clothes. That's the end goal for this product, to inspire people to use it and free up their spare time each and every week by using Basin.
 
 ## Proudly Partnered With:
-### [Stuy Wash N' Dry](https://www.stuywashndryny.com/)
+### 🤝 [Stuy Wash N' Dry](https://www.stuywashndryny.com/)
 
 ## Q&A:
 ### What Does Basin Offer?
