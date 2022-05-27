@@ -72,6 +72,9 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 
 - These two extraneous user types are only permissible on the website [Basin.io](https://www.basin.io). The web app allows for all data-sensitive operations to be carried out in a clean, high fidelity, professional, and secure environment. The employees of said business can also use the website, with the only exception being delivery drivers and customers who are locked to the mobile application for now due to the complexity of implementation.
 
+#How can I use Basin? 
+The iOS version of the app is currently being developed as we speak, but when the customer portion of the app is relatively complete (>= 90%) then I will upload the application to testflight and allow users to download and experience Basin. Current development is blazing fast, it's really only limited by ability to type and stay awake at this point, so I realistically expect the app to be on testflight very soon. And above all, thanks for your patience.
+
 ## Contributions:
 Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
 
