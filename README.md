@@ -17,7 +17,7 @@ Beyond helping local businesses cater to their modern userbase in order to boost
 Personally I don't use laundromats to wash my clothes, so my mission is to make this platform so worth it that even I will consider using it to wash my own clothes. That's the end goal for this product, to inspire people to use it and free up their spare time each and every week by using Basin.
 
 ## Proudly Partnered With:
-### `[Stuy Wash N' Dry](https://www.stuywashndryny.com/)`
+### [Stuy Wash N' Dry](https://www.stuywashndryny.com/)
 
 
 
@@ -46,7 +46,9 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
   - 25% Fee on total order profit for delivery orders
   - 10% Fee on total order profit for pickup orders
 
-```**Note:** Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.```
+```
+**Note:** Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
+```
 
 ### Notable Libraries and Frameworks:
 - **Firebase 🔥** (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
@@ -59,7 +61,9 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 - **IQKeyboardManager ⌨️** | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
 - **FBSDKLoginKit & Google Sign In 🔐** | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
 
-```**Note:** All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)```
+```
+**Note:** All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
+```
 
 ### How is this App Structured?
 - #### Basin is structured around 3 authorized user bases:
