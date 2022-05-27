@@ -29,7 +29,7 @@ Personally I don't use laundromats to wash my clothes, so my mission is to make 
 - Clean, modern, professional, responsive, and tactile UI that promotes readability and usability for all ages through dynamic content size support.
 - Enhanced security through secured backend communication as a result of firebase's user Authentication rules that prevent unauthorized parties from accessing sensitive data.
 
-<## What is The Revenue Model For This Platform?>
+## What is The Revenue Model For This Platform?
 Basin shares a similar revenue model to that of Uber's Ubereats platform in the sense that businesses are charged fixed one-time setup fees, and are structured using a business subscription tier system. Each business tier system delegates a priority level to that business's performance and satisfaction, it is our mission to make the higher tier businesses as profitable as possible through diverse and aggression advertising and algorithmic weighting in search results. Ultimately, the higher the tier of the business' subscription the more we split their total revenue from orders. Each business subscription tier is enumerated below:
 
 - **Basic Bucket: `(Low Priority) 💧`**
@@ -43,7 +43,6 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 - **Washing Machine: `(High Priority) 🌊`**
   - 25% Fee on total order profit for delivery orders
   - 10% Fee on total order profit for pickup orders
-  </>
 
 > Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
 
@@ -66,7 +65,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
   - Delivery Drivers 🚘 (Transient Clients)
   - Business Employees 👨‍💻 (Point of Sale Clients) 
 
--Customers and Delivery driver users are considered transients meaning they operate in one location for short periods of time, they're on the move and should be treated as such. The Business clients are considered fixed, their data propagation and UI reflect this fixed nature, their UI doesn't operate around movement, rather confirming orders, updating received orders to provide customers with real-time data, and marking orders for delivery.
+- Customers and Delivery driver users are considered transients meaning they operate in one location for short periods of time, they're on the move and should be treated as such. The Business clients are considered fixed, their data propagation and UI reflect this fixed nature, their UI doesn't operate around movement, rather confirming orders, updating received orders to provide customers with real-time data, and marking orders for delivery.
 
   - The app supports 3 of the enumerated user types, but outside of this the platform's backend architecture is structured around 5 user types, with business administrator being 1, and developer being the last and highest level. Business administrators are above employees, they are the owners of the laundromats and or trusted high-level associates that require access to all of the business's data. Administrators can create each physical location and supply it with descriptive metadata, and if not desired an engineer can go out to the location to take photos and gather other important information about the site to create an online entity representing it. 
 
