@@ -47,7 +47,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
   - 10% Fee on total order profit for pickup orders
 
 ```
-**Note:** Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
+Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
 ```
 
 ### Notable Libraries and Frameworks:
@@ -62,7 +62,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 - **FBSDKLoginKit & Google Sign In 🔐** | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
 
 ```
-**Note:** All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
+Note: All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
 ```
 
 ### How is this App Structured?
