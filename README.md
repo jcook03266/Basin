@@ -1,4 +1,4 @@
-# Basin - Wash N' Dry
+# Basin - Washing and Drying Made Simple
 [![Generic badge](https://img.shields.io/badge/Swift-5.1-orange.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/Platforms-iOS|Web|Android-blue.svg)](https://shields.io/)
 [![GitHub version](https://badge.fury.io/gh/jcook03266%2FBasin.svg)](https://badge.fury.io/gh/jcook03266%2FBasin)
@@ -46,7 +46,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 
 > Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
 
-### Notable Libraries and Frameworks:
+### Notable Libraries and Frameworks Used:
 - **Firebase 🔥** (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
 - **Google Maps 🗺** | (Front-end) -> User Navigation
 - **Stripe 💳** | (Front-end / Backend) -> Payment Processing
