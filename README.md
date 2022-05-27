@@ -12,17 +12,17 @@ Welcome to the only laundromat and dry cleaning service platform that can satisf
 Local Brooklyn laundromats and dry cleaners can finally rejoice because an affordable, modern, and professional solution is now being handcrafted to best suit their needs. And best suit their needs it will because I'm currently working side-by-side with a local multi-location laundromat business to deliver a product that checks off all possible boxes of satisfactory service, nothing less, but much more in store. 
 
 ## My Mission
-Beyond helping local businesses cater to their modern userbase in order to boost their profit margins, I want to be able to provide jobs for the less fortunate by offering competitve rates for delivery drivers. We all deserve to live decent lives at the end of the day, and most delivery drivers can't do so because one missed tip can make or break their entire day of earning. Therefore, I want this app to be successful, not only for my own gain, but the gain of the communities in which it will be utilized in. We have to protect the local communities and enrich them; I don't want a random platform from the UK coming in and not doing NYC justice with proper service, NYC deserves the best possible solution, and this is only possible by somone who lives there. 
+Beyond helping local businesses cater to their modern userbase in order to boost their profit margins, I want to be able to provide jobs for the less fortunate by offering competitive rates for delivery drivers. We all deserve to live decent lives at the end of the day, and most delivery drivers can't do so because one missed tip can make or break their entire day of earnings. Therefore, I want this app to be successful, not only for my own gain, but for the gain of the communities in which it will be utilized in. We have to protect the local communities and enrich them; I don't want a random platform from the UK coming in and not doing NYC justice with proper service, NYC deserves the best possible solution, and this is only possible by someone who lives there. 
 
 ## My Goal
-Personally I don't use laundromats to wash my clothes, so my mission is to make this platform so worth it that even I will consider using it to wash my own clothes. That's the end goal for this product, to inspire people to use it and free up their spare time each and every week by using Basin.
+Personally, I don't use laundromats to wash my clothes, so my mission is to make this platform so worth it that even I will consider using it to wash my own clothes. That's the end goal for this product, to inspire people to use it and free up their spare time each and every week by using Basin.
 
 ## Proudly Partnered With:
 ### [Stuy Wash N' Dry](https://www.stuywashndryny.com/)
 
 ## Q&A:
 ### What Does Basin Offer?
-- Residental & Commercial laundry pick-up/delivery services so that you never have to even look at your dirty clothes.
+- Residential & Commercial laundry pick-up/delivery services so that you never have to even look at your dirty clothes.
 - Fast & reliable service with a direct communication layer to drivers and laundromats at the press of a button.
 - Multiple affordable pricing model for businesses.
 - Fair pricing for customers as a result of third-party advertising and revenue from business pricing models.
@@ -31,7 +31,7 @@ Personally I don't use laundromats to wash my clothes, so my mission is to make 
 - Enhanced security through secured backend communication as a result of firebase's user Authentication rules that prevent unauthorized parties from accessing sensitive data.
 
 ## What is The Revenue Model For This Platform?
-Basin shares a similar revenue model to that of Uber's Ubereats platform in the sense that businesses are charged fixed one-time setup fees, and are structured using a business subscription tier system. Each business tier system delegates a priority level to that business's performance and satisfaction, it is our mission to make the higher tier businesses as profitable as possible through diverse and aggression advertising and algorithmic weighting in search results. Ultimately, the higher the tier of the business' subscription the more we split their total revenue from orders. Each business subscription tier is enumerated below:
+Basin shares a similar revenue model to that of Uber's Ubereats platform in the sense that businesses are charged fixed one-time setup fees, and are structured using a business subscription tier system. Each business tier system delegates a priority level to that business's performance and satisfaction, it is our mission to make the higher tier businesses as profitable as possible through diverse and aggressive advertising and algorithmic weighting in search results. Ultimately, the higher the tier of the business' subscription the more we split their total revenue from orders. Each business subscription tier is enumerated below:
 
 - **Basic Bucket: `(Low Priority) 💧`**
   - 15% Fee on total order profit for delivery orders
@@ -45,7 +45,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
   - 25% Fee on total order profit for delivery orders
   - 10% Fee on total order profit for pickup orders
 
-> Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
+> Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, that have been deducted from the payment entity record. It is essentially the subtotal of the order.
 
 ### Notable Libraries and Frameworks Used:
 - **Firebase 🔥** (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
@@ -73,7 +73,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 - These two extraneous user types are only permissible on the website [Basin.io](https://www.basin.io). The web app allows for all data-sensitive operations to be carried out in a clean, high fidelity, professional, and secure environment. The employees of said business can also use the website, with the only exception being delivery drivers and customers who are locked to the mobile application for now due to the complexity of implementation.
 
 #How can I use Basin? 
-The iOS version of the app is currently being developed as we speak, but when the customer portion of the app is relatively complete (>= 90%) then I will upload the application to testflight and allow users to download and experience Basin. Current development is blazing fast, it's really only limited by ability to type and stay awake at this point, so I realistically expect the app to be on testflight very soon. And above all, thanks for your patience.
+The iOS version of the app is currently being developed as we speak, but when the customer portion of the app is relatively complete (>= 90%) then I will upload the application to testflight and allow users to download and experience Basin. Current development is blazing fast, it's really only limited by my ability to type fast and stay awake at this point, so realistically, I expect the app to be on testflight very soon. And above all, thanks for your patience.
 
 ## Contributions:
 Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
