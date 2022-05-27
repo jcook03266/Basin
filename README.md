@@ -6,15 +6,15 @@
 
 ![Hero Image](Hero.jpg)
 
-## Meet Brookyln's Premiere Laundry Service
+## Meet Brookyln's Premiere Laundry Service 👋
 Welcome to the only laundromat and dry cleaning service platform that can satisfy Brooklyn's constant hustle and bustle. Whether picking up laundry, dropping it off, or getting it delivered, Basin is here every step of the way 💪
 
 Local Brooklyn laundromats and dry cleaners can finally rejoice because an affordable, modern, and professional solution is now being handcrafted to best suit their needs. And best suit their needs it will because I'm currently working side-by-side with a local multi-location laundromat business to deliver a product that checks off all possible boxes of satisfactory service, nothing less, but much more in store. 
 
-## My Mission
+## My Mission 💙
 Beyond helping local businesses cater to their modern userbase in order to boost their profit margins, I want to be able to provide jobs for the less fortunate by offering competitive rates for delivery drivers. We all deserve to live decent lives at the end of the day, and most delivery drivers can't do so because one missed tip can make or break their entire day of earnings. Therefore, I want this app to be successful, not only for my own gain, but for the gain of the communities in which it will be utilized in. We have to protect the local communities and enrich them; I don't want a random platform from the UK coming in and not doing NYC justice with proper service, NYC deserves the best possible solution, and this is only possible by someone who lives there. 
 
-## My Goal
+## My Goal 🥇
 Personally, I don't use laundromats to wash my clothes, so my mission is to make this platform so worth it that even I will consider using it to wash my own clothes. That's the end goal for this product, to inspire people to use it and free up their spare time each and every week by using Basin.
 
 ## Proudly Partnered With:
