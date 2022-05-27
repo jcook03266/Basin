@@ -46,9 +46,7 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
   - 25% Fee on total order profit for delivery orders
   - 10% Fee on total order profit for pickup orders
 
-```
 Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, have been deducted from the payment entity record. It is essentially the subtotal of the order.
-```
 
 ### Notable Libraries and Frameworks:
 - **Firebase 🔥** (Cloud, Auth, Core, Storage, Store, Analytics, AdMob) | (Front-end / Backend) -> Backend API, File Storage, Database, Analytics, Advertisements
@@ -61,10 +59,10 @@ Note: Total order profit is the amount of money after taxes, service fees, and d
 - **IQKeyboardManager ⌨️** | (Front-end) -> Allows the UI to be dynamically centered around textfields to prevent blockage by the keyboard
 - **FBSDKLoginKit & Google Sign In 🔐** | (Front-end / Backend) -> Authenticate a user with facebook or google, connects with firebase
 
-```
-Note: All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
-```
+> Note: All libraries and frameworks are made possible through [CocoaPods](https://cocoapods.org/)
 
+<details>
+<summary>How is this App Structured?</summary>
 ### How is this App Structured?
 - #### Basin is structured around 3 authorized user bases:
   - Customers 🙋‍♂️ (Remote / Transient Clients)
