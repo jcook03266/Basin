@@ -1,0 +1,56 @@
+{
+  "identifier" : "CFFA9FBE",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "74F841BA",
+      "localizations" : [
+
+      ],
+      "name" : "Group 1",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "DEB08DB1",
+          "introductoryOffer" : {
+            "internalID" : "88AF5B1C",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "JCDev.Basin.Monthly.Bucket",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Bucket",
+          "subscriptionGroupID" : "74F841BA",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 2
+  }
+}

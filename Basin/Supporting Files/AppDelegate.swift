@@ -18,18 +18,22 @@ import FirebaseAnalytics
 import GoogleMaps
 import GooglePlaces
 import GoogleMobileAds
+import Stripe
+import FirebaseFunctions
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
-        
         /**Override point for customization after application launch.*/
         
+        /** Test keys, please replace*/
+        StripeAPI.defaultPublishableKey = stripeDefaultPublishableKey
+        
         /** Google maps*/
-        GMSServices.provideAPIKey("AIzaSyCQRUBIK2bCOigBdinELy1WhdlyeqZ9sP8")
-        GMSPlacesClient.provideAPIKey("AIzaSyCQRUBIK2bCOigBdinELy1WhdlyeqZ9sP8")
+        GMSServices.provideAPIKey(GMSAPIKey)
+        GMSPlacesClient.provideAPIKey(GMSAPIKey)
         
         /** Mobile ads*/
         GADMobileAds.sharedInstance().start(completionHandler: nil)

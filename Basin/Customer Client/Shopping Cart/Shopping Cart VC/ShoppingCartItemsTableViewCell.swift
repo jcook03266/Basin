@@ -285,9 +285,11 @@ class ShoppingCartItemsTableViewCell: UITableViewCell{
         
         /** Rest*/
         if sender.state == .ended || sender.state == .cancelled || sender.state == .failed{
-            /** Enable scrolling when the pan gesture ends*/
+            /** Enable scrolling when the pan gesture ends (if allowed by the presenting vc)*/
             if presentingTableView != nil{
-                presentingTableView!.isScrollEnabled = true
+                if let vc = presentingVC as? ShoppingCartVC{
+                presentingTableView!.isScrollEnabled = vc.scrollingEnabled
+                }
             }
             
             if containerEdge <= panGestureThreshold/2{

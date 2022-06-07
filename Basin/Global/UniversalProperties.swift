@@ -54,6 +54,9 @@ func loadDarkmodestate(){
     if let bool = UserDefaults.standard.object(forKey: "Darkmode") as? Bool{
         darkMode = bool
     }
+    else{
+        //saveDarkmodestate()
+    }
 }
 
 /**Save the state of the darkmode switch*/

@@ -12,5 +12,9 @@
 	<array>
 		<string>webcredentials:Basin.io</string>
 	</array>
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.Basin</string>
+	</array>
 </dict>
 </plist>

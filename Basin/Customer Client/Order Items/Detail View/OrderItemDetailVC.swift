@@ -227,12 +227,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
     
     /** Construct the UI for this VC*/
     func constructUI(){
-        switch darkMode{
-        case true:
-            self.view.backgroundColor = .black
-        case false:
-            self.view.backgroundColor = bgColor
-        }
+        self.view.backgroundColor = darkMode ? .black : bgColor
         
         maskedHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height * 0.25))
         maskedHeaderView.backgroundColor = appThemeColor
@@ -915,7 +910,7 @@ public class OrderItemDetailVC: UIViewController, UINavigationBarDelegate, UITab
         backButtonItem.customView = backButton
         
         imageConfiguration = UIImage.SymbolConfiguration(weight: .regular)
-        image = UIImage(systemName: "questionmark", withConfiguration: imageConfiguration)
+        image = UIImage(systemName: "lightbulb.circle", withConfiguration: imageConfiguration)
         helpButton.frame.size.height = 35
         helpButton.frame.size.width = helpButton.frame.size.height
         helpButton.backgroundColor = bgColor

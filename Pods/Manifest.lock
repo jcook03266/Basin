@@ -307,6 +307,9 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30908.0)
+  - FirebaseFunctions (7.11.0):
+    - FirebaseCore (~> 7.0)
+    - GTMSessionFetcher/Core (~> 1.4)
   - FirebaseInstallations (7.11.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
@@ -410,6 +413,20 @@ PODS:
     - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (1.2.12)
   - SkeletonView (1.29.2)
+  - Stripe (22.4.0):
+    - Stripe/Stripe3DS2 (= 22.4.0)
+    - StripeApplePay (= 22.4.0)
+    - StripeCore (= 22.4.0)
+    - StripeUICore (= 22.4.0)
+  - Stripe/Stripe3DS2 (22.4.0):
+    - StripeApplePay (= 22.4.0)
+    - StripeCore (= 22.4.0)
+    - StripeUICore (= 22.4.0)
+  - StripeApplePay (22.4.0):
+    - StripeCore (= 22.4.0)
+  - StripeCore (22.4.0)
+  - StripeUICore (22.4.0):
+    - StripeCore (= 22.4.0)
 
 DEPENDENCIES:
   - FBSDKLoginKit
@@ -419,6 +436,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - FirebaseAnalytics
   - FirebaseCrashlytics
+  - FirebaseFunctions
   - FirebaseStorage
   - Google-Mobile-Ads-SDK
   - GoogleMaps
@@ -429,6 +447,7 @@ DEPENDENCIES:
   - Nuke
   - PhoneNumberKit (~> 3.3)
   - SkeletonView
+  - Stripe
 
 SPEC REPOS:
   trunk:
@@ -446,6 +465,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCrashlytics
     - FirebaseFirestore
+    - FirebaseFunctions
     - FirebaseInstallations
     - FirebaseStorage
     - Google-Mobile-Ads-SDK
@@ -468,6 +488,10 @@ SPEC REPOS:
     - PhoneNumberKit
     - PromisesObjC
     - SkeletonView
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeUICore
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -484,6 +508,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 68ad972f99206cef818230f3f3179d52ccfb7f8c
   FirebaseCrashlytics: 272b675aa9d1e9bae1f9e1449fcc1f2cf6042806
   FirebaseFirestore: f495bb336b23eca23ea5d3605dce2a4cc214fde9
+  FirebaseFunctions: cf3d041e5292b1c4bda868d542071a0f8291a4d4
   FirebaseInstallations: a58d4f72ec5861840b84df489f2668d970df558a
   FirebaseStorage: 8542711850ca181a3931c0ed483006a7b46039e7
   Google-Mobile-Ads-SDK: 2f288748a42920d1c744946a460896a95b0e9110
@@ -506,7 +531,11 @@ SPEC CHECKSUMS:
   PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   SkeletonView: 915a80ecc2b6421ab7ac0f0212321c0cc1406472
+  Stripe: a925dfa9a7e51aa8f782f428abc10cb828b45a85
+  StripeApplePay: 369857bafe8baf02e31b47478db1574febd2a2f3
+  StripeCore: a94d2823817c97c79fce60884ab9027a2da798c1
+  StripeUICore: a8e24a6c91a5c99075c7a490d45695fb912876e8
 
-PODFILE CHECKSUM: 495ece13291a4624a89bd5116b4b4e264361e166
+PODFILE CHECKSUM: 3a85b34130a41c070b6cc18ffae3ebcb1f617641
 
 COCOAPODS: 1.11.3

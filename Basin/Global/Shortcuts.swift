@@ -10,7 +10,6 @@ import UIKit
 /** A bunch of short cut extensions to make life easier*/
 
 extension UILabel{
-    
     /** Centers text and makes the font size adjustable*/
     func centeredTextDynamicFontSize(){
         self.textAlignment = .center
@@ -20,7 +19,6 @@ extension UILabel{
 }
 
 extension UIView{
-    
     /** Center this uiview inside of the given parent view*/
     func centerInsideOf(this parentView: UIView){
         self.frame.origin = CGPoint(x: parentView.frame.width/2 - self.frame.width/2, y: parentView.frame.height/2 - self.frame.height/2)

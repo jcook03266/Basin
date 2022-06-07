@@ -34,8 +34,6 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
     let minItems = 0
     /** The count to increase the passed item's count by (not replace)*/
     var itemCount: Int = 0
-    /** The subtotal value, this item's total count * the individual value of the item (after choice is specified) if no choice then the default price */
-    var subtotal: Double = 0
     /** Internal Data*/
     
     /** Functional UI*/
@@ -141,11 +139,11 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
     /** Pass over necessary data and containers for this view controller to interact with*/
     init(itemData: OrderItem, laundromatCart: Cart, laundromatMenu: LaundromatMenu) {
         
-        /** Create a copy of the passed item in a new memory address in order to mutate the item without affecting the other object*/
-        self.itemData = itemData.copy() as! OrderItem
-        
         /** Keep an original reference to the given item*/
         self.originalItemData = itemData
+        
+        /** Create a copy of the passed item in a new memory address in order to mutate the item without affecting the other object*/
+        self.itemData = itemData.copy() as! OrderItem
         self.itemCount = itemData.count
         
         self.laundromatCart = laundromatCart
@@ -216,12 +214,7 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
     
     /** Construct the UI for this VC*/
     func constructUI(){
-        switch darkMode{
-        case true:
-            self.view.backgroundColor = .black
-        case false:
-            self.view.backgroundColor = bgColor
-        }
+        self.view.backgroundColor = darkMode ? .black : bgColor
         
         maskedHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height * 0.25))
         maskedHeaderView.backgroundColor = appThemeColor
@@ -839,7 +832,7 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
         backButtonItem.customView = backButton
         
         imageConfiguration = UIImage.SymbolConfiguration(weight: .regular)
-        image = UIImage(systemName: "questionmark", withConfiguration: imageConfiguration)
+        image = UIImage(systemName: "lightbulb.circle", withConfiguration: imageConfiguration)
         helpButton.frame.size.height = 35
         helpButton.frame.size.width = helpButton.frame.size.height
         helpButton.backgroundColor = bgColor
@@ -962,17 +955,43 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
         laundromatCart.hardUpdateThis(updatedItem: itemData, originalItem: originalItemData)
         
         updatePresentingViews()
-        
-        /** Resize the cart if necessary to reflect new selections and deleted items*/
-        if let vc = self.presentingViewController as? ShoppingCartVC{
-            vc.resize()
-        }
+        updateShoppingCartVC()
+        clearCartIfLastItem()
         
         /** Dismiss the keyboard if any*/
         view.endEditing(true)
-        
         /** Dismiss this view controller*/
         self.dismiss(animated: true)
+    }
+    
+    /** Update the total and size of the shopping cart vc's UI if it's presenting this vc*/
+    func updateShoppingCartVC(){
+        if let vc = self.presentingViewController as? ShoppingCartVC{
+            vc.resize()
+            vc.updateSubtotal()
+            vc.updatePresentingViews()
+        }
+    }
+    
+    /** If the cart is now empty then delete it and dismiss self as well as the shopping cart vc if it is an ancestor*/
+    func clearCartIfLastItem(){
+        if self.laundromatCart.items.count == 0{
+                forwardTraversalShake()
+                
+                globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
+                
+            deleteThisCart(cart: self.laundromatCart)
+            view.endEditing(true)
+            self.dismiss(animated: true)
+            
+            /** Dismiss this vc as it's not needed anymore*/
+            if let vc = self.presentingViewController as? ShoppingCartVC{
+                vc.resize()
+                vc.updateSubtotal()
+                vc.updatePresentingViews()
+                vc.dismiss(animated: true)
+            }
+        }
     }
     
     /** Update these data sensitive views that are within the view hierarchy*/
@@ -996,38 +1015,59 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
         alert.imageViewTintColor =  .red
         alert.image = UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
         alert.addAction(action: UIAction(title: "Cancel", handler: {_ in }), with: .cancel)
-        alert.addAction(action: UIAction(title: "Remove", handler: {[self] _ in
+        
+        let closure: (UIAction) -> () = {[self] _ in
             
             /** If internet is available then allow the user to delete the item*/
             if internetAvailable == true{
                 lightHaptic()
          
-                self.laundromatCart.removeThis(item: originalItemData)
-                updateThisCart(cart: self.laundromatCart)
+                /** Set item count to 0*/
+                itemCount = 0
+                itemData.count = 0
+                
+                /** Disable these buttons*/
+                removeItemButton.isEnabled = false
+                helpButton.isEnabled = false
+                addButton.isEnabled = false
+                subtractButton.isEnabled = false
+                updateCartButton.isEnabled = false
+                
+                /** Update this mutated item in the cart and push these new changes to the remote in the delegate receiver*/
+                laundromatCart.hardUpdateThis(updatedItem: itemData, originalItem: originalItemData)
+                updateUpdateCartButton()
+                updatePresentingViews()
                 
                 /** If this is the last item in the cart then remove the entire cart and dismiss this view*/
                 if self.laundromatCart.items.count == 0{
-                    /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
-                    if let vc = self.presentingViewController as? ShoppingCartVC{
-                        let _ = vc.clearCart()
-                    }
-                    else{
-                        /** If no familiar view controller is presenting this detail view then just go forward with the operation*/
-                        forwardTraversalShake()
+                    
+                    /** Display a nice loading screen while the delay takes place*/
+                    let loadingScreen = InterstitialLoadingScreenView()
+                    
+                    /** A delay is required in order for the cart's view controller to be dismissed, this might be due to a hiccup caused by dismissing many view controllers at the same time (including the alertVC)*/
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){[self] in
+                    forwardTraversalShake()
+                    loadingScreen.dismiss(animated: true)
                         
-                        globallyTransmit(this: "Cart cleared", with: UIImage(systemName: "cart.fill.badge.minus", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .borderLessCircle, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .bottomCenterStrip, animated: true, duration: 3, selfDismiss: true)
-                        
-                    deleteThisCart(cart: self.laundromatCart)
+                    clearCartIfLastItem()
                     }
-
-                self.dismiss(animated: true)
+                }
+                else{
+                    /** Still other items in the cart, update accordingly*/
+                    updatePresentingViews()
+                    updateShoppingCartVC()
+                    
+                    view.endEditing(true)
+                    dismiss(animated: true)
                 }
             }
             else{
                 errorShake()
                 
                 globallyTransmit(this: "An internet connection is required in order to update your cart", with: UIImage(systemName: "wifi.slash", withConfiguration: UIImage.SymbolConfiguration(weight: .light)), backgroundColor: bgColor, imageBackgroundColor: .clear, imageBorder: .none, blurEffect: true, accentColor: .red, fontColor: fontColor, font: getCustomFont(name: .Ubuntu_Light, size: 14, dynamicSize: true), using: .centerStrip, animated: true, duration: 3, selfDismiss: true)
-            }}), with: .destructive)
+            }}
+
+        alert.addAction(action: UIAction(title: "Remove", handler: closure), with: .destructive)
         
         alert.modalPresentationStyle = .overFullScreen
         self.present(alert, animated: true)
@@ -1237,7 +1277,6 @@ public class OrderItemUpdateDetailVC: UIViewController, UINavigationBarDelegate,
     /** Update the update cart button with the updated subtotal given a change to the quantity and or item choices*/
     func updateUpdateCartButton(){
         itemData.count = itemCount
-        subtotal = itemData.getSubtotal()
         
         /** Update the item count display*/
         itemCountDisplay.text = "\(itemCount)"

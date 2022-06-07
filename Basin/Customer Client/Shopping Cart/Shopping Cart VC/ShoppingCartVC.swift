@@ -91,6 +91,8 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
     var maximumScrollViewContentHeightThreshold: CGFloat{
         return self.view.frame.height * 0.6
     }
+    /** Determine if the scrollview for the tableview should allow scrolling or not*/
+    var scrollingEnabled: Bool = false
     
     /** Passed the required data to this object upon instantiation*/
     init(cart: Cart, displayAddMoreItemsButton: Bool){
@@ -182,7 +184,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         shareButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         shareButton.backgroundColor = .clear
         shareButton.tintColor = appThemeColor
-        shareButton.setImage(UIImage(systemName: "person.fill.badge.plus", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
+        shareButton.setImage(UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .regular)), for: .normal)
         shareButton.imageView?.contentMode = .scaleAspectFit
         shareButton.layer.cornerRadius = shareButton.frame.height/2
         shareButton.isEnabled = true
@@ -463,14 +465,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
                         
                         deleteThisCart(cart: self.cart)
                         
-                        /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
-                        if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
-                            let _ = vc.isCartValid()
-                        }
-                        else if let vc = self.presentingViewController as? OrderItemDetailVC{
-                            /** Update the referenced collection view and any other tableview tied to this view controller to reflect the changes in data*/
-                            let _ = vc.updatePresentingViews()
-                        }
+                        self.updatePresentingViews()
                         
                         self.dismiss(animated: true)
                     }
@@ -583,6 +578,7 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         /** Disable the scrollview of the tableview if the tableview hasn't yet reached its maximum size*/
         shoppingCartItemsTableView.isScrollEnabled = totalScrollViewHeight <= maximumScrollViewContentHeightThreshold ? false : true
+        scrollingEnabled = totalScrollViewHeight <= maximumScrollViewContentHeightThreshold ? false : true
         
         /** Animate the container growing*/
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn){ [self] in
@@ -753,7 +749,10 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             /** Resize the view to reflect the new changes*/
             resize()
             
-            updateSubtotal()
+            /** Update the subtotal to reflect $0 since all items are cleared*/
+            UIView.transition(with: subtotalPriceLabel, duration: 0.1, options: [.curveEaseIn], animations: { [self] in
+                subtotalPriceLabel.text = "$\(String(format: "%.2f", 0))"
+            })
             
             disableHeaderButtons()
             
@@ -815,6 +814,13 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         
         deleteThisCart(cart: self.cart)
         
+        updatePresentingViews()
+        
+        self.dismiss(animated: true)
+    }
+    
+    /** Update the presentinng view controllers to reflect the changes in shared data*/
+    func updatePresentingViews(){
         /** Update the cart of the presenting VC if it's a laundromat detail VC presenting the shopping cart*/
         if let vc = self.presentingViewController as? LaundromatLocationDetailVC{
             let _ = vc.isCartValid()
@@ -823,8 +829,6 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
             /** Update the referenced collection view and any other tableview tied to this view controller to reflect the changes in data*/
             let _ = vc.updatePresentingViews()
         }
-        
-        self.dismiss(animated: true)
     }
     
     /** Undo the clear action*/
@@ -942,14 +946,12 @@ public class ShoppingCartVC: UIViewController, UICollectionViewDelegate, UITable
         if internetAvailable == true{
             forwardTraversalShake()
             
-            /*
-             let checkoutVC =
+             let checkoutVC = CheckoutVC(cart: cart)
              
              checkoutVC.modalPresentationStyle = .fullScreen
              checkoutVC.modalTransitionStyle = .coverVertical
              
              self.present(checkoutVC, animated: true)
-             */
         }
         else{
             /** Internet unavailable, can't proceed, inform the user that they must have an internet connection to continue*/

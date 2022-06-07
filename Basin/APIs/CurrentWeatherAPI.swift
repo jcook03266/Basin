@@ -11,9 +11,6 @@ import Nuke
 
 /** File that contains a singleton class for JSON fetching and decoding and structs for weather data using Open Weather's API*/
 
-/** API key to pass when fetching JSON data*/
-let openWeatherAPIKey = "43f330b80fec92f73843a6e979b15a81"
-
 /** Send an API call to retrieve the current weather data for the given coordinate point*/
 func getCurrentWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping (Result<CurrentWeather,APIService.APIError>) -> Void){
     

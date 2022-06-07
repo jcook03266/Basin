@@ -22,4 +22,6 @@ pod 'FirebaseAnalytics'
 pod 'GoogleMaps'
 pod 'GooglePlaces'
 pod 'Google-Mobile-Ads-SDK'
+pod 'Stripe'
+pod 'FirebaseFunctions'
 end

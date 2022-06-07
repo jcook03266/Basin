@@ -1,6 +1,6 @@
 //
 //  LottieButton.swift
-//  Stuy Wash N Dry
+//  Basin
 //
 //  Created by Justin Cook on 3/25/22.
 //
@@ -32,7 +32,6 @@ public class LottieButton: UIButton{
         lottieView.shouldRasterizeWhenIdle = true
         lottieView.contentMode = .scaleAspectFill
         lottieView.isOpaque = false
-        lottieView.clipsToBounds = true
         lottieView.backgroundColor = .clear
         lottieView.loopMode = .playOnce
         lottieView.clipsToBounds = false
