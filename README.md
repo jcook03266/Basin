@@ -34,16 +34,16 @@ Personally, I don't use laundromats to wash my clothes, so my mission is to make
 Basin shares a similar revenue model to that of Uber's Ubereats platform in the sense that businesses are charged fixed one-time setup fees, and are structured using a business subscription tier system. Each business tier system delegates a priority level to that business's performance and satisfaction, it is our mission to make the higher tier businesses as profitable as possible through diverse and aggressive advertising and algorithmic weighting in search results. Ultimately, the higher the tier of the business' subscription the more we split their total revenue from orders. Each business subscription tier is enumerated below:
 
 - **Basic Bucket: `(Low Priority) 💧`**
-  - 15% Fee on total order profit for delivery orders
-  - 5% Fee on total order profit for pickup orders
+  - 20% Fee on the subtotal (pre-tax and fees) for delivery orders
+  - 12% Fee on the subtotal for pickup orders
 
 - **Wash Basin: `(Medium Priority) 💦`**
-  - 20% Fee on total order profit for delivery orders 
-  - 5% Fee on total order profit for pickup orders
+  - 22% Fee on the subtotal for delivery orders 
+  - 15% Fee on the subtotal for pickup orders
 
 - **Washing Machine: `(High Priority) 🌊`**
-  - 25% Fee on total order profit for delivery orders
-  - 10% Fee on total order profit for pickup orders
+  - 25% Fee on the subtotal for delivery orders
+  - 18% Fee on the subtotal for pickup orders
 
 > Note: Total order profit is the amount of money after taxes, service fees, and delivery fees, that have been deducted from the payment entity record. It is essentially the subtotal of the order.
 
