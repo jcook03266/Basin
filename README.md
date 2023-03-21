@@ -99,6 +99,7 @@ https://user-images.githubusercontent.com/63657230/226753732-4f6680b2-066d-4545-
 
 ### Detail View
 https://user-images.githubusercontent.com/63657230/226753266-9c8ef615-b9c3-4162-956d-98ffc87776e5.mp4
+
 https://user-images.githubusercontent.com/63657230/226753388-9c2d2ae9-a18b-4e2d-8e5a-7286a7fe41bb.mp4
 
 ### Cart View
