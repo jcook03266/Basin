@@ -75,6 +75,34 @@ Basin shares a similar revenue model to that of Uber's Ubereats platform in the 
 ## How can I use Basin? 
 The iOS version of the app is currently being developed as we speak, but when the customer portion of the app is relatively complete (>= 90%) then I will upload the application to testflight and allow users to download and experience Basin. Current development is blazing fast, it's really only limited by my ability to type fast and stay awake at this point, so realistically, I expect the app to be on testflight very soon. And above all, thanks for your patience.
 
+## Demos:
+### Startup - FTUE
+https://user-images.githubusercontent.com/63657230/226747035-3e62c235-5cd5-4532-8b0f-b819b61c4692.mp4
+
+### Startup - Logged In
+https://user-images.githubusercontent.com/63657230/226746490-2e2ffb2d-13db-4755-b6de-9119e6576569.mov
+
+### Signup - Part I
+https://user-images.githubusercontent.com/63657230/226752008-86e87b18-d755-4f6b-9dd4-1bd6bb5dd745.mp4
+
+### Signup - Part II
+https://user-images.githubusercontent.com/63657230/226752593-7c7b12a6-0755-4c23-bdab-0642d3796589.mp4
+
+### Signup - Part III
+https://user-images.githubusercontent.com/63657230/226753034-331db107-1bab-4803-a99b-e9a1f3c5dee4.mp4
+
+### Forgot/Reset Password
+https://user-images.githubusercontent.com/63657230/226752654-63f9a61e-3c1b-4d9d-a473-3bc2d2e5d15a.mp4
+
+### Home Tab
+https://user-images.githubusercontent.com/63657230/226753732-4f6680b2-066d-4545-95e4-adf459b397c2.mp4
+
+### Detail View
+https://user-images.githubusercontent.com/63657230/226753266-9c8ef615-b9c3-4162-956d-98ffc87776e5.mp4
+
+### Cart View
+https://user-images.githubusercontent.com/63657230/226753388-9c2d2ae9-a18b-4e2d-8e5a-7286a7fe41bb.mp4
+
 ## Contributions:
 Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
 
