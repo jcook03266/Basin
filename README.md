@@ -99,9 +99,11 @@ https://user-images.githubusercontent.com/63657230/226753732-4f6680b2-066d-4545-
 
 ### Detail View
 https://user-images.githubusercontent.com/63657230/226753266-9c8ef615-b9c3-4162-956d-98ffc87776e5.mp4
+https://user-images.githubusercontent.com/63657230/226753388-9c2d2ae9-a18b-4e2d-8e5a-7286a7fe41bb.mp4
 
 ### Cart View
-https://user-images.githubusercontent.com/63657230/226753388-9c2d2ae9-a18b-4e2d-8e5a-7286a7fe41bb.mp4
+https://user-images.githubusercontent.com/63657230/226756336-93e5cd4d-0028-4ddf-aa47-9755d54c7453.mp4
+
 
 ## Contributions:
 Open source contributions are not allowed at this time, this application contains sensitive information at the moment and shouldn't be exposed to unauthorized parties. Reproduction of source materials is allowed via the MIT license, but only to those marked as authorized viewers and contributors to this project.
